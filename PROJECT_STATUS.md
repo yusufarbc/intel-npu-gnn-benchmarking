@@ -4,115 +4,40 @@ Date: 2026-04-12
 
 ## Scope Completed
 
-1. Benchmark core
-- Implemented OOP benchmark runner in scripts/benchmark_npu.py.
-- Added two graph optimization modes:
-  - baseline: ORT_DISABLE_ALL
-  - optimized: ORT_ENABLE_EXTENDED
-- Added provider fallback ordering for NPU-oriented execution.
-- Added latency summary CSV and baseline-vs-optimized chart outputs.
+1. **Integrated Benchmark Engine (`engine/benchmark_runner.py`)** [NEW]
+   - Supports explicit device targeting for **CPU, GPU, and NPU**.
+   - Handles OpenVINO DLL issues and device selection via `--device`.
 
-2. Profiling parser and operator-level evidence
-- Added scripts/parse_operator_breakdown.py.
-- Added scripts/parse_profiling.py as the requested naming-compatible entry point.
-- Added operator-level outputs:
-  - operator_breakdown_by_mode.csv
-  - operator_breakdown.csv
-  - operator_breakdown_topk.png
-  - operator_top5_speedup.csv
-  - disappeared_operators.csv
-  - operator_count_delta.csv
+2. **Unified Analysis Suite (`analysis/`)** [NEW]
+   - `hw_comparison.py`: Automates 3-way hardware performance studies.
+   - `profiling_analyzer.py`: Merged operator-level profiling and acceleration summary.
+   - `scalability_analyzer.py`: Multi-model repeated runs and roofline analysis.
 
-3. Scalability and roofline workflow
-- Added scripts/run_scalability_study.py.
-- Supports multi-model experiments, repeated runs, and statistical summaries.
-- Adds graph-size and complexity evidence:
-  - node count reduction (|V|)
-  - c-factor ratio (optimized/baseline latency)
-  - speedup and latency reduction
-  - 95% confidence interval estimates
-- Adds roofline-style interpretation fields:
-  - arithmetic intensity estimate (FLOP/Byte)
-  - ridge point
-  - memory-bound vs compute-bound label
-  - attained GFLOP/s estimate
+3. **Workspace Cleanup & Reorganization** [NEW]
+   - Organized scripts into functional top-level directories: `engine`, `analysis`, `utils`.
+   - Cleaned root directory by archiving legacy JSON files to `results/archive/`.
+   - Unified orchestration via root-level `run_pipeline.py`.
 
-4. End-to-end automation pipeline
-- Added scripts/run_all.py.
-- One-command flow now executes:
-  - benchmark_npu.py (single-model baseline/optimized)
-  - parse_profiling.py (operator-level evidence)
-  - run_scalability_study.py (multi-model summary)
-  - automatic PNG copy from results/ to paper/figures/
+4. **Hardware Comparison Evidence**
+   - Successfully executed the 3-way comparison on **BERT-tiny**.
+   - Generated `hw_comparison_chart.png` and summary CSV.
 
-5. Academic paper assets
-- Added paper/main.tex.
-- Added paper/references.bib.
-- Added paper/figures/ directory for result figures.
+## Project Structure (Updated)
 
-6. Documentation
-- Updated README.md with run commands and expected artifacts.
+```text
+/
+├── analysis/         # Analytics, reporting, and 3-way comparison
+├── engine/           # Inference execution and provider management
+├── utils/            # Shared utilities (downloaders, etc.)
+├── models/           # ONNX models
+├── results/          # Summary output, charts, and artifacts
+│   └── archive/      # Raw trace files and legacy results
+├── paper/            # LaTeX assets and generated figures
+├── run_pipeline.py   # Top-level entry point
+└── README.md
+```
 
-## Current Output Contract (What You Will Deliver)
+## Next Steps
 
-When models are present under models/, running the scripts produces:
-
-1. Single-model benchmark artifacts
-- results/performance_summary.csv
-- results/performance_comparison.png
-- results/baseline_profiling.json
-- results/optimized_profiling.json
-
-2. Operator analysis artifacts
-- results/operator_breakdown_by_mode.csv
-- results/operator_breakdown.csv
-- results/operator_breakdown_topk.png
-- results/operator_top5_speedup.csv
-- results/disappeared_operators.csv
-- results/operator_count_delta.csv
-
-3. Multi-model scalability artifacts
-- results/scalability_matrix.csv
-- results/scalability_speedup.png
-- results/scalability_latency.png
-- per-model per-run folders in results/<model_name>/run_##/
-
-## Remaining Manual Steps
-
-1. Install dependencies in your active environment
-- pip install -r requirements.txt
-
-2. Place ONNX models in models/
-- Example set: ResNet18, ResNet50, ResNet101 (or any comparable small/medium/large models).
-
-3. Run full pipeline
-- python scripts/run_all.py --repeats 3 --iterations 100 --peak-compute-gflops <HW_PEAK> --peak-bandwidth-gbps <HW_BW>
-
-4. Update paper/main.tex result numbers from generated CSV files.
-
-## OpenVINO EP (Windows) Note
-
-If OpenVINO EP is listed but silently falls back to CPU with an error like:
-
-- Error loading `onnxruntime_providers_openvino.dll` (Error 127: procedure not found)
-
-This is often caused by an unrelated `openvino.dll` appearing earlier on your system PATH (e.g. OEM driver folders).
-
-Current fix in scripts/benchmark_npu.py:
-
-- Prepends the Python package OpenVINO runtime folder (`openvino\\libs`) to PATH for the current process
-- Adds the same folder via `os.add_dll_directory(...)` and keeps the cookie alive
-
-Optional:
-
-- Set `ORT_OPENVINO_DEVICE` to force device selection (default is `NPU`).
-
-## Notes on Interpretation
-
-- Asymptotic class typically remains near O(N+E) in DAG execution terms.
-- Fusion impact is expected in hidden constants via reduced memory traffic and kernel-launch overhead.
-- The strongest evidence comes from combining:
-  - latency reduction,
-  - operator disappearance/merging,
-  - node-count reduction,
-  - and roofline shift toward higher arithmetic intensity.
+1. Run `analysis/hw_comparison.py` on larger vision models (e.g. ResNet50) to see if NPU throughput scales better than CPU/GPU.
+2. Update the LaTeX paper with the newly generated `hw_comparison_chart.png`.

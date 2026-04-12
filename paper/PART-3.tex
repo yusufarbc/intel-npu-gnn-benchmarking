@@ -13,31 +13,34 @@ Deneylerde kullanılan sistem özellikleri aşağıdaki gibidir:
 	\item \textbf{İşletim sistemi}: Windows 11 Home Single Language (25H2), derleme 26200.8037 (64-bit, x64)
 \end{itemize}
 
-\section{Modeller}
-Üç temsili ONNX modeli seçilmiştir:
-\begin{itemize}
-	\item \textbf{MobileNetV2}: kompakt CNN.
-	\item \textbf{ResNet50}: daha derin CNN.
-	\item \textbf{BERT-tiny}: Transformer tabanlı encoder.
-\end{itemize}
-Bu seçim, farklı operatör karışımlarını ve ölçekleri kapsar.
+\section{Modeller ve Veri Seti Çeşitliliği}
+Analizin kapsamını genişletmek ve farklı mimarilerin NPU/GPU/CPU üzerindeki davranışlarını spesifik olarak incelemek üzere \textbf{3 temel derin öğrenme mimarisi} seçilmiştir. Çalışma, bu mimarilerin ağırlık hassasiyetlerine göre (FP32 ve INT8) çeşitlendirilmesiyle \textbf{toplam 5 farklı test modeli} üzerinden yürütülmüştür:
 
-\section{Ölçüm Metodolojisi}
-Her model ve konfigürasyon için tekrarlı koşular gerçekleştirilmiştir.
-Her koşuda sabit sayıda çıkarım iterasyonu, ısınma (warm-up) sonrası ölçülmüştür.
-Ortalama gecikme (ms), standart sapma ve yaklaşık 95\% güven aralığı raporlanmıştır.
+\begin{itemize}
+	\item \textbf{Mimari 1 -- MobileNetV2:} Daha az bellek ve asgari I/O tüketen kompakt Görüntü İşleme (CNN) modeli. \textit{(FP32 modelleri ile boyut etkisini test etmek üzere iki farklı ön-eğitimli türevi eklenmiştir.)}
+	\item \textbf{Mimari 2 -- ResNet50:} Daha derin ve karmaşık özellik (feature) haritasına sahip, bellek bandını (memory bandwidth) daha yoğun zorlayan kapsamlı CNN modeli. \textit{(FP32 formatında test edilmiştir.)}
+	\item \textbf{Mimari 3 -- BERT-tiny:} Doğal Dil İşleme (NLP) alanı için tasarlanmış Transformer tabanlı encoder modeli. \textit{(Önce orijinal FP32 formatında, ardından ONNX Dinamik Kuantizasyon algoritması kullanılarak sıkıştırılmış INT8 formatında test edilerek kuantizasyonun operatör füzyonu ile olan etkileşimi incelenmiştir.)}
+\end{itemize}
+
+\section{Donanım ve Kaynak Ölçüm Metodolojisi}
+Bu çalışma salt çalışma zamanı (latency) ile sınırlı kalmamış; her koşuda ve modelde donanımın gerçek kaynak tüketimini kaydetmek için donanım/telemetri sensörleri ile entegre çalışılmıştır:
+\begin{enumerate}
+    \item \textbf{Üçlü Donanım Kıyaslaması (3-Way Benchmark):} Her model ONNX Runtime'ın farklı Execution Provider'larına (CPU, GPU-DirectML/OpenVINO, NPU-OpenVINO) dinamik olarak atanarak 100 iterasyon ve 5 tekrarlı (repeats) bloklar halinde çalıştırılmış; aralarındaki hız farkları belgelenmiştir.
+    \item \textbf{Resource Tracking (Kaynak Takibi):} İşletim sistemi API'leri ile senkronize elde edilen \textit{Peak Memory (Maksimum Tepe Bellek Kullanımı - MB)} ve \textit{CPU Utilization (İşlemci Yükü - \%)} istatistikleri kaydedilerek dar boğaz analizine (Bottleneck Analysis) boyut katılmıştır.
+\end{enumerate}
+
+Her model için ortalama gecikme süresi (ms) ile standart sapmalar (error bars) \cite{onnxruntime} raporlanmıştır.
 
 \section{Baseline ve Optimized Konfigürasyonları}
-Baseline konfigürasyonda ORT grafik optimizasyonları kapatılmıştır.
-Optimized konfigürasyonda extended optimizasyonlar açılmıştır \cite{onnxruntime}.
-Optimizasyon sonrası ONNX dışa aktarımının EP bağımsız seri hale getirilebilir kalması için, optimize model dışa aktarımı CPU EP üzerinden yapılmıştır.
-Bu tercih, bazı EP'lerin ürettiği derlenmiş düğümler (compiled nodes) nedeniyle seri hale getirme hatalarını engeller.
+Baseline senaryosunda tüm ORT grafik optimizasyonları ve operatör füzyon kuralları kapalı tutulmuştur.
+Optimized modda ise donanım mimarisine bağlı extended (genişletilmiş) optimizasyonlar aktif edilmiştir. 
+Özellikle NPU üzerinden model geçişlerinde donanım limitleri sebebiyle NPU'nun bazı komutları (örn. belirli INT8 dinamik dönüşümlerini) reddederek "CPU Fallback" mantığıyla işlemi işlemciye devrettiği tespit edilmiş ve optimizasyon süreci bu esneklik içinde yönetilmiştir.
 
-\section{Üretilen Çıktılar ve Tekrarlanabilirlik}
-Pipeline çıktıları aşağıdaki artefaktları üretir:
+\section{Üretilen Veri ve Artefaktlar}
+Gerçekleştirilen test pipeline'ı sonucunda aşağıdaki çıktı dosyaları üretilir:
 \begin{itemize}
-	\item \texttt{results/performance\_summary.csv}: tek model gecikme özeti.
-	\item \texttt{results/scalability\_matrix.csv}: çoklu model matrisi.
-	\item \texttt{results/*\_profiling.json}: profiling izleri.
-	\item \texttt{paper/figures/}: raporda kullanılan görseller (otomatik kopyalanır).
+	\item \texttt{results/hw\_comparison/*}: Cihazlar arası 3-yollu hız karşılaştırmaları.
+	\item \texttt{results/performance\_summary.csv}: CPU \% ve Peak Memory içeren genel telemetri özeti.
+	\item \texttt{results/scalability\_matrix.csv}: Modellerin büyüklüklerine göre Roofline parametre matrisi.
+	\item \texttt{paper/figures/}: Araştırma dokümana entegre edilmeye hazır 100'den fazla grafiksel çıktı.
 \end{itemize}

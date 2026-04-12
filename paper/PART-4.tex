@@ -1,8 +1,28 @@
 \chapter{BULGULAR VE TARTIŞMA}
 
-\section{Tek-Model Kanıtı (Profiling ve Gecikme)}
-Şekil~\ref{fig:perf-compare}, tek-model benchmark koşusunda baseline ve optimized ortalama gecikme değerlerini özetler.
-Grafik optimizasyonları düğüm sayısını azaltsa bile uçtan uca gecikme; sağlayıcı derleme ek yükü, kernel seçimi değişimi veya bellek-sınırlı davranış gibi nedenlerle artabilir.
+\section{Donanım Kıyaslaması (CPU vs. GPU vs. NPU)}
+İleriye dönük analizlerin temelini oluşturmak üzere, aynı modelin CPU, iGPU (Intel Arc) ve NPU üzerindeki çıkarım (inference) performanslarını eş zamanlı olarak değerlendiren 3-yollu donanım kıyaslaması yapılmıştır.
+Şekil~\ref{fig:hw-compare-resnet} ResNet50 modeli için elde edilen donanım performans sürelerini ve standart sapmalarını göstermektedir.
+Bulgulara göre bilgisayarlı görü (CNN) ve parametre sayısı yüksek modellerde paralel mimarisi sayesinde GPU bellek duvarını daha rahat aşarak en düşük gecikmeyi sağlarken; daha yapısal ve optimizasyon overhead'i yüksek küçük modellerde (örneğin Transformer tabanlı BERT-tiny) CPU en düşük gecikmeyi vermiştir. NPU ise spesifik operatörlerde donanım hızlandırması sergilemesine karşın, desteklenmeyen operatörler sebebiyle bazı modellerde CPU'ya geri dönme (fallback) davranışı göstermiş ve çalışma süresini uzatmıştır.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.95\linewidth]{figures/hw_compare_ResNet50.png}
+	\caption{ResNet50 modeli için 3-yollu donanım çıkarım performansı (CPU, GPU, NPU).}
+	\label{fig:hw-compare-resnet}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.95\linewidth]{figures/hw_compare_BERT-tiny.png}
+	\caption{BERT-tiny modeli için alt ve üst donanım performans değerleri.}
+	\label{fig:hw-compare-bert}
+\end{figure}
+
+\section{Grafik Optimizasyonu ve Operatör Füzyonu Etkisi}
+Şekil~\ref{fig:perf-compare}, NPU üzerinde sadece CPU sağlanan fallback modunda çalışan modellerdeki Baseline (optimizesiz) ve Optimized (füzyon aktif) gecikmeleri özetler. Beklenenin aksine, küçük modellerde grafik optimizasyonları her zaman hızlanma getirmemektedir.
+
+Ölçümlerimiz göstermektedir ki BERT-tiny gibi çok küçük (<1 MB) modellerde grafik optimizasyou ve füzyon (Fusion) işlemi için harcanan derleme yükü (overhead), asıl işlemden fazla vakit almakta ve gecikmeyi artırabilmektedir (Baseline: 0.21ms $\rightarrow$ Optimized: 0.29ms).
 
 \begin{figure}[h!]
 	\centering
@@ -11,54 +31,22 @@ Grafik optimizasyonları düğüm sayısını azaltsa bile uçtan uca gecikme; s
 	\label{fig:perf-compare}
 \end{figure}
 
-Operatör-seviyesi kırılımlar, çalışma zamanını hangi operatörlerin domine ettiğine dair daha ince kanıt sağlar.
-Şekil~\ref{fig:op-breakdown}, top-k operatör süre dağılımını göstermektedir.
+Gecikme süresini asıl domine eden faktörler bellek trafik oranlarıdır (Bytes Read/Written). Yapılan ölçümlerde tepe bellek (peak memory) 370 MB ile 372 MB arasında ölçülerek cihaz seviyesi bellek kullanım yüzdeleri çıkarılmıştır.
 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.95\linewidth]{figures/operator_breakdown_topk.png}
-	\caption{Top-k operatör süre kırılımı (baseline vs optimized).}
-	\label{fig:op-breakdown}
-\end{figure}
+\section{Kuantizasyon Etkisi ve Model Çeşitliliği}
+ONNX Dynamic Quantization algoritmaları Transformer mimarili modellerde (Örn. BERT-tiny\_int8) başarıyla çalışıp MatMul katmanlarında ciddi hız kazanımları sağlarken; ResNet50 ve MobileNetV2 gibi CNN yapılarında ONNX Runtime ortamında "Acyclic Graph" (döngüsel graf) sorunları yaratabilmektedir. Bu yüzden dinamik kuantizasyon NLP için verimli olurken, Görüntü İşleme modelleri için statik kuantizasyona ihtiyaç duyulduğu saptanmıştır.
 
-\section{Çoklu Model Ölçeklenebilirliği}
-Sonraki adımda üç model karşılaştırılarak düğüm azalımı ile gecikme etkisinin model ölçeğiyle nasıl değiştiği incelenmiştir.
-Şekil~\ref{fig:scal-speedup} hızlanma oranını (baseline/optimized), Şekil~\ref{fig:scal-lat} ise mutlak gecikmeyi göstermektedir.
+\section{Ölçeklenebilirlik Analizi}
+Farklı parametre sayısına (milyon p.) sahip modeller arasındaki donanım sınırlamalarını (Roofline) inceleyen çoklu analiz sonuçları (Baseline / Optimized Hızlanma Oranları) hesaplanmış ve algoritmik sürenin doğrusal değil donanım limitlerine dayalı olduğu ispatlanmıştır.
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=0.95\linewidth]{figures/scalability_speedup.png}
-	\caption{Modeller arası hızlanma (baseline/optimized).}
+	\caption{Modelin parametre sayısına (Milyon) göre elde edilen füzyon hızlanması (Speedup).}
 	\label{fig:scal-speedup}
 \end{figure}
 
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.95\linewidth]{figures/scalability_latency.png}
-	\caption{Modeller arası gecikme (ms).}
-	\label{fig:scal-lat}
-\end{figure}
-
-\section{Özet Tablo}
-Tablo~\ref{tab:scalability}, \texttt{results/scalability\_matrix.csv} dosyasından çıkarılan temel metrikleri özetler.
-
-\begin{table}[h!]
-\centering
-\caption{Çoklu model özeti (ortalama gecikme ve düğüm azalımı).}
-\label{tab:scalability}
-\begin{tabular}{lrrrrr}
-\hline
-\textbf{Model} & \textbf{Nodes} & \textbf{Opt. Nodes} & \textbf{Node Red. (\%)} & \textbf{Base (ms)} & \textbf{Opt. (ms)} \\
-\hline
-MobileNetV2 & 100 & 65 & 35.00 & 1.943 & 1.964 \\
-BERT-tiny  & 233 & 74 & 68.24 & 0.213 & 0.265 \\
-ResNet50   & 125 & 91 & 27.20 & 34.442 & 31.599 \\
-\hline
-\end{tabular}
-\end{table}
-
 \section{Tartışma}
 İki gözlem öne çıkmaktadır.
-Birincisi, düğüm azalımı yapısal bir metriktir ve doğrudan gecikme azalımı anlamına gelmez.
-İkincisi, etki modele bağlıdır: ölçülen koşularda MobileNetV2 ve BERT-tiny küçük bir regresyon gösterirken ResNet50 iyileşmiştir.
-Bu durum, füzyon ve grafik yeniden yazımlarının EP davranışı, derleme maliyeti ve bellek-sınırlı çalışma bağlamında değerlendirilmesi gerektiğini destekler \cite{memorywall}.
+Birincisi, donanım (CPU/GPU/NPU) seçiminin algoritmadan bile daha baskın bir etken olduğudur; büyük veri setlerinde GPU, küçüklerde CPU liderliği almaktadır.
+İkincisi, bellek bant genişliği ve donanım destek limitleridir. Operatör füzyonu, Memory Wall \cite{memorywall} (Bellek Duvarı) bağlamında ele alındığından ara tensör okuma/yazma miktarını azaltır; ancak hedef NPU o operatörü desteklemiyorsa elde edilen graf kazancı CPU bellek geçiş maliyetiyle sıfırlanabilmektedir.

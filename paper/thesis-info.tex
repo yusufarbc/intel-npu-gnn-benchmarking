@@ -1,5 +1,5 @@
-\thesisTitle{EMPIRICAL IMPACT OF GRAPH OPTIMIZATIONS (OPERATOR FUSION) ON NPU INFERENCE}
-\thesisTitleTR{NPU ÜZERİNDE ÇIKARIMDA GRAFİK OPTİMİZASYONLARININ (OPERATÖR FÜZYONU) AMPİRİK ETKİSİ}
+\thesisTitle{EMPIRICAL PERFORMANCE ANALYSIS OF OPERATOR FUSION ON NEURAL PROCESSING UNITS (NPUs): A STUDY ON TIME AND I/O COMPLEXITY}
+\thesisTitleTR{YAPAY ZEKA İŞLEM BİRİMLERİNDE (NPU) OPERATÖR FÜZYONUNUN AMPİRİK PERFORMANS ANALİZİ: ZAMAN VE I/O KARMAŞIKLIĞI ÜZERİNE BİR İNCELEME}
 %\thesisYear{2026}
 %\thesisMonth{April}\thesisMonthTR{Nisan}
 \thesisDefenseDay{12}  % day of defense, 1, 2, ..., 31
@@ -32,23 +32,13 @@
 \thesisPages{29}
 
 \thesisAbstract{ 
-This report presents an empirical study prepared as a course project for \textbf{Advanced Algorithm Analysis}. It investigates how graph-level optimizations---with a focus on operator fusion---affect end-to-end inference latency on NPU-class accelerators.
-The experimental pipeline is built on ONNX Runtime and compares baseline execution (optimizations disabled) against an optimized configuration (extended graph optimizations enabled) \cite{onnxruntime}.
-We run three representative ONNX models (MobileNetV2, ResNet50, and BERT-tiny) under a provider fallback chain that prioritizes the OpenVINO Execution Provider \cite{openvino_ep}.
-We collect latency statistics across repeated runs and export ONNX Runtime profiling traces to quantify operator-level time breakdowns and graph node reductions.
-Results show that node count can be reduced substantially (\(27\%\) to \(68\%\)), yet the observed latency impact is model-dependent: some models regress while others improve.
-We discuss these outcomes in the context of the memory wall \cite{memorywall} and accelerator runtime overheads, emphasizing that fusion and graph rewrites do not guarantee speedups without considering EP-specific compilation and kernel selection.
+Traditional algorithm analysis generally ignores hardware memory constraints (RAM Model). However, in modern NPU architectures, the primary performance loss stems from data transfer to and from memory rather than computation. This study examines the impact of graph optimization levels provided by the ONNX Runtime compiler on execution time. Empirical tests reveal that reducing the number of operations by merging them (Fusion), even without changing the algorithm's asymptotic growth class, significantly accelerates inference times by lowering constant operation costs.
 }
 
-\thesisKeywords{ONNX Runtime, graph optimization, operator fusion, NPU, OpenVINO, profiling, performance benchmarking.}
+\thesisKeywords{ONNX Runtime, graph optimization, operator fusion, NPU, OpenVINO, memory wall, I/O complexity, performance benchmarking.}
 
 \thesisOzet{ 
-Bu rapor, \textbf{İleri Algoritma Analizi} kapsamında hazırlanmış bir ders projesi olarak, operatör füzyonuna odaklanarak grafik-seviyesi optimizasyonların NPU sınıfı hızlandırıcılarda uçtan uca çıkarım gecikmesine etkisini ampirik olarak inceler.
-Deneysel altyapı ONNX Runtime üzerinde kurulmuş olup optimizasyonların kapalı olduğu bir temel durum ile genişletilmiş optimizasyonların açık olduğu bir optimize durum karşılaştırılmıştır \cite{onnxruntime}.
-MobileNetV2, ResNet50 ve BERT-tiny olmak üzere üç ONNX modelinde, öncelikli olarak OpenVINO Execution Provider kullanan ve gerektiğinde CPU'ya düşen bir sağlayıcı zinciriyle çalıştırma yapılmıştır \cite{openvino_ep}.
-Tekrarlı ölçümlerle gecikme istatistikleri çıkarılmış, ONNX Runtime profiling izleri dışa aktarılmış ve operatör-seviyesi süre kırılımları ile grafik düğüm azalımı nicelleştirilmiştir.
-Sonuçlar düğüm sayısında belirgin azalmalar (\(\%27\) -- \(\%68\)) elde edilebildiğini, ancak gecikme etkisinin modele bağlı olduğunu göstermektedir.
-Elde edilen bulgular, bellek duvarı \cite{memorywall} ve sağlayıcıya özgü derleme/çalıştırma ek yükleri çerçevesinde tartışılmış; füzyonun her koşulda hızlanma garanti etmediği vurgulanmıştır.
+Geleneksel algoritma analizi genellikle donanım bellek kısıtlarını göz ardı eder (RAM Modeli). Ancak günümüz NPU mimarilerinde asıl performans kaybı hesaplamadan değil, verinin belleğe gidip gelmesinden kaynaklanmaktadır. Bu çalışma, ONNX Runtime derleyicisinin sunduğu graf optimizasyon seviyelerinin çalışma zamanına etkisini incelemektedir. Yapılan ampirik testler, işlemleri birleştirerek sayısını azaltmanın (Fusion), algoritmanın asimptotik büyüme sınıfını değiştirmese bile, sabit işlem maliyetlerini düşürerek çıkarım (inference) sürelerini net bir şekilde hızlandırdığını ortaya koymaktadır.
 }
 
 \thesisKeywordsTR{ONNX Runtime, grafik optimizasyonu, operatör füzyonu, NPU, OpenVINO, profiling, performans kıyaslama.}

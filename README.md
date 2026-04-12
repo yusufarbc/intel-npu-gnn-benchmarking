@@ -1,15 +1,18 @@
 # npu-graph-opt-benchmarking
 
-Bu proje, "Ileri Algoritma Analizi" kapsaminda su soruyu ampirik olarak incelemek icin tasarlanmistir:
+Bu proje, **Intel Core Ultra (Meteor Lake)** gibi modern işlemcilerde NPU, GPU ve CPU performansını kıyaslamak ve grafik optimizasyonlarının (operatör füzyonu) etkilerini analiz etmek için tasarlanmıştır.
 
-> NPU mimarilerinde DAG tabanli operator fusion (node merging), asimptotik hesaplama karmasikligini degistirmese de (
-> compute tarafinda yaklasik O(N + E)), I/O baskisini ve memory wall etkisini calisma zamaninda nasil degistirir?
+## Proje Yapısı
 
-## Proje Yapisi
+Proje, mantıksal bölümlere ayrılarak yeniden organize edilmiştir:
 
-- `models/`: ONNX model dosyalari
-- `scripts/`: benchmark kodlari
-- `results/`: profiling JSON, CSV ozetleri ve grafik ciktilari
+- `engine/`: Benchmark motoru ve donanım seçim mantığı.
+- `analysis/`: Veri analizi, grafik üretimi ve donanım kıyaslama araçları.
+- `utils/`: Model indirme gibi yardımcı araçlar.
+- `models/`: ONNX model dosyaları.
+- `results/`: Profiling verileri, CSV raporları ve görsel grafikler.
+- `results/archive/`: Eski test sonuçlarının yedekleri.
+- `paper/`: Akademik rapor (LaTeX) ve figürler.
 
 ## Kurulum
 
@@ -19,147 +22,35 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Not: Sanal ortam (venv) zorunlu degil; global Python'a da kurabilirsiniz. Venv sadece paket surumlerini izole edip tekrar edilebilirligi kolaylastirir.
+## Donanım Kıyaslaması (3-Way Comparison)
 
-## Calistirma
-
-```bash
-python scripts/benchmark_npu.py --model models/your_model.onnx --iterations 100
-```
-
-OpenVINO EP icin cihaz secimi (varsayilan: NPU):
+İşlemcinizdeki **CPU**, **iGPU (Intel Arc)** ve **NPU (AI Boost)** birimlerini aynı model üzerinde kıyaslamak için:
 
 ```bash
-set ORT_OPENVINO_DEVICE=NPU
-python scripts/benchmark_npu.py --model models/your_model.onnx --iterations 100
+python analysis/hw_comparison.py --model models/your_model.onnx --iterations 100
 ```
 
-## Windows: OpenVINO EP DLL Yukleme Sorunu (Error 127)
+Bu komut sonucunda `results/hw_comparison/<model_adı>/` altında karşılaştırmalı bir grafik (`hw_comparison_chart.png`) ve tablo üretilir.
 
-Eger `OpenVINOExecutionProvider` listede gorunup yine de session creation aninda CPU'ya duserse ve su hata gorunurse:
+## Grafik Optimizasyon Analizi
 
-- `Error loading onnxruntime_providers_openvino.dll` (Error 127: procedure not found)
-
-Sebep siklikla, sistem PATH'inde OpenVINO'ya ait olmayan baska bir `openvino.dll`'in (ornegin OEM surucu klasorleri) daha once gelmesidir.
-
-Bu repo'da [scripts/benchmark_npu.py](scripts/benchmark_npu.py) Windows icin su mitigasyonu yapiyor:
-
-- `openvino\\libs` klasorunu PATH'in basina alir
-- Aynisini `os.add_dll_directory(...)` ile ekler ve surec boyunca aktif tutar
-
-## Script Ne Yapar?
-
-`scripts/benchmark_npu.py` iki ayri modda test yapar:
-
-- Baseline: `GraphOptimizationLevel.ORT_DISABLE_ALL`
-- Optimized: `GraphOptimizationLevel.ORT_ENABLE_EXTENDED`
-
-Her mod icin:
-
-- 5 warmup + 100 olcum iterasyonu calistirir
-- Ortalama gecikme (ms) ve standart sapma hesaplar
-- ONNX Runtime profiling verisini JSON olarak kaydeder
-- Sonuclari CSV ve bar chart olarak disari verir
-
-## Ciktilar
-
-`results/` altinda olusan dosyalar:
-
-- `baseline_profiling.json`
-- `optimized_profiling.json`
-- `performance_summary.csv`
-- `performance_comparison.png`
-
-## Operator Bazli Profiling Analizi
-
-Toplam latency'e ek olarak operator seviyesinde sure kirilimi almak icin:
+Bir modelin optimizasyon (Baseline vs Optimized) etkilerini analiz etmek için:
 
 ```bash
-python scripts/parse_operator_breakdown.py
+python analysis/profiling_analyzer.py --baseline results/baseline.json --optimized results/optimized.json
 ```
 
-Hoca beklentisine uygun alias script:
+## Tam Otomasyon Hattı
+
+Bütün modelleri test edip, analizleri yapıp figürleri rapor dizinine kopyalayan tam akış:
 
 ```bash
-python scripts/parse_profiling.py
+python run_pipeline.py --iterations 100 --repeats 3
 ```
 
-Bu script, varsayilan olarak `results/baseline_profiling.json` ve `results/optimized_profiling.json` dosyalarini okur ve su ciktilari uretir:
+## NPU Notu (Intel Core Ultra)
 
-- `operator_breakdown_by_mode.csv` (mode + operator bazli toplam/ortalama sure)
-- `operator_breakdown.csv` (baseline vs optimized karsilastirma)
-- `operator_breakdown_topk.png` (en agir operatorler icin karsilastirma grafigi)
-- `operator_top5_speedup.csv` (en cok hizlanan ilk 5 operator)
-- `disappeared_operators.csv` (fuzyon sonrasi kaybolan/birlesen operatorler)
-- `operator_count_delta.csv` (operator invocation sayisi degisimi)
+Kod, **Intel OpenVINO** üzerinden NPU'ya erişir. Eğer NPU üzerinde model derleme hatası alırsanız, kütüphane otomatik olarak CPU'ya fallback yapacaktır (BERT modellerinde bazen operatör desteği nedeniyle görülebilir).
 
-## Olceklenebilirlik ve Roofline Analizi
-
-Farkli model boyutlariyla tekrarli calisma ve roofline ozet matrisi icin:
-
-```bash
-python scripts/run_scalability_study.py --repeats 3 --iterations 100
-```
-
-Bu script:
-
-- `models/` altindaki tum `.onnx` dosyalarini tarar
-- her model icin baseline/optimized benchmark'i `repeats` kadar tekrarlar
-- ortalama, std, %95 CI, speedup ve `c` faktor orani hesaplar
-- dugum sayisi degisimi (`|V|`) raporlar
-- basit roofline metrikleri (AI, ridge point, memory/compute-bound sinifi) uretir
-
-Uretilen ozet ciktilar:
-
-- `results/scalability_matrix.csv`
-- `results/scalability_speedup.png`
-- `results/scalability_latency.png`
-
-Donaniminiza gore roofline parametrelerini elle verebilirsiniz:
-
-```bash
-python scripts/run_scalability_study.py --peak-compute-gflops 1600 --peak-bandwidth-gbps 34
-```
-
-## Tek Komut Otomasyon (Reproducibility)
-
-Tum akisi tek komutta calistirmak icin:
-
-```bash
-python scripts/run_all.py --repeats 3 --iterations 100
-```
-
-Bu komut sirasiyla:
-
-1. ilk modeli kullanarak benchmark calistirir
-2. profiling parse eder
-3. tum modellerde olceklenebilirlik calismasi yapar
-4. `results/` altindaki PNG dosyalarini `paper/figures/` altina kopyalar
-
-Opsiyonel roofline parametreleri:
-
-```bash
-python scripts/run_all.py --peak-compute-gflops 1600 --peak-bandwidth-gbps 34
-```
-
-## Paper Yapisi
-
-`paper/` klasoru akademik raporlama icin olusturuldu:
-
-- `paper/main.tex`
-- `paper/references.bib`
-- `paper/figures/`
-
-Grafikleri rapora eklemek icin `results/` altindaki PNG dosyalarini `paper/figures/` altina kopyalayabilirsiniz.
-
-## NPU Provider Fallback
-
-Kod, su sirayi hedefleyerek execution provider secer:
-
-1. `OpenVINOExecutionProvider`
-2. `QNNExecutionProvider`
-3. `DmlExecutionProvider`
-4. `CUDAExecutionProvider`
-5. `CPUExecutionProvider`
-
-Boylece yerel NPU/ivmelendirici varsa kullanilir, yoksa otomatik fallback ile benchmark yine calisir.
+---
+*Hazırlayan: Antigravity AI Assistant*

@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,iterations,providers,profiling_json
-baseline,2.1381999998993706,0.33411496883896946,5,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\npu-graph-opt-benchmarking\results\_smoke_mobilenet\baseline_profiling.json
-optimized,2.2858000003907364,0.22782986648951042,5,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\npu-graph-opt-benchmarking\results\_smoke_mobilenet\optimized_profiling.json
