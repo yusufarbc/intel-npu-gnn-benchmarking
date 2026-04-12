@@ -1,0 +1,292 @@
+\chapter{INTRODUCTION}\label{sec:intro}
+\section{THIS IS A FIRST LEVEL HEADING}
+Recent advances in nanoscale transport have been summarized by  \cite{Smith2021Chap}, who provided a detailed theoretical framework for phonon drag effects.
+
+For further background on non-linear oscillations, see the discussion by Jones \cite{Jones2018Sec}.
+
+Experimental validation of metamaterial cloaking at microwave frequencies was reported by \cite{Lee2019Conf}.
+
+Monte Carlo studies of lattice gauge models at finite temperature were explored by \cite{Garcia2022Master}.
+
+Nguyen’s doctoral work \cite{Nguyen2020PhD} established a correlation between lattice strain and superconducting transition temperature.
+
+The velocity field data used for model verification were retrieved from the Dryad repository \cite{Hansen2017Data}.
+
+Neural-network modeling was implemented using the open-source TensorFlow library \cite{TensorFlow2015}.
+
+A concise overview of the fundamental postulates can be found on Wikipedia \cite{Wikipedia2025Quantum}.
+
+Environmental compliance in laboratory procedures followed ISO 14001:2015 \cite{ISO14001:2015}.
+
+A broad philosophical overview of foundational issues is collected in an Oxford handbook \cite{Batterman2013OxfordHandbook}.
+
+For a focused chapter inside a book, see Penrose’s discussion of spinors \cite{Penrose1987Inbook}.
+
+Deep residual networks were introduced at \cite{He2016ResNetConference}.
+
+The full ICML 2020 volume is available as an edited proceedings from PMLR \cite{ICML2020Proceedings}.
+
+Shannon’s master’s thesis established the algebraic basis of switching circuits \cite{Shannon1937Masters}.
+
+Turing’s Princeton dissertation laid groundwork for ordinal logics \cite{Turing1938PhD}.
+
+Strain data for GW150914 can be obtained from LOSC \cite{LOSCGW150914Dataset}.
+
+Many numerical examples here were produced with NumPy \cite{NumPySoftware}.
+
+Physical constants are retrieved from NIST’s online database \cite{NISTCODATAOnline}.
+
+Time formatting follows the ISO date/time standard \cite{ISO8601Standard}.
+
+\subsection{This is a second level heading}
+Classical mechanics describes the motion of a particle of mass \(m\)
+under a force \(\mathbf{F}\) through Newton’s second law:
+\begin{equation}
+  \mathbf{F} = m \mathbf{a}.
+  \label{eq:newton}
+\end{equation}
+Equation~\eqref{eq:newton} remains a cornerstone of physics \cite{Newton1687Principia}.
+
+For waves on a string, the standard one-dimensional wave equation is
+\begin{equation}
+  \frac{\partial^2 y}{\partial t^2} = v^2 \frac{\partial^2 y}{\partial x^2},
+  \label{eq:wave}
+\end{equation}
+where \(v = \sqrt{T/\mu}\) is the wave speed determined by tension \(T\)
+and linear density \(\mu\) \cite{French1971Vibrations}.
+
+In quantum mechanics, the time-independent Schrödinger equation reads
+\begin{equation}
+  -\frac{\hbar^2}{2m}\nabla^2 \psi + V\psi = E\psi,
+  \label{eq:schrodinger}
+\end{equation}
+first introduced by Schrödinger in 1926 \cite{Schrodinger1926Quantisation}.
+
+\section{FIGURE EXAMPLES}
+
+Scientific documents often include figures to illustrate results, experimental setups,
+or conceptual frameworks. Figure~\ref{fig:single} shows a single image with a caption.
+The convention for captions and references follows guidelines in \cite{KopkaDalyGuide}.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\linewidth]{example-image-a}
+  \caption{A single placeholder example image.}
+  \label{fig:single}
+\end{figure}
+
+Multiple related panels can be combined as subfigures (Fig.~\ref{fig:subfigures});
+see general practices for composite figures in \cite{Tufte2001VisualDisplay}.
+
+\begin{figure}[h]
+  \centering
+  \begin{subfigure}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{example-image-b}
+    \caption{First subfigure.}
+  \end{subfigure}\hfill
+  \begin{subfigure}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{example-image-c}
+    \caption{Second subfigure.}
+  \end{subfigure}
+  \caption{Example of two related subfigures side by side.}
+  \label{fig:subfigures}
+\end{figure}
+
+Larger works often combine multiple figures in a sequence to show
+progressive results (Fig.~\ref{fig:sequence}), following presentation techniques
+from \cite{EdwardRHeathLaTeXIllustrations}.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.3\linewidth]{example-image-a}
+  \includegraphics[width=0.3\linewidth]{example-image-b}
+  \includegraphics[width=0.3\linewidth]{example-image-c}
+  \caption{A sequence of related figures illustrating progressive results.}
+  \label{fig:sequence}
+\end{figure}
+
+Finally, figures may also appear in floating environments with wide layouts
+such as a two-column article (not shown here), or may include multiple panels
+referenced collectively (e.g., Figs.~\ref{fig:single}–\ref{fig:sequence}).
+
+\section{TABLE EXAMPLES}
+
+Experimental data often appear in tabular form.
+Table~\ref{tab:constants} lists selected fundamental constants
+recommended by CODATA \cite{MohrCODATA2018}. These values are widely
+used in numerical simulations and physical calculations.
+
+\begin{table}[h!]
+\centering
+\caption{Selected fundamental physical constants (CODATA 2018) \cite{MohrCODATA2018}.}
+\label{tab:constants}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Quantity} & \textbf{Symbol} & \textbf{Value} \\
+\midrule
+Speed of light & $c$ & $2.9979\times10^{8}\ \text{m/s}$ \\
+Planck constant & $h$ & $6.6261\times10^{-34}\ \text{J·s}$ \\
+Elementary charge & $e$ & $1.6022\times10^{-19}\ \text{C}$ \\
+Boltzmann constant & $k_{\mathrm{B}}$ & $1.3806\times10^{-23}\ \text{J/K}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\bigskip
+
+Table~\ref{tab:materials} shows sample material properties adapted from
+standard references on solid-state materials \cite{Callister2018Materials}.
+Such data are frequently used to compare thermal and mechanical performance.
+
+\begin{table}[h!]\footnotesize
+\centering
+\caption{Typical properties of selected engineering materials \cite{Callister2018Materials}.}
+\label{tab:materials}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Material} & \textbf{Density (g/cm$^3$)} & \textbf{Elastic Modulus (GPa)} & \textbf{Thermal Conductivity (W/m·K)} \\
+\midrule
+Aluminum & 2.70 & 69 & 237 \\
+Copper   & 8.96 & 110 & 401 \\
+Steel (AISI 1020) & 7.87 & 200 & 51 \\
+Silicon  & 2.33 & 130 & 149 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\bigskip
+
+In social-science or management contexts, smaller textual tables are also common.
+Table~\ref{tab:survey} illustrates a Likert-scale example as used in
+survey analysis \cite{Likert1932Technique}.
+
+\begin{table}[h!]
+\centering
+\caption{Example of a Likert-scale question and responses \cite{Likert1932Technique}.}
+\label{tab:survey}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Statement} & \textbf{SD} & \textbf{D} & \textbf{N} & \textbf{A} & \textbf{SA} \\
+\midrule
+Physics is enjoyable & 3 & 8 & 15 & 20 & 4 \\
+Mathematics is easy  & 5 & 10 & 12 & 18 & 5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:survey} uses the abbreviations:
+SD (Strongly Disagree), D (Disagree), N (Neutral),
+A (Agree), SA (Strongly Agree).
+
+\section{SECTIONING AND CROSS-REFERENCING}\label{sec:sectioning}
+This section demonstrates how to create hierarchical headings and cross-references.  
+Always assign each major part of your thesis a logical structure:
+\begin{itemize}
+  \item \texttt{\textbackslash section\{...\}}
+  \item \texttt{\textbackslash subsection\{...\}}
+  \item \texttt{\textbackslash subsubsection\{...\}}
+\end{itemize}
+
+For example, the methodology details are explained in Section~\ref{sec:methods}, 
+while the results are summarized in Section~\ref{sec:results}.
+
+\subsection{Methodology Example}
+\label{sec:methods}
+
+The study followed a two-stage process: simulation and verification.  
+The simulation parameters are listed in Table~1 (not shown here).  
+Cross-referencing is done using commands like \texttt{\textbackslash ref\{sec:results\}}.
+
+\subsection{Results Example}
+\label{sec:results}
+
+This subsection provides the findings, which are discussed further in Section~\ref{sec:discussion}.
+
+\subsubsection{Statistical Analysis}
+Descriptive and inferential statistics were used to interpret data.
+
+\section{DISCUSSION}
+\label{sec:discussion}
+
+Section~\ref{sec:sectioning} described the use of sections and labels; 
+here we connect those references logically in the narrative.
+
+% ==================================================
+\section{LISTS}
+\label{sec:lists}
+
+Lists help organize information clearly.  
+LaTeX supports both numbered and bulleted lists, as shown below.
+
+\subsection{Numbered List (Enumerate)}
+Use numbered lists for procedural steps:
+\begin{enumerate}
+  \item Review existing literature.
+  \item Define the problem statement.
+  \item Design and conduct experiments.
+  \item Analyze data and interpret results.
+  \item Draw conclusions and propose future work.
+\end{enumerate}
+
+\subsection{Bulleted List (Itemize)}
+Use bulleted lists for unordered information:
+\begin{itemize}
+  \item Experimental setup
+  \item Numerical model
+  \item Analytical solution
+\end{itemize}
+
+You can also nest lists if necessary:
+\begin{itemize}
+  \item Input parameters:
+    \begin{enumerate}
+      \item Temperature
+      \item Pressure
+      \item Volume
+    \end{enumerate}
+  \item Output:
+    \begin{enumerate}
+      \item Energy
+      \item Entropy
+    \end{enumerate}
+\end{itemize}
+
+% ==================================================
+\section{INLINE MATHEMATICS}
+\label{sec:inline-math}
+
+Mathematics can appear either inline or displayed separately.  
+Inline math is enclosed within dollar signs \texttt{\$...\$}, 
+and it flows naturally with the text.
+
+For example, the relationship between distance $d$, velocity $v$, 
+and time $t$ is expressed as $d = v t$.  
+Similarly, the kinetic energy is given by $E_k = \tfrac{1}{2} m v^2$, 
+and the potential energy by $E_p = m g h$.  
+
+For larger expressions, use display mode:
+\[
+E = \sqrt{(p c)^2 + (m_0 c^2)^2}
+\]
+Equation numbering can also be added with the \texttt{equation} environment.
+
+% ==================================================
+\section{QUOTATIONS AND FOOTNOTES}
+\label{sec:quotes-footnotes}
+
+Proper quotation formatting improves readability and avoids plagiarism.  
+Short quotations are included inline, for example:  
+According to Einstein, \enquote{Imagination is more important than knowledge.}
+
+For longer excerpts, use the \texttt{quote} environment:
+\begin{quote}
+Science is a way of thinking much more than it is a body of knowledge.  
+\hfill---Carl Sagan
+\end{quote}
+
+You may also add explanatory or bibliographic comments using footnotes.  
+For instance, quantum mechanics was formulated in the early twentieth century,\footnote{Historically, the development involved both matrix mechanics (Heisenberg, 1925) and wave mechanics (Schrödinger, 1926).}  
+which revolutionized physics.
+
+Footnotes should be concise and supplementary, never containing major arguments or references that belong in the bibliography.
+
