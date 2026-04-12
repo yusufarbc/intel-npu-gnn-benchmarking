@@ -19,11 +19,33 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Not: Sanal ortam (venv) zorunlu degil; global Python'a da kurabilirsiniz. Venv sadece paket surumlerini izole edip tekrar edilebilirligi kolaylastirir.
+
 ## Calistirma
 
 ```bash
 python scripts/benchmark_npu.py --model models/your_model.onnx --iterations 100
 ```
+
+OpenVINO EP icin cihaz secimi (varsayilan: NPU):
+
+```bash
+set ORT_OPENVINO_DEVICE=NPU
+python scripts/benchmark_npu.py --model models/your_model.onnx --iterations 100
+```
+
+## Windows: OpenVINO EP DLL Yukleme Sorunu (Error 127)
+
+Eger `OpenVINOExecutionProvider` listede gorunup yine de session creation aninda CPU'ya duserse ve su hata gorunurse:
+
+- `Error loading onnxruntime_providers_openvino.dll` (Error 127: procedure not found)
+
+Sebep siklikla, sistem PATH'inde OpenVINO'ya ait olmayan baska bir `openvino.dll`'in (ornegin OEM surucu klasorleri) daha once gelmesidir.
+
+Bu repo'da [scripts/benchmark_npu.py](scripts/benchmark_npu.py) Windows icin su mitigasyonu yapiyor:
+
+- `openvino\\libs` klasorunu PATH'in basina alir
+- Aynisini `os.add_dll_directory(...)` ile ekler ve surec boyunca aktif tutar
 
 ## Script Ne Yapar?
 

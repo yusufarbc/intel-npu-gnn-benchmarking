@@ -106,6 +106,7 @@ numbers=endperiod%
 % \renewbibmacro*{date+extrayear}{}
 
 \addbibresource{thesis.bib}
+\addbibresource{references.bib}
 
 %%%%%%%%%%%%%%%%%% END REF STYLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -136,6 +137,27 @@ numbers=endperiod%
 \newcommand*{\thesisMemberSIX}[1]{\def\theMemberSIX{#1}}
 \newcommand*{\thesisMemberSEVEN}[1]{\def\theMemberSEVEN{#1}}
 \newcommand*{\thesisMember}[2][]{\parbox{0.14\linewidth}{Member} : \parbox{0.65\linewidth}{#2}\parbox{0.2\linewidth}{\dotfill}}
+
+% ------------------------------
+% Course-project customization (defaults keep thesis behavior)
+% ------------------------------
+\newcommand*{\thesisDocTypeEN}[1]{\def\theDocTypeEN{#1}}
+\newcommand*{\thesisDocTypeTR}[1]{\def\theDocTypeTR{#1}}
+\newcommand*{\thesisAdvisorLabelEN}[1]{\def\theAdvisorLabelEN{#1}}
+\newcommand*{\thesisAdvisorLabelTR}[1]{\def\theAdvisorLabelTR{#1}}
+\newcommand*{\thesisPreparedAsEN}[1]{\def\thePreparedAsEN{#1}}
+\newcommand*{\thesisPreparedAsTR}[1]{\def\thePreparedAsTR{#1}}
+\newcommand*{\thesisCourseNameEN}[1]{\def\theCourseNameEN{#1}}
+\newcommand*{\thesisCourseNameTR}[1]{\def\theCourseNameTR{#1}}
+
+\def\theDocTypeEN{\theDegree\ THESIS}
+\def\theDocTypeTR{\theDegreeTR\ Tezi}
+\def\theAdvisorLabelEN{Thesis Advisor}
+\def\theAdvisorLabelTR{Tez Danışmanı}
+\def\thePreparedAsEN{PhD Thesis}
+\def\thePreparedAsTR{Doktora Tezi}
+\def\theCourseNameEN{}
+\def\theCourseNameTR{}
 
 \newcommand*{\thesisMonth}{\ifcase \month \or January\or February\or March\or %
 April\or May \or June\or July\or August\or September\or October\or November\or %
@@ -250,10 +272,11 @@ toclevel=2%
 \includegraphics[height=3.6cm,width=4.8cm]{logo.png}\\[\baselineskip]
 \parbox[b][7\baselineskip][t]{\linewidth}{\centering\ba{\theTitle}}
 \ba{\the\year}\\
-\ba{\theDegree\ THESIS}\\
+\ba{\theDocTypeEN}\\
 \ba{\MakeUppercase{\theProgram}}\\[4\baselineskip]
+\begingroup\makeatletter\ifx\theCourseNameEN\@empty\else\ba{\theCourseNameEN}\\[\baselineskip]\fi\endgroup
 \ba{\theAuthor}\\[4\baselineskip]
-\ba{Thesis Advisor}\\*
+\ba{\theAdvisorLabelEN}\\*
 \ba{\theAdvisorTitle\ \theAdvisor}
 \end{singlespace}
 %\clearpage
@@ -270,14 +293,14 @@ toclevel=2%
 \parbox[t][9\baselineskip][t]{\linewidth}{\centering\theTitle}
 \end{singlespace}
 \theAuthor\\[3\baselineskip]
-Thesis Advisor\\
+\theAdvisorLabelEN\\
 \theAdvisorTitle\ \theAdvisor\\[3\baselineskip] 
 T.C.\\
 Karabük University\\
 Institute of Graduate Programs\\
 Department of \makefirstuc{\MakeLowercase{\theProgram}}\\
 Prepared as\\
-PhD Thesis\\[3\baselineskip]
+\thePreparedAsEN\\[3\baselineskip]
 KARABÜK\\
 \thesisMonth\ \the\year
 
@@ -285,12 +308,12 @@ KARABÜK\\
 %%%----APPROVAL PAGE-----%%%
 \newpage\restoregeometry
 \addxcontentsline{toc}{thesisChapter}{APPROVAL}
-\parbox[t][5\baselineskip][t]{\linewidth}{I certify that in my opinion the thesis submitted by \theAuthor titled  "\theTitle" is fully adequate in scope and in quality as a thesis for the degree of PhD.}\\
+\parbox[t][5\baselineskip][t]{\linewidth}{I certify that in my opinion the report submitted by \theAuthor titled  "\theTitle" is fully adequate in scope and in quality as a course project report.}\\
 \theAdvisorTitle\ \theAdvisor\hfill\dotfill\\
-Thesis Advisor, Department of \theAdvisorDepartment\\[2\baselineskip]
+\theAdvisorLabelEN, Department of \theAdvisorDepartment\\[2\baselineskip]
 %\theCoAdvisor, \theCoAdvisorInstitution\hfill\dotfill\\
 %Thesis Co-Advisor
-This thesis is accepted by the examining committee with a unanimous vote in the Department of \makefirstuc{\MakeLowercase{\theProgram}} as a \theDegree\ thesis. \dday .\dmonth .\the\year\\[1\baselineskip]
+This report is accepted by the examining committee with a unanimous vote in the Department of \makefirstuc{\MakeLowercase{\theProgram}} as a course project. \dday .\dmonth .\the\year\\[1\baselineskip]
 \underline{Examining Committee Members (Institutions)}\hfill\underline{Signature}\hfill
 
 \parbox{0.14\linewidth}{Chairman} : \parbox{0.65\linewidth}{\theChairman}\parbox{0.2\linewidth}{\dotfill}
@@ -312,7 +335,7 @@ Director of the Institute of Graduate Programs
 %%------DECLARATION-----%%%
 \newpage
 \begin{singlespace}
-\ \vfill\textit{"I declare that all the information within this thesis has been gathered and presented in accordance with academic regulations and ethical principles and I have according to the requirements of these regulations and principles cited all those which do not originate in this work as well."}
+\ \vfill\textit{"I declare that all the information within this report has been gathered and presented in accordance with academic regulations and ethical principles and I have according to the requirements of these regulations and principles cited all those which do not originate in this work as well."}
 \end{singlespace}
 
 \hfill\theAuthor%
@@ -322,7 +345,7 @@ Director of the Institute of Graduate Programs
 \vspace*{5mm}
 {\centering\bfseries ABSTRACT
 
-\theDegree\ Thesis
+\theDocTypeEN
 
 \theTitle
 
@@ -333,7 +356,7 @@ Institute of Graduate Programs\\
 The Department of \theProgram
 %The Department of \makefirstuc{\MakeLowercase{\theProgram}}%NOT workıng properly for two words department names
 
-Thesis Advisor:\\
+\theAdvisorLabelEN:\\
 \theAdvisorTitle\ \theAdvisor\\
 \thesisMonth\ \the\year, \thePages\ pages
 
@@ -351,7 +374,7 @@ Thesis Advisor:\\
 \vspace*{8mm}
 {\centering\bfseries ÖZET
 
-\theDegreeTR\ Tezi
+\theDocTypeTR
 
 \theTitleTR
 
@@ -362,7 +385,7 @@ Lisansüstü Eğitim Enstitüsü\\
 \theProgramTR\ Ana Bilim Dalı
 %\makefirstuc{\MakeLowercase{\theProgramTR}}\ Ana Bilim Dalı %NOT workıng properly for two words department names
 
-Tez Danışmanı:\\
+\theAdvisorLabelTR:\\
 \theAdvisorTitleTR\ \theAdvisor\\
 \thesisMonthTR\ \the\year, \thePages\ sayfa
 

@@ -1,0 +1,38 @@
+\babel@toc {british}{}\relax 
+\contentsline {thesisChapter}{\nonumberline APPROVAL}{ii}{}%
+\contentsline {thesisChapter}{\nonumberline ABSTRACT}{iv}{}%
+\contentsline {thesisChapter}{\nonumberline ÖZET}{vi}{}%
+\contentsline {thesisChapter}{\nonumberline ACKNOWLEDGMENT}{viii}{}%
+\contentsline {thesisChapter}{\nonumberline CONTENTS}{ix}{}%
+\contentsline {thesisChapter}{\nonumberline \normalfont {LIST OF FIGURES}}{xi}{}%
+\contentsline {thesisChapter}{\nonumberline \normalfont {LIST OF TABLES}}{xii}{}%
+\contentsline {thesisChapter}{\nonumberline \normalfont {SYMBOLS AND ABBREVIATIONS INDEX}}{xiii}{}%
+\contentsline {chapter}{\numberline {1}GİRİŞ}{1}{}%
+\contentsline {section}{\numberline {1.1}Motivasyon}{1}{}%
+\contentsline {section}{\numberline {1.2}Problem Tanımı ve Kapsam}{1}{}%
+\contentsline {section}{\numberline {1.3}Katkılar}{2}{}%
+\contentsline {section}{\numberline {1.4}Rapor Organizasyonu}{2}{}%
+\contentsline {chapter}{\numberline {2}KURAMSAL ARKA PLAN}{3}{}%
+\contentsline {section}{\numberline {2.1}Hesaplama Grafikleri ve Operatör Füzyonu}{3}{}%
+\contentsline {section}{\numberline {2.2}ONNX Runtime Grafik Optimizasyon Seviyeleri}{3}{}%
+\contentsline {section}{\numberline {2.3}Execution Provider (EP) Kavramı ve OpenVINO EP}{4}{}%
+\contentsline {section}{\numberline {2.4}Profiling ve Operatör-Seviyesi Kanıt}{4}{}%
+\contentsline {section}{\numberline {2.5}Memory Wall ve Roofline Sezgisi}{4}{}%
+\contentsline {chapter}{\numberline {3}DENEYSEL YÖNTEM}{5}{}%
+\contentsline {section}{\numberline {3.1}Yazılım/Çalışma Ortamı}{5}{}%
+\contentsline {section}{\numberline {3.2}Modeller}{5}{}%
+\contentsline {section}{\numberline {3.3}Ölçüm Metodolojisi}{6}{}%
+\contentsline {section}{\numberline {3.4}Baseline ve Optimized Konfigürasyonları}{6}{}%
+\contentsline {section}{\numberline {3.5}Üretilen Çıktılar ve Tekrarlanabilirlik}{6}{}%
+\contentsline {chapter}{\numberline {4}BULGULAR VE TARTIŞMA}{8}{}%
+\contentsline {section}{\numberline {4.1}Tek-Model Kanıtı (Profiling ve Gecikme)}{8}{}%
+\contentsline {section}{\numberline {4.2}Çoklu Model Ölçeklenebilirliği}{9}{}%
+\contentsline {section}{\numberline {4.3}Özet Tablo}{10}{}%
+\contentsline {section}{\numberline {4.4}Tartışma}{10}{}%
+\contentsline {chapter}{\numberline {5}SONUÇ VE GELECEK ÇALIŞMALAR}{11}{}%
+\contentsline {section}{\numberline {5.1}Sonuç}{11}{}%
+\contentsline {section}{\numberline {5.2}Sınırlılıklar}{11}{}%
+\contentsline {section}{\numberline {5.3}Gelecek Çalışmalar}{11}{}%
+\contentsline {chapter}{\nonumberline REFERENCES}{13}{}%
+\contentsline {thesisChapter}{\nonumberline CURRICULUM VITAE}{14}{}%
+\providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

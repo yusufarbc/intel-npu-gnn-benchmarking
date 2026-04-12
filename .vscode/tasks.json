@@ -1,0 +1,29 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run full pipeline (global Python)",
+			"type": "shell",
+			"command": "py -3 scripts/run_all.py --repeats 3 --iterations 100",
+			"isBackground": false
+		},
+		{
+			"label": "Build paper PDF (main.tex)",
+			"type": "shell",
+			"command": "cd paper; pdflatex -interaction=nonstopmode main.tex; bibtex main; pdflatex -interaction=nonstopmode main.tex; pdflatex -interaction=nonstopmode main.tex",
+			"isBackground": false,
+			"problemMatcher": [
+				"$latex"
+			]
+		},
+		{
+			"label": "Build paper PDF (template: thesis_main.tex)",
+			"type": "shell",
+			"command": "cd paper; pdflatex -interaction=nonstopmode thesis_main.tex; bibtex thesis_main; pdflatex -interaction=nonstopmode thesis_main.tex; pdflatex -interaction=nonstopmode thesis_main.tex",
+			"isBackground": false,
+			"problemMatcher": [
+				"$latex"
+			]
+		}
+	]
+}

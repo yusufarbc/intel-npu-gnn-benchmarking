@@ -1,0 +1,2 @@
+metric,baseline,optimized,delta,reduction_pct
+operator_invocation_count,317.0,317.0,0.0,0.0

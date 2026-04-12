@@ -1,0 +1,3 @@
+mode,avg_latency_ms,std_latency_ms,iterations,providers,profiling_json
+baseline,33.867147999990266,8.600446634439875,100,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\npu-graph-opt-benchmarking\results\ResNet50\run_03\baseline_profiling.json
+optimized,26.565094999932626,1.9080755227969457,100,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\npu-graph-opt-benchmarking\results\ResNet50\run_03\optimized_profiling.json

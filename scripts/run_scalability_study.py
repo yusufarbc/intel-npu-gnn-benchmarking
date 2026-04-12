@@ -195,11 +195,12 @@ class OptimizedModelExporter:
         options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED
         options.optimized_model_filepath = str(output_path)
 
-        providers = [p for p in ["OpenVINOExecutionProvider", "QNNExecutionProvider", "DmlExecutionProvider", "CPUExecutionProvider"] if p in ort.get_available_providers()]
-        if not providers:
-            providers = ort.get_available_providers()
-
-        ort.InferenceSession(str(model_path), sess_options=options, providers=providers)
+        # Use CPU EP for export to avoid compiled nodes that cannot be serialized.
+        ort.InferenceSession(
+            str(model_path),
+            sess_options=options,
+            providers=["CPUExecutionProvider"],
+        )
         return output_path
 
 

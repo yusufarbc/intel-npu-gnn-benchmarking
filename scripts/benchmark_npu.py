@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import time
 from dataclasses import dataclass
@@ -48,6 +49,56 @@ class ProviderSelector:
         "CUDAExecutionProvider",
         "CPUExecutionProvider",
     ]
+
+    # Keep `os.add_dll_directory(...)` cookies alive for the process lifetime.
+    # If the cookie object is garbage-collected, Windows removes the directory
+    # from the DLL search path, and OpenVINO EP may fail to load.
+    _dll_dir_cookies: List[object] = []
+
+    @classmethod
+    def prepare_runtime(cls) -> None:
+        """Best-effort runtime prep for provider DLL loading.
+
+        On Windows, OpenVINO EP may appear in `get_available_providers()` but still fail
+        to load at session creation time due to DLL search path issues.
+        """
+
+        if os.name != "nt":
+            return
+
+        add_dir = getattr(os, "add_dll_directory", None)
+        if not callable(add_dir):
+            return
+
+        # Try to locate OpenVINO runtime DLL folders from the Python `openvino` package.
+        # This also works around systems that have an unrelated `openvino.dll` earlier on PATH
+        # (e.g. OEM drivers), which can cause Error 127 (procedure not found).
+        try:
+            import openvino  # type: ignore
+
+            base = Path(openvino.__file__).resolve().parent
+            candidate_dirs = [base / "libs", base / "runtime" / "libs", base / "runtime", base]
+
+            existing_path_parts = [part.strip('"') for part in os.environ.get("PATH", "").split(os.pathsep)]
+            existing_lower = {part.lower() for part in existing_path_parts if part}
+
+            for directory in candidate_dirs:
+                if not directory.exists():
+                    continue
+
+                directory_str = str(directory)
+                if directory_str.lower() not in existing_lower:
+                    os.environ["PATH"] = directory_str + os.pathsep + os.environ.get("PATH", "")
+                    existing_lower.add(directory_str.lower())
+
+                try:
+                    cookie = add_dir(directory_str)
+                except OSError:
+                    continue
+                else:
+                    cls._dll_dir_cookies.append(cookie)
+        except Exception:
+            pass
 
     @classmethod
     def select(cls) -> List[str]:
@@ -100,6 +151,7 @@ class NPUBenchmarkRunner:
     def __init__(self, config: BenchmarkConfig) -> None:
         self.config = config
         self.config.results_dir.mkdir(parents=True, exist_ok=True)
+        ProviderSelector.prepare_runtime()
         self.selected_providers = ProviderSelector.select()
 
     def _create_session(self, mode: BenchmarkMode) -> ort.InferenceSession:
@@ -107,10 +159,25 @@ class NPUBenchmarkRunner:
         session_options.enable_profiling = True
         session_options.graph_optimization_level = mode.graph_level
 
+        providers_with_options: List[object] = []
+        openvino_device = os.environ.get("ORT_OPENVINO_DEVICE", "NPU")
+        for provider in self.selected_providers:
+            if provider == "OpenVINOExecutionProvider":
+                providers_with_options.append(
+                    (
+                        "OpenVINOExecutionProvider",
+                        {
+                            "device_type": openvino_device,
+                        },
+                    )
+                )
+            else:
+                providers_with_options.append(provider)
+
         return ort.InferenceSession(
             str(self.config.model_path),
             sess_options=session_options,
-            providers=self.selected_providers,
+            providers=providers_with_options,
         )
 
     def _prepare_inputs(self, session: ort.InferenceSession) -> Dict[str, np.ndarray]:

@@ -1,1 +1,43 @@
-\chapter{EXPERIMENTAL AND THEORETICAL STUDIES}
+\chapter{DENEYSEL YÖNTEM}
+
+\section{Yazılım/Çalışma Ortamı}
+Deneyler Windows üzerinde Python ve ONNX Runtime kullanılarak yürütülmüştür.
+Çalışma zamanı, öncelikli olarak OpenVINO EP kullanacak şekilde yapılandırılmış; uyumsuzluk durumlarında CPU EP'ye düşüşe izin verilmiştir.
+Sağlayıcı kullanılabilirliği ve cihaz derleme davranışı sistemden sisteme değişebileceği için, pipeline her koşuda kullanılan sağlayıcı zincirini raporlamaktadır.
+
+Deneylerde kullanılan sistem özellikleri aşağıdaki gibidir:
+\begin{itemize}
+	\item \textbf{Cihaz}: MATEBOOK
+	\item \textbf{İşlemci}: Intel(R) Core(TM) Ultra 5 125H (3.60\,GHz)
+	\item \textbf{Bellek}: 16\,GB RAM
+	\item \textbf{İşletim sistemi}: Windows 11 Home Single Language (25H2), derleme 26200.8037 (64-bit, x64)
+\end{itemize}
+
+\section{Modeller}
+Üç temsili ONNX modeli seçilmiştir:
+\begin{itemize}
+	\item \textbf{MobileNetV2}: kompakt CNN.
+	\item \textbf{ResNet50}: daha derin CNN.
+	\item \textbf{BERT-tiny}: Transformer tabanlı encoder.
+\end{itemize}
+Bu seçim, farklı operatör karışımlarını ve ölçekleri kapsar.
+
+\section{Ölçüm Metodolojisi}
+Her model ve konfigürasyon için tekrarlı koşular gerçekleştirilmiştir.
+Her koşuda sabit sayıda çıkarım iterasyonu, ısınma (warm-up) sonrası ölçülmüştür.
+Ortalama gecikme (ms), standart sapma ve yaklaşık 95\% güven aralığı raporlanmıştır.
+
+\section{Baseline ve Optimized Konfigürasyonları}
+Baseline konfigürasyonda ORT grafik optimizasyonları kapatılmıştır.
+Optimized konfigürasyonda extended optimizasyonlar açılmıştır \cite{onnxruntime}.
+Optimizasyon sonrası ONNX dışa aktarımının EP bağımsız seri hale getirilebilir kalması için, optimize model dışa aktarımı CPU EP üzerinden yapılmıştır.
+Bu tercih, bazı EP'lerin ürettiği derlenmiş düğümler (compiled nodes) nedeniyle seri hale getirme hatalarını engeller.
+
+\section{Üretilen Çıktılar ve Tekrarlanabilirlik}
+Pipeline çıktıları aşağıdaki artefaktları üretir:
+\begin{itemize}
+	\item \texttt{results/performance\_summary.csv}: tek model gecikme özeti.
+	\item \texttt{results/scalability\_matrix.csv}: çoklu model matrisi.
+	\item \texttt{results/*\_profiling.json}: profiling izleri.
+	\item \texttt{paper/figures/}: raporda kullanılan görseller (otomatik kopyalanır).
+\end{itemize}

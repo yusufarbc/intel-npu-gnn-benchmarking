@@ -1,0 +1,2 @@
+operator,baseline_count,baseline_total_ms,baseline_avg_ms,optimized_count,optimized_total_ms,optimized_avg_ms,delta_total_ms,reduction_pct
+OpenVINO-EP-subgraph_1,105.0,337.057,3.2100666666666666,0.0,0.0,0.0,-337.057,100.0

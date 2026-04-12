@@ -1,6 +1,6 @@
 # Project Status Report
 
-Date: 2026-04-03
+Date: 2026-04-12
 
 ## Scope Completed
 
@@ -89,6 +89,23 @@ When models are present under models/, running the scripts produces:
 - python scripts/run_all.py --repeats 3 --iterations 100 --peak-compute-gflops <HW_PEAK> --peak-bandwidth-gbps <HW_BW>
 
 4. Update paper/main.tex result numbers from generated CSV files.
+
+## OpenVINO EP (Windows) Note
+
+If OpenVINO EP is listed but silently falls back to CPU with an error like:
+
+- Error loading `onnxruntime_providers_openvino.dll` (Error 127: procedure not found)
+
+This is often caused by an unrelated `openvino.dll` appearing earlier on your system PATH (e.g. OEM driver folders).
+
+Current fix in scripts/benchmark_npu.py:
+
+- Prepends the Python package OpenVINO runtime folder (`openvino\\libs`) to PATH for the current process
+- Adds the same folder via `os.add_dll_directory(...)` and keeps the cookie alive
+
+Optional:
+
+- Set `ORT_OPENVINO_DEVICE` to force device selection (default is `NPU`).
 
 ## Notes on Interpretation
 

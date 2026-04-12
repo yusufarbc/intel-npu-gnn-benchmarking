@@ -1,1 +1,19 @@
-\chapter{CONCLUSION AND FUTURE PLAN}
+\chapter{SONUÇ VE GELECEK ÇALIŞMALAR}
+
+\section{Sonuç}
+Bu projede, OpenVINO-öncelikli bir EP zinciriyle ORT grafik optimizasyonlarının (füzyon ilişkili dönüşümler dahil) çıkarım gecikmesine etkisini ölçen tekrarlanabilir bir pipeline geliştirilmiştir.
+Üç model genelinde düğüm sayısında belirgin azalmalar (\(68\%\)'e kadar) gözlenmiş; ancak uçtan uca gecikme etkisi tutarlı değildir: hem regresyon hem de iyileşme görülmüştür.
+Dolayısıyla “daha fazla füzyon” veya “daha fazla optimizasyon” tek başına her zaman hızlanma garantisi olarak ele alınmamalı; her model ve her EP için ampirik olarak doğrulanmalıdır.
+
+\section{Sınırlılıklar}
+Sonuçlar kullanılan donanıma ve EP arka ucunun davranışına bağlıdır.
+Özellikle OpenVINO, bazı modeller/operatörler için hedef derlemeden CPU yürütmeye düşebilir; ayrıca optimize model dışa aktarımı seri hale getirme uyumluluğu için CPU EP ile sınırlandırılmıştır.
+Bu noktalar gerçek dağıtım bağlamının bir parçasıdır ve raporda açıkça belirtilmelidir.
+
+\section{Gelecek Çalışmalar}
+İleriye dönük geliştirmeler:
+\begin{itemize}
+	\item Profiling olaylarını grafik yeniden yazım günlükleriyle eşleştirerek operatör bazında “fused vs unfused” atıfı üretmek.
+	\item Aynı metodolojiyi farklı EP'ler üzerinde (örn. DirectML, CUDA) çalıştırarak “grafik etkisi” ile “sağlayıcı etkisini” ayrıştırmak.
+	\item Ölçeklenebilirlik setini daha büyük Transformer varyantları ve kuantize modellerle genişletmek.
+\end{itemize}
