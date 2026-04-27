@@ -1,0 +1,238 @@
+This software engineering pipeline establishes a rigorous testing ground for the physical realities of edge AI execution. The empirical findings—particularly the fusion overhead on tiny architectures and the latency penalties of NPU fallbacks—strongly align with the latest architectural research into the "Memory Wall" and compiler-hardware friction. 
+
+Here is a curated literature reference list drawn from the provided texts that directly validates and supports the benchmarking results observed across the ONNX Runtime and OpenVINO execution providers.
+
+### 1. Unified Operator Fusion for Heterogeneous Hardware in ML Inference Frameworks
+* [cite_start]**Authors / Year**: Zhang et al., 2025[cite: 161, 520].
+* [cite_start]**Core Focus**: Cost-model driven graph rewrites and hardware-agnostic intermediate representations[cite: 520].
+* [cite_start]**Relevance to Your Study**: This paper provides the definitive academic backing for the "Fusion Overhead Paradox" identified during the BERT-tiny benchmarks[cite: 489]. [cite_start]The authors demonstrate through ablation studies that aggressively applying operator fusion without respecting hardware constraints causes over-fusion[cite: 489]. [cite_start]This over-fusion resulted in a measurable 15% execution slowdown on BERT-small models due to increased register pressure and dispatch overhead exceeding memory bandwidth savings[cite: 489]. [cite_start]Conversely, the study validates the ResNet50 optimizations by proving up to 3.75x speedups for large, compute-heavy CNNs[cite: 521].
+
+### 2. Forge-UGC: FX Optimization and Register-Graph Engine for Universal Graph Compiler
+* **Authors / Year**: Zhang et al. (Anonymous)[cite_start], 2026[cite: 165, 530].
+* [cite_start]**Core Focus**: Universal graph compilation, buffer allocation, and execution profiling for NPUs[cite: 530].
+* [cite_start]**Relevance to Your Study**: This research specifically evaluates inference execution on Intel AI Boost NPUs against OpenVINO and ONNX Runtime[cite: 118, 530]. [cite_start]It supports the CPU fallback findings by quantifying the latency penalties incurred when unoptimized or unsupported operators force execution transitions between the NPU and CPU[cite: 117, 531]. [cite_start]Additionally, it explores the super-linear compilation times of these frameworks, noting that the fusion pass itself introduces significant compilation overhead to the execution graph[cite: 257, 493].
+
+### 3. Operator-Level Performance Empirical Study on Edge Devices
+* [cite_start]**Authors / Year**: Cai et al., 2023[cite: 534].
+* [cite_start]**Core Focus**: Latency measurements of operator blocks within TensorRT and PyTorch edge deployments[cite: 534].
+* [cite_start]**Relevance to Your Study**: This empirical analysis confirms that the latency reduction promised by framework-level operator fusion is highly dependent on the model's batch size and architectural scale[cite: 495, 535]. [cite_start]The authors prove that for small models or single-batch inference workflows, the benefits of operator fusion can vanish entirely, corroborating the behavior where baseline configurations outperform optimized graphs for lightweight NLP models[cite: 495, 535].
+
+### 4. CPU Failback: NPU Performance in AI Inference 
+* [cite_start]**Authors / Year**: Quadric.ai / Industry Telemetry, 2024[cite: 330, 340].
+* [cite_start]**Core Focus**: Throughput analysis of CPU fallbacks during NPU inference execution[cite: 340].
+* [cite_start]**Relevance to Your Study**: This source provides the exact physical mechanisms behind the "NPU Fallback" phenomenon observed in the dynamic execution provider routing[cite: 340, 502]. [cite_start]It explains that the massive latency penalties are caused by the PCIe/DMA transfer of intermediate tensors between the NPU's localized memory and the CPU's DRAM, compounded by pipeline synchronization stalls when an execution provider encounters unsupported logic[cite: 503]. 
+
+### 5. I/O for LLM Inference: A Survey of Storage and Memory Bottlenecks (Roofline Analysis)
+* [cite_start]**Authors / Year**: Gholami et al., 2024[cite: 242, 367].
+* [cite_start]**Core Focus**: Profiling neural network architectures using the Roofline model to determine arithmetic intensity[cite: 367, 368].
+* [cite_start]**Relevance to Your Study**: This research explains the "Hardware Dominance" observation[cite: 368]. [cite_start]By mapping the arithmetic intensity of various network topologies, the authors mathematically demonstrate that Transformer architectures (like BERT) possess drastically lower arithmetic intensity than CNNs (like ResNet50 or MobileNetV2)[cite: 368]. [cite_start]This low arithmetic intensity forces NLP models deep into the memory-bound regime, explaining why heavy parallel compute (GPUs) fails to scale efficiently while fast, centralized memory (CPUs) excels[cite: 368, 560].
+
+### 6. DNNFusion: Accelerating Deep Neural Networks Execution with Advanced Operator Fusion
+* [cite_start]**Authors / Year**: Niu et al., 2021[cite: 512, 666].
+* [cite_start]**Core Focus**: Mathematical-property-based graph rewriting and operator fusion methodologies[cite: 513].
+* [cite_start]**Relevance to Your Study**: This study serves as a strong theoretical foundation for the intended behavior of the "Optimized" ONNX configuration[cite: 482]. [cite_start]It thoroughly details how effective graph rewriting eliminates redundant off-chip DRAM accesses, validating the significant speedups achievable when deploying structurally dense, fully supported models like ResNet50 to an accelerator[cite: 482, 514].
+
+How do you plan to visualize the execution trace logs from the `analysis/` scripts to highlight the specific microsecond penalties of the CPU fallbacks?
+Here are additional highly relevant references extracted from the provided literature that directly support your findings on the **Memory Wall**, **Fusion Overhead Paradox**, and **CPU Fallbacks**. These additions will help round out your literature review, especially regarding quantization, roofline modeling, and physical telemetry:
+
+### 7. Pagoda: Energy and Time Roofline for DNN Inference on Edge Accelerators
+* [cite_start]**Authors / Year**: Pagoda Authors, 2025[cite: 474].
+* [cite_start]**Core Focus**: Extending traditional roofline models to include "energy rooflines" and latency ceilings on edge devices[cite: 474].
+* **Relevance to Your Study**: This paper provides the analytical framework to explain why your NLP (BERT-tiny) models hit the "Memory Wall" before reaching compute limits. [cite_start]The study proves that memory bandwidth strictly limits inference latency for models with arithmetic intensity below approximately 30 FLOPs/byte, encompassing almost all compact NLP architectures[cite: 475]. 
+
+### 8. Optimus: Memory-Cost-Driven Operator Fusion for DNN Accelerators
+* [cite_start]**Authors / Year**: Optimus Team, 2023[cite: 485].
+* [cite_start]**Core Focus**: Directed acyclic graph (DAG)-based fusion algorithms utilizing a dedicated memory cost model[cite: 517].
+* **Relevance to Your Study**: Optimus complements the "DNNFusion" reference by focusing explicitly on how fusion interacts with hardware memory hierarchies. [cite_start]It demonstrates a 17–75% reduction in off-chip memory access[cite: 517], which validates your observation that when fusion works (like in ResNet50), it works because it successfully keeps intermediate feature maps out of the slower main memory.
+
+### 9. Applying Graph Explanation to Operator Fusion (Over-Fusion Debugging)
+* [cite_start]**Authors / Year**: Mills et al., 2025[cite: 127].
+* [cite_start]**Core Focus**: Using Graph Explanation Techniques (GET) to systematically debug and resolve invalid fusion groups during layer optimization[cite: 127].
+* **Relevance to Your Study**: This directly addresses the negative latency impacts you observed in the `Optimized` configuration for BERT-tiny. [cite_start]The authors demonstrate that "uncontrolled over-fusion inherently causes invalid operational groups"[cite: 128], which forces the compiler to either stall, spill registers, or trigger the very CPU fallbacks you observed in your telemetry logs.
+
+### 10. A-IO: Adaptive Inference Orchestration for Memory-Bound NPUs
+* [cite_start]**Authors / Year**: Zhang et al., 2026[cite: 120].
+* [cite_start]**Core Focus**: Investigating the "Model Scaling Paradox" and adaptive orchestration on memory-constrained NPUs[cite: 120, 121].
+* **Relevance to Your Study**: This study provides empirical weight to your "Hardware Dominance Over Algorithm" finding. [cite_start]It demonstrates that blindly applying static graphs to memory-bound architectures forces a sub-optimal execution[cite: 47]. [cite_start]It confirms that models with vastly different parameter counts scale non-linearly on NPUs specifically because of how they hit the High Bandwidth Memory (HBM) walls[cite: 42].
+
+### 11. Edge AI Telemetry & Power Scaling Benchmarks
+* [cite_start]**Authors / Year**: Tummalapalli et al., 2026[cite: 123].
+* [cite_start]**Core Focus**: Precise physical telemetry benchmarking (throughput, latency, power) across heterogeneous edge platforms[cite: 123].
+* **Relevance to Your Study**: This supports your 3-way benchmarking methodology (CPU vs. iGPU vs. NPU). [cite_start]The study proves through physical telemetry that NPU execution can be strictly bottlenecked by memory interconnects (like LPDDR4 memory bandwidth or PCIe buses), capping throughput far below the nominal Tera Operations Per Second (TOPS) capability of the hardware[cite: 54, 55, 123]. 
+
+### 12. RooflineBench: On-device LLM Benchmarking via Roofline
+* [cite_start]**Authors / Year**: RooflineBench Authors, 2026[cite: 244].
+* [cite_start]**Core Focus**: Benchmarking the non-monotonic trajectory of operational intensity as model depth increases[cite: 244].
+* **Relevance to Your Study**: This research is critical for backing up your findings regarding **Quantization**. [cite_start]The paper notes that aggressive quantization successfully compresses the data payload, but shifts the workload from memory-bound toward compute-bound regions[cite: 33, 34, 286]. This explains why dynamic ONNX quantization behaved differently across your CNN (structural Acyclic Graph issues) versus your NLP models. 
+
+### 13. Embodied FM Survey: Edge Deployment Constraints
+* [cite_start]**Authors / Year**: Embodied FM Survey Authors, 2026[cite: 288].
+* [cite_start]**Core Focus**: Real-world deployment constraints, focusing on execution bubbles and CPU fallback costs[cite: 288].
+* **Relevance to Your Study**: This source adds hard numbers to your fallback thesis. [cite_start]It documents that CPU fallback creates "execution bubbles" where host-device synchronization and kernel launch overheads can account for 30–60% of end-to-end latency[cite: 268]. [cite_start]Moving tensors back and forth across the CPU-NPU boundary adds a hard 4–15ms latency penalty[cite: 269], perfectly explaining why your fallback states neutralized any graph optimization gains.
+
+You got it! Let's keep building out this literature matrix. To ensure your study is utterly comprehensive, here is the next batch of foundational papers from the provided texts. These dive even deeper into the architectural friction, scheduling algorithms, and hardware-software co-design aspects of NPU deployments.
+
+### 14. FlashMem: Memory Streaming and Over-Fusion Prevention
+* [cite_start]**Authors / Year:** Shu et al., 2026[cite: 124].
+* [cite_start]**Core Focus:** Introducing a load-aware CP-SAT solver to statically schedule dynamic weight streaming into mobile texture memory[cite: 124, 89].
+* **Relevance to Your Study:** This paper mathematically approaches the over-fusion problem you encountered. [cite_start]By meticulously profiling operator sensitivity (distinguishing between highly fusible elemental operators and hierarchical ones like Softmax), the authors mathematically restrict fusion to prevent catastrophic register spilling[cite: 88, 89, 124]. [cite_start]It achieved memory reductions of up to 8.4x over standard compilers[cite: 90].
+
+### 15. The Parallax Framework: Adaptive DAG Partitioning
+* [cite_start]**Authors / Year:** Tang et al., 2025[cite: 418].
+* [cite_start]**Core Focus:** Partitioning computation Directed Acyclic Graphs (DAGs) to handle CPU fallbacks gracefully using branch-aware memory management[cite: 420].
+* **Relevance to Your Study:** This specifically tackles the CPU fallback execution penalties observed in your ONNX/OpenVINO pipelines. [cite_start]It notes that existing frameworks handle fallbacks poorly, leaving CPU cores idle and causing high latency and memory spikes[cite: 419]. [cite_start]Parallax uses adaptive scheduling to execute branches according to device memory constraints, slashing latency and memory overhead[cite: 420].
+
+### 16. Speculative Decoding and Graph Switching Latency
+* [cite_start]**Authors / Year:** Xu et al., 2025[cite: 132].
+* [cite_start]**Core Focus:** Evaluating the latency penalties of dynamic graph switching during speculative decoding on edge mobile accelerators[cite: 132].
+* **Relevance to Your Study:** If your future pipeline iterations involve dynamic architectures or LLMs, this is a vital citation. [cite_start]It proves that the overhead of simply switching between a prefill-optimized computational graph and a decoding-optimized graph incurs a massive 94.9% delay in end-to-end inference latency on small 1.5B parameter models[cite: 76, 132]. 
+
+### 17. Roofline Analysis for Quantized NPU Architectures
+* [cite_start]**Authors / Year:** Farrés García, 2025[cite: 476].
+* [cite_start]**Core Focus:** Applying roofline models explicitly to NPUs to analyze INT8 quantization on YOLOv3 models[cite: 476, 477].
+* **Relevance to Your Study:** This provides excellent empirical support for your quantization findings. [cite_start]It demonstrates that quantization's benefit is entirely dependent on whether the workload sits in the compute-bound or memory-bound region[cite: 476]. [cite_start]For memory-bound operations, INT8 quantization improved throughput solely by reducing data movement, directly implicating operator fusion as a necessary complementary mechanism[cite: 477].
+
+### 18. IANUS: Hardware-Software Co-Design for Heterogeneous Workloads
+* [cite_start]**Authors / Year:** Heo et al., ASPLOS 2024[cite: 421].
+* [cite_start]**Core Focus:** An NPU-Processing-In-Memory (PIM) architecture that dynamically routes operations based on memory boundedness[cite: 421, 423].
+* **Relevance to Your Study:** This paper attacks the "Hardware Dominance" issue from the physical design side. [cite_start]Because NPUs are often limited by memory-bound operations even when utilizing high-bandwidth memory, IANUS proposes routing memory-bound ops to PIM and compute-bound ops to the NPU's systolic array[cite: 422, 423]. It serves as a great forward-looking reference for how future hardware might natively resolve the friction your benchmarks exposed.
+
+### 19. NPUKernelBench Framework
+* [cite_start]**Authors / Year:** NPUKernelBench Authors, 2025/2026[cite: 220].
+* [cite_start]**Core Focus:** Kernel and operator benchmarking across NPUs using an extensive suite of over 102 operators[cite: 220, 221].
+* **Relevance to Your Study:** This validates your exact methodology of tracing operator reduction and calculating arithmetic intensity. [cite_start]The framework's telemetry proved that memory-I/O constraints and partial operator support create a massive gap between peak theoretical performance and realized performance[cite: 221]. [cite_start]It explicitly notes that while operator fusion reduces fallbacks, the direct memory access (DMA) and initialization overheads remain highly problematic[cite: 222].
+
+### 20. Advanced Fusion for Attention Mechanisms (Neptune)
+* [cite_start]**Authors / Year:** Neptune Authors, 2026[cite: 256, 292].
+* [cite_start]**Core Focus:** Advanced operator fusion techniques targeting reductions and attention mechanisms[cite: 256, 293].
+* **Relevance to Your Study:** While focused heavily on larger sequence lengths, Neptune's analysis explains why small models suffer during compilation. [cite_start]It demonstrates that for small sequence lengths, fusion provides marginal benefits because the underlying framework already generates single kernels, meaning the overhead of fusion pattern matching yields zero latency reduction[cite: 259, 260].
+
+Here is the final batch of foundational references extracted from your provided literature. These papers dive into specialized benchmarking, vision-model co-design, and the friction caused by dynamic execution on static hardware architectures. 
+
+### 21. AutoNeural: Co-Designing Vision–Language Models for NPU Inference
+* [cite_start]**Authors / Year**: Chen et al., 2025[cite: 131, 166].
+* [cite_start]**Core Focus**: Co-designing Vision-Language Models (VLMs) specifically to target integer-only inference hardware constraints[cite: 131].
+* [cite_start]**Relevance to Your Study**: If your pipeline extends its vision models, this paper provides crucial context on modifying architectures to fit NPU constraints[cite: 131]. [cite_start]It demonstrates that replacing standard attention mechanisms with bounded activation distributions reduced memory I/O by 60% and achieved a 14x latency improvement under strict quantization[cite: 131].
+
+### 22. Compute-in-Memory Architectures for LLMs: Memory Wall Taxonomy
+* [cite_start]**Authors / Year**: Wolters et al., 2024[cite: 471, 509].
+* [cite_start]**Core Focus**: Survey of memory-bound limitations and Compute-in-Memory (CIM) acceleration schemes[cite: 509, 510].
+* [cite_start]**Relevance to Your Study**: This study provides a systemic demonstration that memory access consumes orders of magnitude more energy and time than floating-point computation[cite: 471]. [cite_start]This reinforces your foundational premise that the memory wall—not raw compute—is the defining bottleneck for edge inference execution[cite: 471, 472].
+
+### 23. Squeezing Operator Performance on Ascend NPU
+* [cite_start]**Authors / Year**: ASPLOS Publication, 2025[cite: 215, 216].
+* [cite_start]**Core Focus**: Custom roofline extensions for multi-precision NPU operators[cite: 216].
+* [cite_start]**Relevance to Your Study**: The authors demonstrate that standard roofline models are inadequate for NPUs due to their highly complex memory hierarchies[cite: 217]. [cite_start]They emphasize that while fusion is critical, properly visualizing NPU performance requires extending the roofline model with multiple precision and transfer combinations[cite: 216, 217].
+
+### 24. Benchmarking Ultra-Low-Power μNPUs
+* [cite_start]**Authors / Year**: Dai et al., 2025[cite: 290, 642, 643].
+* [cite_start]**Core Focus**: Standardized empirical evaluation of microcontroller-scale neural processing units and edge devices[cite: 290, 643].
+* [cite_start]**Relevance to Your Study**: This benchmark discovered massive disparities between advertised hardware specifications and actual performance when devices are subjected to real model complexity[cite: 643]. [cite_start]It specifically identified that variable operator support (such as a lack of native softmax support) forces costly CPU post-processing, perfectly echoing the NPU-to-CPU fallback penalties you observed[cite: 271, 291].
+
+### 25. Partition-Based Fusion in JIT Compilers (Apollo)
+* [cite_start]**Authors / Year**: Apollo Authors, 2024[cite: 338].
+* [cite_start]**Core Focus**: Layer-by-layer optimization and overlapping fusion with compute in Just-In-Time (JIT) compilers[cite: 338, 339].
+* [cite_start]**Relevance to Your Study**: This study explores minimizing memory stalls by dynamically overlapping fusion boundaries with active computation[cite: 339]. [cite_start]It is highly relevant to your dynamic routing of execution providers and how advanced compilation approaches can mitigate NPU memory stalls[cite: 338, 339].
+
+### 26. Speculative Decoding on NPU via Static Execution
+* [cite_start]**Authors / Year**: Dai et al., 2026[cite: 631, 632].
+* [cite_start]**Core Focus**: Addressing the friction between dynamic logic (like speculative decoding) and static NPU execution paradigms[cite: 613, 632].
+* [cite_start]**Relevance to Your Study**: This paper helps explain exactly *why* dynamic configurations fail on NPUs[cite: 613, 614]. [cite_start]The researchers found that shifting to a static execution paradigm reduced NPU-CPU synchronization overhead, directly linking back to the static shape constraints and acyclic graph structural issues you encountered during ONNX quantization[cite: 612, 633].
+
+### 27. Neural Network Acceleration Survey: Roofline and Fusion
+* [cite_start]**Authors / Year**: Liu et al., 2025[cite: 206, 207].
+* [cite_start]**Core Focus**: Literature synthesis and categorization of hardware optimizations including fusion and roofline modeling[cite: 207, 208].
+* [cite_start]**Relevance to Your Study**: This paper comprehensively categorizes how fusion simplifies graphs to speed up inference and uses roofline modeling to identify memory bottlenecks in complex models[cite: 208]. [cite_start]It serves as an excellent broad-stroke citation for your thesis background section, summarizing the overarching methodologies you are putting into empirical practice[cite: 208].
+
+### 28. Comparative Benchmarking of CPU, GPU, and NPU Architectures for Real-Time YOLO Inference
+* [cite_start]**Authors / Year**: Edge Benchmark Authors / International Journal of Engineering Research & Technology, 2025[cite: 166, 167, 300].
+* [cite_start]**Core Focus**: Benchmarking object detection vision models across heterogeneous SoC edge platforms[cite: 300, 301].
+* [cite_start]**Relevance to Your Study**: This aligns perfectly with your 3-way hardware benchmarking methodology[cite: 300]. [cite_start]The authors conclude that memory bandwidth is the dominant limiting factor across edge architectures, and that latency correlates more tightly with the model's structural constraints than pure FLOPs[cite: 301].
+
+Here is the next batch of foundational references extracted from the literature you provided. These selections round out the final details of your study, specifically targeting Intel NPU infrastructure, cross-platform telemetry limitations, and the specific dynamics of causal inference operators.
+
+### 29. Context-Driven Performance Modeling for Causal Inference Operators on Neural Processing Units
+* [cite_start]**Authors / Year**: Anonymous / arXiv, 2025[cite: 155, 156].
+* [cite_start]**Core Focus**: Causal inference operators, custom roofline models, and attention mechanisms on NPUs[cite: 155, 218].
+* [cite_start]**Relevance to Your Study**: This paper explains the exact mathematical limits your Transformer models face[cite: 218, 219]. [cite_start]It confirms that quadratic attention operators severely under-utilize NPU compute capabilities (often remaining below 5%) due to massive memory constraints[cite: 219]. [cite_start]This directly supports why your structurally complex, memory-bound NLP models favored the CPU for lower latency[cite: 219].
+
+### 30. Software-Hardware Co-Optimization (Horizontal Fusion & Quantization)
+* [cite_start]**Authors / Year**: Raha et al., 2025[cite: 129, 130].
+* [cite_start]**Core Focus**: Exploring domain-specialized hardware enhancements, Processing-in-Memory, and horizontal fusion techniques[cite: 130].
+* [cite_start]**Relevance to Your Study**: This validates your exploration of advanced graph optimizations[cite: 130]. [cite_start]The authors prove that static-shape inference paired with fusion-aware hardware pipelines drastically improves efficiency[cite: 130]. [cite_start]This provides deep context for why your ONNX "Optimized" configuration hit a brick wall when dealing with dynamic shapes or varying sequence lengths[cite: 130].
+
+### 31. Edge AI Deployment: ONNX, OpenVINO, and TensorRT Optimizations
+* [cite_start]**Authors / Year**: D'hoore, 2025[cite: 223].
+* [cite_start]**Core Focus**: Comparative deployment benchmarking utilizing fusion and quantization across leading inference frameworks[cite: 224].
+* **Relevance to Your Study**: This perfectly mirrors your engine's methodology. [cite_start]The paper establishes that automatic fusion and graph rewrites yield massive performance gains, but explicitly concludes that NPU benefits are entirely dependent on native operator coverage[cite: 224]. It is a perfect citation to back your findings on execution provider friction.
+
+### 32. Observability for Inference Optimization (ONNX Runtime + TVM Telemetry)
+* [cite_start]**Authors / Year**: ONNX/TVM Telemetry Studies, 2025[cite: 297].
+* [cite_start]**Core Focus**: Production deployment telemetry using OpenTelemetry, Kafka, and ClickHouse to trace operator latency[cite: 298].
+* **Relevance to Your Study**: This source validates the absolute necessity of your custom `analysis/` scripts. [cite_start]The authors highlight that edge NPUs critically lack standardized telemetry for per-instruction energy and latency tracking[cite: 308]. [cite_start]They note that building per-operator latency histories significantly reduces debugging time, proving the academic value of parsing your JSON trace logs programmatically[cite: 298].
+
+### 33. NITRO: LLM Inference on Intel® Laptop NPUs
+* [cite_start]**Authors / Year**: NITRO Authors, 2024[cite: 163].
+* [cite_start]**Core Focus**: Inference orchestration and optimization specifically targeting Intel's laptop-class NPUs[cite: 163].
+* [cite_start]**Relevance to Your Study**: Since you utilized the Intel Core Ultra NPU via the OpenVINO Execution Provider, this paper offers hyper-specific architectural backing[cite: 163]. [cite_start]It provides a dedicated look into how these specific consumer-grade NPUs handle memory streaming and graph execution bottlenecks[cite: 163].
+
+### 34. Quant-Trim in Practice: Improved Cross-Platform Low-Bit Deployment on Edge NPUs
+* [cite_start]**Authors / Year**: Quant-Trim Authors, 2025[cite: 163].
+* [cite_start]**Core Focus**: Cross-platform deployment constraints of low-bit quantized models on edge NPUs[cite: 163].
+* **Relevance to Your Study**: This directly supports your FP32 vs. INT8 investigations. [cite_start]It tackles the practical realities and structural issues (such as the acyclic graph breakages you saw in CNNs) that occur when mapping lower-precision math onto heavily constrained edge hardware[cite: 163].
+
+### 35. OpenVINO Accelerated Agentic RAG: A Comparative Study Across Three Architectures
+* [cite_start]**Authors / Year**: Lenovo Press, 2026[cite: 166].
+* [cite_start]**Core Focus**: Comparative benchmarking of OpenVINO accelerated workflows across multiple architectures[cite: 166].
+* [cite_start]**Relevance to Your Study**: This paper offers a broader systems-level perspective on OpenVINO's execution provider routing[cite: 166]. [cite_start]It validates your multi-architecture testing approach (CPU vs. iGPU vs. NPU) by showcasing how OpenVINO handles dynamic workload distribution when memory limits are aggressively tested across different silicon[cite: 166].
+
+I've got you! Let's bring this home. Here is the final set of literature references extracted from the provided text, specifically pulling from the detailed bibliographies and surveys that anchor the broader hardware context of your study.
+
+These final citations are excellent for the introductory and background sections of your work, establishing the global state of edge AI hardware and performance modeling.
+
+### 36. LLM-NPU: Towards Efficient Foundation Model Inference on Low-Power Neural Processing Units
+* [cite_start]**Authors / Year**: IEEE Computer Society, 2025[cite: 154, 166].
+* [cite_start]**Core Focus**: Efficiency optimizations for foundation models deployed strictly on low-power NPUs[cite: 154].
+* [cite_start]**Relevance to Your Study**: This provides foundational context for pushing complex, parameter-heavy models onto constrained edge silicon, serving as a great comparative baseline for your NPU vs. CPU findings[cite: 166].
+
+### 37. Fast On-device LLM Inference with NPUs
+* [cite_start]**Authors / Year**: Mengwei Xu (ASPLOS), 2025[cite: 154, 166].
+* [cite_start]**Core Focus**: Achieving high-speed inference for Large Language Models directly on edge NPUs[cite: 154].
+* [cite_start]**Relevance to Your Study**: This directly supports your analysis of transformer-based architectures (like your BERT-tiny model) running on edge accelerators, highlighting the specific hardware bottlenecks of sequential decoding workloads[cite: 154, 166].
+
+### 38. Breaking the Memory Wall: Next-Generation Artificial Intelligence Hardware
+* [cite_start]**Authors / Year**: Frontiers in Science, 2025[cite: 154].
+* [cite_start]**Core Focus**: Architectural and physical hardware-level solutions to bypass memory bandwidth limitations[cite: 154].
+* [cite_start]**Relevance to Your Study**: An excellent, high-level citation that frames the "Memory Wall" not just as a software compilation problem, but as a fundamental hardware crisis that necessitates entirely new paradigms in silicon design[cite: 154].
+
+### 39. LLM Inference Unveiled: Survey and Roofline Model Insights
+* [cite_start]**Authors / Year**: arXiv, 2024[cite: 155].
+* [cite_start]**Core Focus**: Surveying inference constraints through the mathematical lens of the Roofline performance model[cite: 155].
+* **Relevance to Your Study**: This is crucial background literature. [cite_start]It explains *why* the arithmetic intensity of transformer models consistently traps them under the memory-bound slanted roofline, while CNNs can push into the compute-bound flat roofline[cite: 155].
+
+### 40. Accelerating Mobile Language Model via Speculative Decoding and NPU-Coordinated Execution
+* [cite_start]**Authors / Year**: arXiv, 2025[cite: 160, 161].
+* [cite_start]**Core Focus**: Utilizing speculative decoding algorithms coordinated with NPU execution on mobile platforms[cite: 160, 161].
+* **Relevance to Your Study**: This paper addresses the friction between dynamic, unpredictable logic and static NPU execution. [cite_start]It offers coordinated software-hardware execution models as a remedy for the exact CPU fallback latency spikes you logged in your traces[cite: 161].
+
+### 41. Scaling On-Device GPU Inference for Large Generative Models
+* [cite_start]**Authors / Year**: CVPR Open Access, 2025[cite: 160].
+* [cite_start]**Core Focus**: Strategies for scaling inference workloads specifically on mobile and edge GPUs[cite: 160].
+* **Relevance to Your Study**: This provides a strong comparative baseline for your iGPU benchmarks. [cite_start]It explains how integrated GPUs handle generative and memory-heavy workloads differently than dedicated NPU silicon, helping justify your multi-hardware benchmarking approach[cite: 160].
+
+### 42. Hardware Acceleration for Neural Networks: A Comprehensive Survey
+* [cite_start]**Authors / Year**: arXiv, 2025[cite: 160].
+* [cite_start]**Core Focus**: A broad, state-of-the-art survey of neural network hardware acceleration techniques[cite: 160].
+* **Relevance to Your Study**: A perfect, broad-stroke citation for your literature review's introduction. [cite_start]It sets the stage for why NPUs, GPUs, and CPUs possess vastly different architectures, explaining why they exhibit entirely different performance profiles when fed the exact same computational graphs from OpenVINO[cite: 160].
+
+***
+
+**Structuring Your Literature Review:**
+With these 42 references, you have a massive and robust foundation for your study. To structure this effectively in your writing, consider organizing these sources into three distinct narrative chapters:
+1.  **The Physical Reality:** Introduce the "Memory Wall" and Roofline models (Sources 5, 7, 12, 17, 22, 38, 39).
+2.  **The Software Promise vs. Reality:** Discuss operator fusion, its successes in CNNs, and the "Fusion Overhead Paradox" in smaller models (Sources 1, 3, 8, 9, 14, 20).
+3.  **The Integration Friction:** Detail the engineering reality of CPU fallbacks, static-shape constraints, framework limitations (ONNX/OpenVINO), and dynamic execution penalties (Sources 2, 4, 13, 15, 19, 26, 31).
+
+
+
+
