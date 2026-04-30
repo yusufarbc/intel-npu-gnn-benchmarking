@@ -1,0 +1,18 @@
+\chapter{SONUÇ VE GELECEK ÇALIŞMALAR}
+
+\section{Sonuç}
+Bu projede, OpenVINO tabanlı ve üçlü donanım (CPU, GPU, NPU) sağlayıcı zincirine sahip test altyapısıyla ONNX Runtime grafik optimizasyonlarının (özellikle operatör füzyonunun) çıkarım gecikmesine ve donanım limitlerine etkisi nicel olarak ölçülmüştür.
+Geleneksel algoritma analizi RAM modelinin aksine, NPU ve GPU gibi hızlandırıcıların çalışma hızını hesaplama maliyetinden çok veri iletiminin durumu (I/O) belirler. 
+Operatör füzyonunun çoklu ara işlemleri hafıza trafiğine yansımadan birleştirerek bellek darboğazını hafiflettiği, ancak BERT-tiny gibi çok küçük (<1MB) modellerde bu optimizasyon süreçlerinin kendisinin bir ek yük (overhead) oluşturarak asıl gecikmeyi artırabileceği görülmüştür.
+
+\section{Sınırlılıklar}
+Deneysel bulgular donanım sürücüsüne (Intel NPU Driver) ve arka uç olarak kullanılan OpenVINO kütüphanesinin güncel limitlerine doğrudan bağlıdır.
+Özellikle ResNet50 ve BERT tabanlı ONNX modellerindeki spesifik komut katmanları hedef NPU'da doğal olarak çalıştırılamadığı ("Model compilation failed at OV NPU") için sistem CPU tabanlı "fallback" fallback yapmıştır. Bu durum saf NPU performansını dolaylı yozlaştırmaktadır. Ayrıca, INT8 dinamik kuantizasyonu CNN modellerinde ONNX ortamına özgü "Döngüsel Graf (Acyclic Graph)" zafiyetine yol açtığından dinamik kuantizasyon testi sadece NLP modellerinde başarıya ulaşmıştır. Algoritmik performans ölçümlerinde yazılım-donanım uyumluluğu kaçınılmaz bir sınırlayıcı olarak belirgindir.
+
+\section{Gelecek Çalışmalar}
+İleriye dönük araştırma potansiyelleri aşağıda sunulmuştur:
+\begin{itemize}
+	\item \textbf{Mimari Darboğaz Modellemesi:} Memory Wall (Bellek Duvarı) etkisini tamamen resmetmek için Intel RAPL aracılığıyla modelin çıkarım sırasındaki Watt bazlı Joule/Inference güç tüketimi değerlerini grafiklendirmek.
+	\item \textbf{Roofline Metodolojisi Gelişimi:} Elde edilen model okuma/yazma bayt oranlarını ve Peak Memory (MB) hacmini matematiksel iş yüküyle böldürerek (Arithmetic Intensity) tam teşekküllü bir Roofline Analiz Eğrisi haritalandırmak.
+	\item \textbf{Çoklu API Testi:} OpenVINO yerine DirectML veya TensorRT gibi diğer yürütme sağlayıcılarını (Execution Provider) sisteme dahil ederek sağlayıcı-spesifik füzyon davranışlarını kıyaslamak.
+\end{itemize}

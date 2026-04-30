@@ -1,0 +1,31 @@
+\chapter{GİRİŞ}\label{sec:intro}
+
+\section{Motivasyon}
+NPU (Neural Processing Unit) sınıfı hızlandırıcılar, derin öğrenme çıkarımında yüksek verimlilik sunsa da uçtan uca gecikme yalnızca hesaplama kapasitesiyle açıklanamaz.
+Modern çıkarım çalışma zamanları, modelleri yönlü çevrimsiz grafikler (DAG) olarak temsil eder ve sabit katlama, gereksiz düğüm silme ve \textit{operatör füzyonu} gibi grafik-seviyesi optimizasyonlar uygular.
+Füzyon çoğunlukla ara tensör yazma/okuma maliyetlerini ve çağrı/dispatch ek yükünü azaltmayı hedefler; ancak gerçek etki bellek bant genişliği sınırları (\textit{memory wall}) \cite{memorywall} ve yürütme sağlayıcısına (EP) özgü derleme/çalıştırma davranışları nedeniyle modele göre değişebilir.
+
+\section{Problem Tanımı ve Kapsam}
+Bu ders projesi, operatör füzyonuna odaklanarak grafik optimizasyonlarının çıkarım gecikmesine etkisini ampirik olarak incelemektedir.
+Deneysel altyapı ONNX Runtime (ORT) ile kurulmuş ve iki konfigürasyon karşılaştırılmıştır:
+\begin{itemize}
+  \item \textbf{Baseline}: grafik optimizasyonları kapalı.
+  \item \textbf{Optimized}: genişletilmiş grafik optimizasyonları açık \cite{onnxruntime}.
+\end{itemize}
+Deneyler Windows üzerinde, öncelikli olarak OpenVINO Execution Provider kullanan ve gerektiğinde CPU EP'ye düşen bir sağlayıcı zinciriyle yürütülmüştür \cite{openvino_ep}.
+
+\section{Katkılar}
+Bu çalışmanın somut çıktıları:
+\begin{itemize}
+  \item Tek komutla çalışabilen ölçüm hattı (\texttt{scripts/run\_all.py}) ile gecikme ölçümü, profiling izi alma ve CSV/PNG çıktı üretimi.
+  \item ORT profiling verisinden operatör-seviyesi süre kırılımı (baseline vs optimized) ve düğüm sayısı azalımı kanıtları.
+  \item MobileNetV2, ResNet50 ve BERT-tiny modelleri üzerinde ölçeklenebilirlik karşılaştırması.
+  \item Füzyon/yeniden yazımların neden her zaman hızlanma getirmediğine dair tartışma (EP derleme maliyeti, kernel seçimi, bellek-sınırlı davranış).
+\end{itemize}
+
+\section{Rapor Organizasyonu}
+İkinci bölüm kuramsal arka planı (grafik, füzyon, ORT optimizasyon seviyeleri, EP kavramı) sunar.
+Üçüncü bölüm deneysel kurulum ve metodolojiyi açıklar.
+Dördüncü bölüm bulguları sunar ve tartışır.
+Beşinci bölüm sonuç ve gelecek çalışmaları özetler.
+

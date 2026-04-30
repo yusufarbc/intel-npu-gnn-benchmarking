@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,1.7099039997992804,0.4215657004232287,562.11328125,118.1,100,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\npu-graph-opt-benchmarking\results\hw_comparison\BERT-tiny\GPU\run_00\baseline_profiling.json
-optimized,1.4084200002253056,0.5311054379550073,575.4765625,100.4,100,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\npu-graph-opt-benchmarking\results\hw_comparison\BERT-tiny\GPU\run_00\optimized_profiling.json

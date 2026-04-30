@@ -6,7 +6,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -20,6 +20,8 @@ class PipelineConfig:
     repeats: int = 3
     top_k: int = 15
     top_speedup_k: int = 5
+    profile_model: Path | None = None
+    hwinfo_log: Path | None = None
 
 
 class CommandRunner:
@@ -55,11 +57,17 @@ class PipelineRunner:
         print(f"[{start_time.strftime('%H:%M:%S')}] Starting full benchmark pipeline...")
 
         # 1. Run single model benchmark (for profiling detail)
-        first_model = self.config.models[0]
-        print(f"[pipeline] Using first model for profiling: {first_model}")
+        target_model = self.config.profile_model or self.config.models[0]
+        # Search for GCN specifically if no profile_model provided
+        if not self.config.profile_model:
+            gcn_models = [m for m in self.config.models if "GCN" in m.name]
+            if gcn_models:
+                target_model = gcn_models[0]
+
+        print(f"[pipeline] Using model for profiling: {target_model}")
         self.runner.run([
-            sys.executable, "engine/benchmark_runner.py",
-            "--model", str(first_model),
+            sys.executable, "analysis/benchmark_runner.py",
+            "--model", str(target_model),
             "--iterations", str(self.config.iterations),
             "--results-dir", str(self.config.results_dir),
             "--profile"
@@ -96,10 +104,16 @@ class PipelineRunner:
         # 5. Finalize figures
         copied = FigureCollector.copy_results_pngs(self.config.results_dir, self.config.figures_dir)
         
+        # 6. Energy Analysis (if log provided)
+        if self.config.hwinfo_log:
+            from analysis.energy_analyzer import EnergyAnalyzer
+            energy = EnergyAnalyzer(self.config.hwinfo_log).analyze()
+            print(f"\n[pipeline] Energy Analysis: {energy}")
+
         end_time = datetime.datetime.now()
         duration = (end_time - start_time).total_seconds()
         
-        print(f"[pipeline] Copied {len(copied)} figure(s) to: {self.config.figures_dir}")
+        print(f"\n[pipeline] Copied {len(copied)} figure(s) to: {self.config.figures_dir}")
         print(f"[{end_time.strftime('%H:%M:%S')}] End-to-end flow complete.")
         print(f"Total pipeline duration: {duration:.2f} seconds.")
 
@@ -112,6 +126,8 @@ def parse_args() -> PipelineConfig:
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--results-dir", default=str(project_root / "results"))
     parser.add_argument("--figures-dir", default=str(project_root / "paper" / "figures"))
+    parser.add_argument("--profile-model", help="Specific model file to use for detailed profiling.")
+    parser.add_argument("--hwinfo-log", help="Path to HWiNFO CSV log for energy analysis.")
 
     args = parser.parse_args()
     models = sorted(Path(args.models_dir).resolve().glob("*.onnx"))
@@ -125,7 +141,9 @@ def parse_args() -> PipelineConfig:
         results_dir=Path(args.results_dir).resolve(),
         figures_dir=Path(args.figures_dir).resolve(),
         iterations=args.iterations,
-        repeats=args.repeats
+        repeats=args.repeats,
+        profile_model=Path(args.profile_model).resolve() if args.profile_model else None,
+        hwinfo_log=Path(args.hwinfo_log).resolve() if args.hwinfo_log else None
     )
 
 

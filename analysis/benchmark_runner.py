@@ -185,7 +185,14 @@ class BenchmarkRunner:
             if np.issubdtype(np_dtype, np.floating):
                 values = rng.random(input_shape, dtype=np.float32).astype(np_dtype)
             elif np.issubdtype(np_dtype, np.integer):
-                values = rng.integers(0, 10, size=input_shape, dtype=np_dtype)
+                # For GNN edge_index, we need valid node indices
+                # Assuming input_meta.name is 'edge_index'
+                if "edge_index" in input_meta.name.lower():
+                    # We need to know num_nodes to generate valid indices
+                    num_nodes = 2708 # Default Cora size
+                    values = rng.integers(0, num_nodes, size=input_shape, dtype=np_dtype)
+                else:
+                    values = rng.integers(0, 10, size=input_shape, dtype=np_dtype)
             else:
                 values = np.zeros(input_shape, dtype=np_dtype)
 
@@ -197,6 +204,11 @@ class BenchmarkRunner:
     def _resolve_dim(dim: object) -> int:
         if isinstance(dim, int) and dim > 0:
             return dim
+        if isinstance(dim, str):
+            if "num_nodes" in dim:
+                return 2708
+            if "num_edges" in dim:
+                return 10000
         return 1
 
     @staticmethod

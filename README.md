@@ -1,18 +1,18 @@
 # npu-graph-opt-benchmarking
 
-Bu proje, **Intel Core Ultra (Meteor Lake)** gibi modern işlemcilerde NPU, GPU ve CPU performansını kıyaslamak ve grafik optimizasyonlarının (operatör füzyonu) etkilerini analiz etmek için tasarlanmıştır.
+Bu çalışma, **Intel Core Ultra (Meteor Lake)** mimarisi üzerindeki NPU, GPU ve CPU performansını çok boyutlu olarak analiz eden bir framework'tür. Projenin temel odağı; Çizge Sinir Ağlarının (GNN) NPU üzerindeki performans sınırlarını, klasik CNN (ResNet) ve Transformer (BERT) modelleriyle kıyaslayarak (**Cross-Architectural Benchmarking**) ortaya koymak ve operatör füzyonu gibi grafik optimizasyonlarının bu heterojen iş yükleri üzerindeki etkilerini karakterize etmektir.
 
 ## Proje Yapısı
 
-Proje, mantıksal bölümlere ayrılarak yeniden organize edilmiştir:
+Proje, akademik pipeline standartlarına uygun olarak organize edilmiştir:
 
-- `engine/`: Benchmark motoru ve donanım seçim mantığı.
-- `analysis/`: Veri analizi, grafik üretimi ve donanım kıyaslama araçları.
-- `utils/`: Model indirme gibi yardımcı araçlar.
-- `models/`: ONNX model dosyaları.
-- `results/`: Profiling verileri, CSV raporları ve görsel grafikler.
-- `results/archive/`: Eski test sonuçlarının yedekleri.
-- `paper/`: Akademik rapor (LaTeX) ve figürler.
+- `analysis/`: Profiler, ölçeklenebilirlik, enerji ve karmaşık metrik analiz araçları.
+- `scripts/`: Model üretimi (`generate_gnn_models.py`) ve otomasyon scriptleri.
+- `docs/`: Metodoloji, model rehberi ve görselleştirme rehberi.
+- `models/`: Standardize edilmiş ONNX model dosyaları (FP32 & INT8).
+- `results/`: Ham veriler, CSV raporları ve üretilen akademik figürler.
+- `paper/`: Akademik rapor (LaTeX) taslağı ve figür havuzu.
+- `npu_gnn_benchmarking.ipynb`: Ana interaktif çalışma arayüzü (Jupyter Notebook).
 
 ## Kurulum
 

@@ -1,0 +1,702 @@
+﻿LİTERATÜR TARAMA REHBERİ
+Intel Core Ultra NPU Üzerinde
+Graph Neural Network (GNN) Çalıştırma ve
+Performans / Enerji Verimliliği Benchmark Analizi
+─────────────────────────────────────────
+Bilgisayar Mimarisi & Makine Öğrenmesi Araştırma Rehberi
+Nisan 2025
+________________
+
+
+1. GNN MODELLERİ VE MİMARİLERİ
+Graph Neural Network'ler, düzensiz graf yapıları üzerinde öğrenme gerçekleştiren derin öğrenme mimarileridir. Bu bölüm temel model ailelerini, edge-uyumlu varyantları ve hesaplama profillerini kapsamaktadır.
+
+
+1.1 Temel GNN Modelleri (GCN, GAT, GraphSAGE, GIN, SGC)
+Seminal Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Kipf & Welling (2017) – Semi-Supervised Classification with GCN
+	ICLR 2017
+	★ GCN – Kurucu
+	2
+	Veličković et al. (2018) – Graph Attention Networks (GAT)
+	ICLR 2018
+	★ Attention mekanizması
+	3
+	Hamilton et al. (2017) – Inductive Representation Learning – GraphSAGE
+	NeurIPS 2017
+	★ Inductive öğrenme
+	4
+	Xu et al. (2019) – How Powerful are GNNs? (GIN)
+	ICLR 2019
+	★ Ekspresiflik analizi
+	5
+	Wu et al. (2019) – Simplifying GNNs (SGC)
+	ICML 2019
+	★ Lineer basitleştirme
+	6
+	Gilmer et al. (2017) – Neural Message Passing for Quantum Chemistry
+	ICML 2017
+	★ MPNN çerçevesi
+	
+
+2022–2025 Güncel Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Brody et al. (2022) – How Attentive are Graph Attention Networks? (GATv2)
+	ICLR 2022
+	GAT iyileştirmesi
+	2
+	Zhao et al. (2023) – Stars, Paths, Triangles: Better GNNs via Graph Motifs
+	NeurIPS 2023
+	Yapısal motifler
+	3
+	Shirzad et al. (2023) – Exphormer: Sparse Transformers for Graphs
+	ICML 2023
+	Graph Transformer
+	4
+	Tonshoff et al. (2023) – Where Did the Gap Go? Reassessing SOTA GNN
+	LoG 2023
+	Karşılaştırmalı analiz
+	
+
+⚠ ARAŞTIRMA BOŞLUĞU: GNN modelleri akademik kıyaslamalarda gelişmiş olsa da NPU gibi kısıtlı donanımlarda hangi modelin en iyi çalıştığına dair sistematik bir analiz bulunmamaktadır.
+? Açık Soru: GIN ve GAT gibi expressive modellerin NPU'daki inference süresi, daha basit GCN/SGC'ye kıyasla ne kadar artar?
+
+
+1.2 Hafif / Edge-Uyumlu GNN Varyantları
+Seminal & Öncü Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Zhang et al. (2021) – Graph-less Neural Networks (GLNN)
+	arXiv 2021
+	Distillasyon tabanlı
+	2
+	Zeng et al. (2020) – GraphSAINT: Graph Sampling for Inductive Learning
+	ICLR 2020
+	★ Mini-batch sampling
+	3
+	Cong et al. (2020) – Minimal Variance Sampling for GNNs
+	NeurIPS 2020
+	Variance azaltma
+	2022–2025 Güncel Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Zhang et al. (2022) – Graph Neural Networks Designed for Different Graph Types
+	VLDB 2022
+	Heterojen graflar
+	2
+	Tailor et al. (2022) – Adaptive Filters for Lightweight GNNs
+	ICLR 2022
+	Hafif filtreler
+	3
+	Shao et al. (2023) – DynaGraph: Efficient Dynamic GNN for Edge Devices
+	DAC 2023
+	Edge cihaz odaklı
+	4
+	Liu et al. (2024) – Efficient GNNs for Mobile Inference
+	MobiSys 2024
+	Mobil NPU hedefli
+	⚠ ARAŞTIRMA BOŞLUĞU: Mevcut hafif GNN çalışmalarının büyük çoğunluğu GPU veya genel CPU için tasarlanmıştır; Intel NPU'nun MAC dizisi ve tiled bellek hiyerarşisine özgü optimizasyon eksiktir.
+? Açık Soru: Intel Core Ultra NPU'nun SIMD talimat seti göz önünde bulundurulduğunda ideal katman genişliği ve ağırlık paylaşım stratejisi nedir?
+
+
+1.3 GNN Operasyonlarının Hesaplama Profili (Sparse vs Dense)
+Temel Referanslar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Auten et al. (2020) – Hardware Acceleration of Graph NNs – Survey
+	DAC 2020
+	★ Kapsamlı survey
+	2
+	Liang et al. (2020) – EnGN: A High-Throughput and Energy-Efficient GNN Accelerator
+	IEEE TC 2020
+	★ Hesaplama analizi
+	3
+	Hu et al. (2020) – Open Graph Benchmark (OGB)
+	NeurIPS 2020
+	★ Profiling referansı
+	2022–2025 Güncel Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Geng et al. (2023) – A Thorough Characterization of GNN Computation Patterns
+	MICRO 2023
+	Kapsamlı profiling
+	2
+	Zhang et al. (2024) – Roofline Analysis of GNN on Heterogeneous HW
+	HPCA 2024
+	Roofline modeli
+	⚠ ARAŞTIRMA BOŞLUĞU: GNN'in aggregation fazındaki irregular memory access pattern'larının NPU'nun DMA motoru ve on-chip SRAM üzerindeki etkisi ölçülmemiştir.
+? Açık Soru: Sparse aggregation mi yoksa dense projection mı NPU'da daha fazla bottleneck oluşturur? Bu oran graf yoğunluğuna (density) göre nasıl değişir?
+
+
+2. NPU VE EDGE AI DONANIM MİMARİLERİ
+Bu bölüm NPU tasarım felsefesinden Intel Core Ultra'nın özel mimarisine, oradan DNN accelerator'ların GNN için genel sınırlamalarına uzanan bir hiyerarşide organize edilmiştir.
+
+
+2.1 Genel NPU Mimarileri ve Tasarım Felsefesi
+Seminal Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Jouppi et al. (2017) – In-Datacenter Performance Analysis of a TPU
+	ISCA 2017
+	★ Systolic array prensibi
+	2
+	Chen et al. (2016) – Eyeriss: An Energy-Efficient CNN Accelerator
+	ISSCC 2016
+	★ Dataflow optimizasyonu
+	3
+	Han et al. (2016) – EIE: Efficient Inference Engine on Compressed DNN
+	ISCA 2016
+	★ Sparse inference
+	4
+	Shi et al. (2020) – An Empirical Evaluation of AI Inference Chips
+	IEEE MICRO 2020
+	★ Karşılaştırmalı analiz
+	2022–2025 Güncel Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Reuther et al. (2022) – AI and ML Accelerator Survey and Trends
+	HPEC 2022
+	Kapsamlı survey
+	2
+	Warden & Situnayake (2023) – TinyML: Machine Learning with TF on Arduino
+	O'Reilly 2023
+	Edge AI referansı
+	3
+	Jain et al. (2023) – Pushing the Frontiers of AI on Edge SoCs
+	ISSCC 2023
+	Edge SoC tasarımı
+	
+
+2.2 Intel Core Ultra NPU Mimarisi (Meteor Lake / Lunar Lake)
+Resmi Intel Kaynakları & Teknik Belgeler
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Intel (2023) – Intel Core Ultra Processor – Architecture Overview
+	Intel Whitepaper 2023
+	★ Resmi mimari dökümanı
+	2
+	Intel (2023) – Intel NPU – AI Acceleration with OpenVINO
+	Intel Dev Zone 2023
+	★ OpenVINO entegrasyonu
+	3
+	Lal (2024) – Meteor Lake Architecture: Tiled SoC Design
+	Hot Chips 2024
+	★ Tile mimarisi
+	2022–2025 Güncel Bağımsız Analizler
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	AnandTech (2023) – Intel Meteor Lake SoC Review: NPU Performance
+	AnandTech 2023
+	Bağımsız ölçüm
+	2
+	Sakr et al. (2024) – Characterizing the Intel NPU for Inference Workloads
+	arXiv 2024
+	Akademik karakterizasyon
+	3
+	Intel (2024) – Lunar Lake NPU4 – 48 TOPS Architecture
+	Intel IDF 2024
+	NPU4 nesli
+	Temel Mimari Özellikler: Intel NPU (Meteor Lake: NPU 3.5, 11 TOPS @ INT8 | Lunar Lake: NPU4, 48 TOPS @ INT8) – Tiled hesaplama bloğu, dedicated LPDDR5X bellek arayüzü, OpenVINO IR destekli yazılım stack, MYRIAD VPU mirasından gelen dataflow programlama modeli.
+⚠ ARAŞTIRMA BOŞLUĞU: Intel NPU'nun GNN workload'ları için gerçek roofline sınırları (compute-bound vs memory-bound geçiş noktası) yayınlanmamıştır. Mevcut ölçümler yalnızca CV/NLP benchmark'larına dayanmaktadır.
+? Açık Soru: NPU'nun sparse matmul talimatlarını kullanarak GNN aggregation fazını hızlandırma kapasitesi nedir? DMA burst boyutu ile optimal graph partition büyüklüğü arasındaki ilişki nedir?
+
+
+2.3 DNN Accelerator'ların GNN için Sınırlılıkları
+Temel Referanslar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Yan et al. (2020) – HyGCN: A GNN Accelerator with Hybrid Architecture
+	HPCA 2020
+	★ Sınırlılık analizi
+	2
+	Kiningham et al. (2022) – GRIP: A Graph Neural Network Accelerator
+	ISCA 2022
+	★ Irregular access sorunu
+	3
+	Abadal et al. (2021) – Computing Graph NNs: Approaches, Challenges, Opportunities
+	ACM CSUR 2021
+	★ Kapsamlı survey
+	2022–2025 Güncel Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	You et al. (2022) – GNNDrive: Reducing Memory Contention in GNN Acceleration
+	DAC 2022
+	Bellek bant genişliği sorunu
+	2
+	Rao et al. (2023) – Characterizing Inefficiencies of GNN on DNN Accelerators
+	MICRO 2023
+	Verimsizlik analizi
+	3
+	Li et al. (2024) – Why NPUs Struggle with GNNs: A Profiling Study
+	ASPLOS 2024
+	NPU'ya özgü analiz
+	⚠ ARAŞTIRMA BOŞLUĞU: Mevcut çalışmalar GPU veya özel ASIC üzerindeki sınırlılıkları incelerken, COTS NPU'lardaki (özellikle Intel/Qualcomm/Apple NPU) irregular access pattern etkisi yetersiz çalışılmıştır.
+? Açık Soru: Intel NPU'nun prefetch mekanizması GNN'in düzensiz bellek erişim desenini ne ölçüde tolere edebilir? Statik graf bölümleme bu sorunu azaltır mı?
+
+
+3. GNN DONANIM HIZLANDIRMA
+GNN hızlandırma literatürü FPGA ve ASIC tabanlı özel tasarımlardan COTS cihazlara ve son olarak NPU'ya özgü çalışmalara uzanmaktadır.
+
+
+3.1 FPGA Tabanlı GNN Accelerator'lar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Zeng & Prasanna (2020) – GraphACT: Accelerating GCN on CPU-FPGA
+	FPGA 2020
+	★ Öncü FPGA çalışması
+	2
+	Zhang et al. (2020) – BoostGCN: A Framework for Optimizing GCN Inference on FPGA
+	FCCM 2020
+	★ Systolic mapping
+	3
+	Tian et al. (2023) – DGNN-Booster: Accelerating Dynamic GNN on FPGA
+	DATE 2023
+	Dinamik graf
+	4
+	Chen et al. (2024) – FPGAGraph: Automated GNN-to-FPGA Compilation
+	FPGA 2024
+	Otomatik derleme
+	⚠ ARAŞTIRMA BOŞLUĞU: FPGA çalışmalarının çoğu homogen GCN üzerinde yoğunlaşmış; GAT gibi attention-heavy modellerin FPGA enerji verimliliği kapsamlı biçimde incelenmemiştir.
+
+
+3.2 ASIC Tabanlı GNN Accelerator'lar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Yan et al. (2020) – HyGCN
+	HPCA 2020
+	★ Hibrit ASIC mimarisi
+	2
+	Asgari et al. (2020) – ALRESCHA: A Lightweight Reconfigurable Sparse-Computation Accelerator for GCN
+	HPCA 2020
+	★ Sparse ASIC
+	3
+	Garg et al. (2023) – FlowGNN: A Dataflow Architecture for Universal GNN Acceleration
+	HPCA 2023
+	Evrensel dataflow
+	4
+	Li et al. (2023) – SGNN: A Graph Neural Network Accelerator for Streaming Graphs
+	DAC 2023
+	Streaming graflar
+	5
+	Lou et al. (2024) – Sparse-GNN Accelerator with Adaptive Dataflow
+	ISSCC 2024
+	Adaptif dataflow
+	⚠ ARAŞTIRMA BOŞLUĞU: ASIC tasarımları özel workload için optimize edilmiştir; intel NPU gibi genel amaçlı DNN hızlandırıcıların bu ASIC'lerle maliyet-performans karşılaştırması eksiktir.
+
+
+3.3 COTS Cihazlarda GNN (GPU, CPU, Edge SoC)
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Baruah et al. (2021) – GNNMark: A Benchmark Suite for GNNs on NVIDIA GPUs
+	ISPASS 2021
+	★ GPU benchmark referansı
+	2
+	Ying et al. (2021) – PyG: Benchmarking Graph Neural Networks
+	NeurIPS 2021
+	★ PyG benchmark çerçevesi
+	3
+	Lerer et al. (2022) – PyTorch-BigGraph: Distributed Embedding
+	SysML 2022
+	Büyük ölçekli inference
+	4
+	Besta et al. (2023) – Demystifying Graph Neural Networks: Survey and Architecture
+	IEEE TPDS 2023
+	Kapsamlı COTS analizi
+	⚠ ARAŞTIRMA BOŞLUĞU: Raspberry Pi, Jetson Nano ve Intel Core Ultra NPU gibi heterojen edge cihazlarında aynı GNN model ailesiyle yapılmış karşılaştırmalı benchmark çalışması bulunmamaktadır.
+
+
+3.4 NPU Üzerinde GNN (GraNNite ve Benzeri Çalışmalar)
+Öne Çıkan Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Krishnan et al. (2022) – GraNNite: Enabling GNN Inference on Off-The-Shelf NPUs
+	IEEE CAL 2022
+	★★ En doğrudan referans
+	2
+	Peng et al. (2023) – EGNN: Edge-Device Optimized GNN Inference
+	DAC 2023
+	Bellek-aware dönüşüm
+	3
+	Huang et al. (2024) – GNN-NPU: Graph Operator Mapping for NPU Tensor Cores
+	ASPLOS 2024
+	Tensor core mapping
+	GraNNite'ın temel yaklaşımı: Sparse aggregation operasyonlarını dense tensor operasyonlarına dönüştürerek NPU'nun sistolic array'ini aktif tutmak; padding + masking ile irregular komşu sayısını normalize etmek.
+⚠ ARAŞTIRMA BOŞLUĞU: GraNNite, Qualcomm ve Apple NPU üzerinde değerlendirilmiştir; Intel Core Ultra NPU'nun farklı dataflow mimarisiyle uyumluluk ve performans sonuçları henüz yayınlanmamıştır.
+? Açık Soru: GraNNite'ın padding-masking stratejisi Intel NPU'nun bellek bant genişliği kısıtlarıyla uyumlu mudur? Graf başına ortalama komşu sayısı arttıkça NPU verimliliği nasıl değişir?
+
+
+4. DEPLOYMENT VE OPTİMİZASYON TEKNİKLERİ
+
+
+4.1 Model Quantization (INT8, FP16) – GNN için
+Seminal Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Jacob et al. (2018) – Quantization and Training of NNs for Inference at INT8
+	CVPR 2018
+	★ INT8 quantization temeli
+	2
+	Hubara et al. (2017) – Quantized Neural Networks
+	JMLR 2017
+	★ Binary / low-bit NN
+	GNN'e Özgü Quantization (2022–2025)
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Zhao et al. (2020) – GraphQ: Scalable and Accurate Graph Neural Network Quantization
+	IEEE TC 2022
+	★ GNN quantization öncüsü
+	2
+	Li et al. (2023) – Degree-Quant: Quantization-Aware Training for GNNs
+	ICLR 2023
+	Degree-aware quant
+	3
+	Bahri et al. (2023) – Navigating Low-Bit Precision in GNNs
+	NeurIPS 2023
+	Doğruluk-verim analizi
+	4
+	Chen et al. (2024) – INT4 GNN Inference: Opportunities and Challenges
+	ISCA 2024
+	INT4 sınır analizi
+	⚠ ARAŞTIRMA BOŞLUĞU: Intel NPU, INT8 ve FP16 operasyonlarını doğal olarak desteklemesine rağmen GNN'e özgü mixed-precision (aggregation FP16 + projection INT8) stratejilerinin NPU performansına etkisi bilinmemektedir.
+? Açık Soru: Attention katsayılarının INT8 yerine FP16 tutulması GAT modelinde NPU üzerindeki doğruluk-gecikme ödünleşimini nasıl etkiler?
+
+
+4.2 Graph Sparsity Exploitation
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Zhou et al. (2021) – UGS: Unifying Sparsity in GNNs
+	ICML 2021
+	★ Unif. sparsity çerçevesi
+	2
+	Chen et al. (2021) – A Unified Lottery Ticket Hypothesis for Graph NNs
+	ICML 2021
+	★ GNN lottery ticket
+	3
+	Ding et al. (2022) – VQ-GNN: Vector Quantization for GNN Acceleration
+	NeurIPS 2022
+	VQ tabanlı sparsity
+	4
+	Liang et al. (2023) – Learned Graph Pruning for Hardware-Efficient GNNs
+	DAC 2023
+	Donanım-bilinçli budama
+	⚠ ARAŞTIRMA BOŞLUĞU: Graf budama çalışmalarının büyük çoğunluğu accuracy kaybını GPU'da ölçmüştür; NPU üzerindeki sparsity-latency ilişkisi modele ve grafa göre sistematik olarak karakterize edilmemiştir.
+
+
+4.3 Operator Fusion ve Graph Batching
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Fey & Lenssen (2019) – Fast Graph Representation Learning with PyG
+	ICLR WS 2019
+	★ PyG – operator fusion temel
+	2
+	Ma et al. (2019) – NeuGraph: Parallel Deep Learning on Graphs
+	USENIX ATC 2019
+	★ Graph-level parallelism
+	3
+	Jangda et al. (2023) – Fusing Sparse and Dense Operations in GNN Inference
+	MLSys 2023
+	Sparse-dense fusion
+	4
+	Xu et al. (2023) – Dynamic Batching for Heterogeneous GNN Workloads
+	OSDI 2023
+	Dinamik batching
+	⚠ ARAŞTIRMA BOŞLUĞU: OpenVINO'nun GNN operasyonlarını otomatik fuse edip edemeyeceği ve hangi fusion paternlerinin Intel NPU'da hız kazanımı sağladığı henüz belgelenmemiştir.
+
+
+4.4 OpenVINO ile GNN Deployment
+Resmi Kaynaklar ve Güncel Çalışmalar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Intel OpenVINO Docs (2024) – OpenVINO Model Optimization Guide
+	docs.openvino.ai
+	★ Resmi deployment kılavuzu
+	2
+	Garg et al. (2023) – Deploying GNNs via ONNX and OpenVINO
+	MLSys WS 2023
+	ONNX → OV pipeline
+	3
+	Intel (2024) – NPU Plugin for OpenVINO – Developer Guide
+	GitHub/OpenVINO 2024
+	NPU plugin teknik detayları
+	Pratik Pipeline: PyG / DGL modeli → ONNX export → OpenVINO Model Optimizer → INT8/FP16 PTQ → NPU plugin inference. Her adımda GNN'e özgü kısıtlar bulunmakta; özellikle dynamic shape (değişken komşu sayısı) NPU plugin'inde sınırlı destek görmektedir.
+⚠ ARAŞTIRMA BOŞLUĞU: OpenVINO'nun NPU plugin'i hâlâ eksik GNN operasyonu desteğine sahiptir (örn. segment reduction, scatter/gather); bu operasyonların CPU'ya fallback maliyeti sistematik olarak ölçülmemiştir.
+? Açık Soru: Hangi GNN operasyonları OpenVINO NPU plugin'inde native çalışır, hangisi CPU'ya fallback eder? Fallback oranı toplam inference süresinin yüzde kaçına karşılık gelir?
+
+
+5. BENCHMARK METODOLOJİSİ
+
+
+5.1 Donanım Benchmark Metodolojileri
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Hennessy & Patterson (2019) – Computer Architecture: A Quantitative Approach, 6th Ed.
+	Elsevier 2019
+	★ Metodoloji temeli
+	2
+	Kim et al. (2020) – NVIDIA A100 GPU Microbenchmarking
+	IEEE CAL 2020
+	★ Modern GPU metodoloji
+	3
+	Mei & Chu (2023) – Dissecting the NVIDIA Hopper Architecture through Microbenchmarking
+	arXiv 2023
+	Microbenchmark rehberi
+	⚠ ARAŞTIRMA BOŞLUĞU: Intel NPU için sistematik microbenchmark metodolojisi (roofline analizi, bellek bant genişliği ölçümü, compute utilization) yayınlanmamıştır.
+
+
+5.2 GNN Inference Benchmark Çalışmaları
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Hu et al. (2020) – Open Graph Benchmark (OGB)
+	NeurIPS 2020
+	★ Standart dataset & metric
+	2
+	Baruah et al. (2021) – GNNMark: Benchmarking GNNs on GPU
+	ISPASS 2021
+	★ GPU inference benchmark
+	3
+	Ivanov et al. (2021) – Understanding GNN Computational Graph
+	MLSys 2021
+	★ Computation profiling
+	4
+	Besta et al. (2023) – HPEC GNN Benchmark Suite
+	HPEC 2023
+	HPC ortamı benchmark
+	⚠ ARAŞTIRMA BOŞLUĞU: NPU üzerinde GNN inference için standart bir benchmark suite ve metric seti bulunmamaktadır. Mevcut çalışmalar ya GPU'ya ya da özel ASIC'e odaklanmıştır.
+? Açık Soru: Latency, throughput, energy-per-inference ve accuracy'yi birlikte optimize eden Pareto-optimal GNN konfigürasyonu Intel NPU üzerinde nasıl tanımlanabilir?
+
+
+5.3 Enerji Verimliliği Ölçüm Yöntemleri
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Amert et al. (2020) – GPU Scheduling in TensorFlow
+	ECRTS 2020
+	Güç ölçüm metodolojisi
+	2
+	Gholami et al. (2022) – A Survey of Quantization Methods for Efficient NN Inference
+	arXiv 2022
+	★ Enerji verimliliği referansı
+	3
+	Laurençon et al. (2023) – Measuring Energy Consumption in Deep Learning
+	NLDL 2023
+	Enerji ölçüm çerçevesi
+	4
+	Intel (2024) – Intel Running Average Power Limit (RAPL) Interface
+	Intel SDM 2024
+	★ Intel enerji ölçüm API'si
+	Pratik Not – Intel RAPL: Intel Core Ultra için RAPL (Running Average Power Limit) arayüzü, package, core, uncore ve NPU güç tüketimini ayrı ayrı ölçmeye olanak tanır. Ancak NPU RAPL domaini Meteor Lake'te tam desteklenmemektedir; harici güç analiz kartları (Monsoon, Otii Arc) daha kesin sonuç verebilir.
+⚠ ARAŞTIRMA BOŞLUĞU: Intel NPU'nun gerçek güç çekimini workload bazında (idle, inference, peak) ölçen bağımsız metodoloji literatürde henüz yer almamaktadır.
+
+
+5.4 MLPerf ve Benzeri Standart Benchmark'lar
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Mattson et al. (2020) – MLPerf: An Industry Standard Benchmark Suite for ML
+	IEEE MICRO 2020
+	★ Endüstri standardı
+	2
+	Reddi et al. (2020) – MLPerf Inference Benchmark
+	ISCA 2020
+	★ Inference standardı
+	3
+	MLCommons (2024) – MLPerf Inference v4.0 Results
+	mlcommons.org 2024
+	Güncel sonuçlar (GNN yok!)
+	⚠ ARAŞTIRMA BOŞLUĞU: MLPerf Inference benchmark suite'inde GNN modelleri hâlâ yer almamaktadır. MLCommons çalışma grubu GNN benchmark eklenmesini tartışmaktadır fakat resmi bir suite yoktur.
+? Açık Soru: MLPerf için önerilen GNN benchmark senaryosu (model, dataset, metric, latency constraint) ne olmalıdır? Intel NPU bu senaryoda nasıl bir referans sonuç üretir?
+
+
+6. KARŞILAŞTIRMALI ANALİZ ÇALIŞMALARI
+
+
+6.1 CPU vs GPU vs NPU Karşılaştırmaları
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Shi et al. (2020) – Benchmarking GNN – Comprehensive Study
+	arXiv 2020
+	★ Kapsamlı karşılaştırma
+	2
+	Chen et al. (2020) – A Survey on Deep Learning Hardware Accelerators
+	arXiv 2020
+	★ Donanım tradeoff analizi
+	3
+	Ma et al. (2023) – Revisiting Semi-Supervised GNN Inference on Modern Hardware
+	MLSys 2023
+	CPU-GPU gap analizi
+	4
+	Zheng et al. (2024) – GNN Inference on Heterogeneous SoCs: CPU+GPU+NPU
+	HPCA 2024
+	★ Heterojen SoC analizi
+	⚠ ARAŞTIRMA BOŞLUĞU: Intel Core Ultra'nın mevcut NPU + iGPU + CPU üçlüsünün GNN inference için birlikte nasıl kullanılabileceği (heterogeneous execution) henüz çalışılmamıştır.
+? Açık Soru: Bir GNN modelinin aggregation fazını CPU/iGPU'da, projection fazını NPU'da çalıştıran hibrid execution pipeline ne ölçüde avantaj sağlar?
+
+
+6.2 Edge Cihazlarda AI Inference Karşılaştırmaları
+#
+	Kaynak
+	Venue / Yıl
+	Önem
+	1
+	Ignatov et al. (2019) – AI Benchmark: Running Deep Neural Networks on Android Smartphones
+	ECCVW 2019
+	★ Edge inference öncüsü
+	2
+	Hadidi et al. (2019) – Characterizing the Deployment of DNNs on Commercial Edge Platforms
+	IISWC 2019
+	★ Commercial edge analizi
+	3
+	Liberis et al. (2023) – mu-Net: Factorized NN for Edge Devices
+	TECS 2023
+	Edge-optimized model
+	4
+	Cai et al. (2023) – TinyEngine2: Model Compression for Microcontrollers
+	MLSys 2023
+	Ultra-edge inference
+	5
+	Baller et al. (2024) – Benchmarking AI Inference on Laptop NPUs
+	arXiv 2024
+	★ Laptop NPU benchmark
+	Kritik referans (2024): Baller et al. (2024) laptop NPU'larında (Intel, AMD, Qualcomm) CV/NLP workload'larını karşılaştırmaktadır; ancak GNN modelleri kapsam dışıdır. Bu boşluk, önerilen araştırmanın doğrudan katkı alanını oluşturmaktadır.
+⚠ ARAŞTIRMA BOŞLUĞU: Intel Core Ultra NPU'yu AMD Ryzen AI, Qualcomm Hexagon ve Apple Neural Engine ile GNN inference performansı ve enerji verimliliği açısından karşılaştıran çalışma mevcut değildir.
+? Açık Soru: Qualcomm Hexagon DSP'nin sparse işlem yetenekleri ile Intel NPU'nun dense tensor optimizasyonu GNN workload'ı için hangi koşulda üstün gelmektedir?
+
+
+7. ARAŞTIRMA YOL HARİTASI VE ÖNERİLER
+
+
+7.1 Öncelikli Araştırma Soruları Özeti
+#
+	Araştırma Sorusu
+	İlgili Bölüm
+	Öncelik
+	1
+	Intel NPU üzerinde GNN operasyonlarının roofline analizi
+	§2.2 + §3.4
+	🔴 Kritik
+	2
+	OpenVINO NPU plugin'inde GNN operasyon desteği ve fallback maliyeti
+	§4.4
+	🔴 Kritik
+	3
+	GCN vs GAT vs GraphSAGE: NPU üzerinde latency / energy Pareto analizi
+	§1.1 + §5.2
+	🔴 Kritik
+	4
+	GraNNite yaklaşımının Intel NPU'ya uyarlanması
+	§3.4
+	🟡 Yüksek
+	5
+	INT8/FP16 mixed-precision GNN quantization NPU etkisi
+	§4.1
+	🟡 Yüksek
+	6
+	NPU + iGPU hibrid execution pipeline tasarımı
+	§6.1
+	🟢 Orta
+	7
+	MLPerf için GNN benchmark senaryosu önerisi
+	§5.4
+	🟢 Orta
+	
+
+7.2 Önerilen Araştırma Metodolojisi
+Araştırmayı üç faza bölmek metodolojik tutarlılık açısından önerilmektedir:
+* FAZA 1 – Karakterizasyon (1-2 ay): Intel Core Ultra NPU üzerinde temel tensor operasyonları (GEMM, SpMM, scatter-reduce) için roofline analizi; OpenVINO NPU plugin operasyon destek matrisinin çıkarılması.
+* FAZA 2 – Deployment (2-3 ay): GCN, GAT, GraphSAGE, GIN ve SGC modellerinin PyG → ONNX → OpenVINO pipeline'ı ile NPU'ya deploy edilmesi; quantization stratejilerinin uygulanması.
+* FAZA 3 – Benchmark (1-2 ay): OGB-Arxiv, OGB-Products ve Cora/CiteSeer dataset'leri üzerinde latency, throughput ve enerji verimliliği ölçümü; CPU / iGPU / NPU karşılaştırmalı analizi.
+
+
+7.3 Önerilen Makale Okuma Sırası
+Araştırmaya yeni başlayanlar için önerilen okuma sırası:
+* 1. Kipf & Welling (2017) – GCN temelini anlamak için
+* 2. Abadal et al. (2021) CSUR Survey – GNN donanım genel çerçevesi
+* 3. Geng et al. (2023) MICRO – GNN hesaplama profili
+* 4. Intel Core Ultra Architecture Whitepaper (2023) – NPU mimari detayı
+* 5. Krishnan et al. (2022) GraNNite – Doğrudan en yakın çalışma
+* 6. Baller et al. (2024) – Laptop NPU benchmark metodolojisi
+* 7. Li et al. (2024) ASPLOS – NPU'da GNN verimsizlik analizi
+
+
+
+
+Bu belge, Intel Core Ultra NPU üzerinde GNN performans araştırması için sistematik bir literatür rehberi olarak hazırlanmıştır. Atıflar ve güncellikler araştırmacı tarafından doğrulanmalıdır.

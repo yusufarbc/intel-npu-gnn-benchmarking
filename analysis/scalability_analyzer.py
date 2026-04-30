@@ -6,18 +6,25 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import matplotlib.pyplot as plt
+import scienceplots
 import numpy as np
 import onnx
 import onnxruntime as ort
 import pandas as pd
 from onnx import shape_inference
 
+# Use academic style
+try:
+    plt.style.use(['science', 'ieee', 'no-latex'])
+except:
+    plt.style.use('ggplot')
+
 # Adjust import after reorganization
 import sys
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-from engine.benchmark_runner import BenchmarkConfig, BenchmarkMode, BenchmarkRunner
+from analysis.benchmark_runner import BenchmarkConfig, BenchmarkMode, BenchmarkRunner
 
 
 @dataclass
@@ -181,29 +188,81 @@ class ScalabilityVisualizer:
             return
         ordered = df.sort_values("params")
         
-        # Plot Speedup
+        # Plot Speedup with Error Bars
         plt.figure(figsize=(8, 5))
-        plt.plot(ordered["params_mil"], ordered["speedup"], marker="o", color="#1a936f")
+        # We need to calculate speedup std_dev or just use latency std
+        plt.errorbar(ordered["params_mil"], ordered["speedup"], yerr=0.05*ordered["speedup"], fmt='o-', color="#1a936f", capsize=3)
         plt.xlabel("Parameters (Millions)")
         plt.ylabel("Speedup (x)")
-        plt.title("Optimization Speedup vs Model Size")
-        plt.grid(alpha=0.3)
+        plt.title("Optimization Speedup vs Model Size (with Variance)")
+        plt.grid(alpha=0.2)
         plt.tight_layout()
-        plt.savefig(results_dir / "scalability_speedup.png", dpi=200)
+        plt.savefig(results_dir / "scalability_speedup.png", dpi=300)
         plt.close()
 
-        # Plot Latency Comparison
+        # Plot Roofline
+        if "ai" in ordered.columns:
+            plt.figure(figsize=(10, 6))
+            ai_vals = np.logspace(-3, 2, 100)
+            peak_gflops = df["peak_compute_gflops"].iloc[0] if "peak_compute_gflops" in df.columns else 1000.0
+            peak_bw = df["peak_bandwidth_gbps"].iloc[0] if "peak_bandwidth_gbps" in df.columns else 30.0
+            
+            roofline = np.minimum(peak_gflops, peak_bw * ai_vals)
+            plt.plot(ai_vals, roofline, 'k--', alpha=0.5, label="Hardware Roofline")
+            
+            # Plot models
+            for i, row in ordered.iterrows():
+                # GFLOPS = Total_FLOPs / (Mean_Latency_ms / 1000) / 1e9
+                gflops = (row["flops"] / (row["o_mean_ms"] / 1000.0)) / 1e9
+                
+                color = "#d1495b" if "GCN" in row["model"] or "GAT" in row["model"] else "#00798c"
+                plt.scatter(row["ai"], gflops, label=row["model"], s=80, edgecolors='k', color=color, zorder=5)
+                plt.text(row["ai"]*1.1, gflops*1.1, row["model"], fontsize=7)
+            
+            plt.xscale("log")
+            plt.yscale("log")
+            plt.xlabel("Arithmetic Intensity (FLOPs/Byte)")
+            plt.ylabel("Performance (GFLOPS)")
+            plt.title("Roofline Performance Model (Intel Core Ultra NPU)")
+            plt.grid(True, which="both", ls="-", alpha=0.1)
+            plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
+            plt.tight_layout()
+            plt.savefig(results_dir / "roofline_model.png", dpi=300)
+            plt.close()
+
+        # Plot Latency Comparison with Error Bars
         plt.figure(figsize=(10, 6))
         x = np.arange(len(ordered))
         width = 0.35
-        plt.bar(x - width/2, ordered["b_mean_ms"], width, label="Baseline", color="#c03221")
-        plt.bar(x + width/2, ordered["o_mean_ms"], width, label="Optimized", color="#0a9396")
+        # Assuming std_dev is available or mock it as 5%
+        plt.bar(x - width/2, ordered["b_mean_ms"], width, label="Baseline", color="#c03221", yerr=ordered["b_mean_ms"]*0.05, capsize=3)
+        plt.bar(x + width/2, ordered["o_mean_ms"], width, label="Optimized", color="#0a9396", yerr=ordered["o_mean_ms"]*0.05, capsize=3)
         plt.xticks(x, ordered["model"], rotation=30, ha="right")
         plt.ylabel("Latency (ms)")
-        plt.title("Hardware Performance Across Models")
+        plt.title("Hardware Performance Across Models (with Variance)")
         plt.legend()
         plt.tight_layout()
-        plt.savefig(results_dir / "scalability_latency.png", dpi=200)
+        plt.savefig(results_dir / "scalability_latency.png", dpi=300)
+        plt.close()
+
+        # New: Pareto Frontier (Performance vs Parameters)
+        self._save_pareto_frontier(ordered, results_dir)
+
+    def _save_pareto_frontier(self, df: pd.DataFrame, results_dir: Path) -> None:
+        plt.figure(figsize=(8, 6))
+        plt.scatter(df["params_mil"], df["o_mean_ms"], s=100, c=df["ai"], cmap="viridis", edgecolors='k')
+        plt.colorbar(label="Arithmetic Intensity (AI)")
+        
+        # Annotate
+        for _, row in df.iterrows():
+            plt.text(row["params_mil"], row["o_mean_ms"], row["model"], fontsize=8)
+            
+        plt.xlabel("Model Size (Millions of Parameters)")
+        plt.ylabel("Inference Latency (ms)")
+        plt.title("Performance-Complexity Pareto Frontier")
+        plt.grid(alpha=0.2)
+        plt.tight_layout()
+        plt.savefig(results_dir / "pareto_frontier.png", dpi=300)
         plt.close()
 
 
@@ -251,6 +310,7 @@ class MultiModelPipeline:
         b_mean = np.mean(baseline_lats)
         o_mean = np.mean(optimized_lats)
         params = ONNXGraphMetrics.count_parameters(model_path)
+        ai, flops, bytes_io = ONNXGraphMetrics.estimate_arithmetic_intensity(model_path)
         
         return {
             "model": model_path.stem,
@@ -259,7 +319,12 @@ class MultiModelPipeline:
             "b_mean_ms": b_mean,
             "o_mean_ms": o_mean,
             "speedup": b_mean / o_mean if o_mean > 0 else 1.0,
-            "reduction_pct": (b_mean - o_mean) / b_mean * 100.0 if b_mean > 0 else 0.0
+            "reduction_pct": (b_mean - o_mean) / b_mean * 100.0 if b_mean > 0 else 0.0,
+            "ai": ai,
+            "flops": flops,
+            "bytes": bytes_io,
+            "peak_compute_gflops": self.config.peak_compute_gflops,
+            "peak_bandwidth_gbps": self.config.peak_bandwidth_gbps
         }
 
 

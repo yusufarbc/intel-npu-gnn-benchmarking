@@ -1,0 +1,32 @@
+\chapter{KURAMSAL ARKA PLAN}
+
+\section{Hesaplama Grafikleri ve Operatör Füzyonu}
+ONNX formatına aktarılan derin öğrenme modelleri, operatör düğümlerinden oluşan yönlü çevrimsiz grafikler (DAG) olarak ifade edilir.
+Operatör füzyonu; ardışık operatörlerin tek bir birleşik çekirdek (kernel) veya sağlayıcıya özgü altgrafik olarak çalıştırılmasını hedefler.
+Amaç ara tensörlerin belleğe yazılıp tekrar okunmasını azaltmak ve çalışma zamanı çağrı/dispatch ek yükünü düşürmektir.
+Buna karşın füzyon, kernel seçimini değiştirebilir, bazı düşük seviye optimizasyonları engelleyebilir veya EP tarafında ek derleme maliyeti doğurabilir.
+
+\section{ONNX Runtime Grafik Optimizasyon Seviyeleri}
+ORT, oturum (session) oluşturulurken bir dizi grafik dönüşümü uygular.
+Bu projede belgelenmiş ayarlar üzerinden “optimizasyon kapalı” konfigürasyonu ile “extended optimizasyon açık” konfigürasyonu karşılaştırılmıştır \cite{onnxruntime}.
+Yüksek seviyede dönüşümler şu hedefleri taşır:
+\begin{itemize}
+	\item Gereksiz düğümleri kaldırma ve sabit ifadeleri katlama (constant folding).
+	\item Kalıp (pattern) yeniden yazımlarıyla daha verimli grafik üretme.
+	\item Füzyonları ve hedef çekirdeklere uygun düzen (layout) dönüşümlerini etkinleştirme.
+\end{itemize}
+
+\section{Execution Provider (EP) Kavramı ve OpenVINO EP}
+ORT, yürütmeyi Execution Provider (EP) bileşenlerine devreder.
+OpenVINO EP, Intel hedefleri için altgrafikleri derleyebilir; derleme başarısız olduğunda EP içi düşüş (fallback) veya CPU EP'ye düşüş gözlenebilir \cite{openvino_ep}.
+Bu çalışmada NPU sınıfı hızlandırıcı davranışına yaklaşmak amacıyla öncelikli sağlayıcı olarak OpenVINO EP seçilmiştir.
+
+\section{Profiling ve Operatör-Seviyesi Kanıt}
+ORT profiling çıktısı, çekirdek bazlı süreleri ve metadata'yı içeren bir JSON izidir.
+Bu iz üzerinde operatör türüne göre toplulaştırma yaparak baseline/optimized karşılaştırmasında hangi operatörlerin toplam süreyi domine ettiğini ölçmek mümkündür.
+Bu ayrıştırma önemlidir; çünkü grafik yapısında sadeleşme olsa bile toplam gecikme değişmeyebilir.
+
+\section{Memory Wall ve Roofline Sezgisi}
+Pek çok modelde performans, aritmetik yoğunluktan ziyade veri taşımaya (bellek bant genişliğine) bağlıdır.
+Memory wall \cite{memorywall} yaklaşımı, düğüm sayısındaki azalmanın neden her zaman hızlanmaya dönüşmediğini açıklamada kullanışlıdır.
+Bu nedenle bulgular, basit bir “bellek-sınırlı / hesaplama-sınırlı” sezgisiyle yorumlanmıştır.

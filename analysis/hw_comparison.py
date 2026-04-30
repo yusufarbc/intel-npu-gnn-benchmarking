@@ -12,7 +12,7 @@ import sys
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
 
-from engine.benchmark_runner import BenchmarkConfig, BenchmarkRunner
+from analysis.benchmark_runner import BenchmarkConfig, BenchmarkRunner
 
 
 class HWComparator:
