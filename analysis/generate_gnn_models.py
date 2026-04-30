@@ -102,29 +102,36 @@ def export_models():
     model_configs = [
         ("GCN", GCN(num_features, 64, num_classes)),
         ("GraphSAGE", GraphSAGE(num_features, 64, num_classes)),
-        ("GAT", GAT(num_features, 16, num_classes, heads=8)),
+        ("GAT", GAT(num_features, 32, num_classes, heads=1)), # Reduced heads for stability
         ("GIN", GIN(num_features, 64, num_classes)),
         ("SGC", SGC(num_features, num_classes)),
         ("APPNP", APPNPModel(num_features, 64, num_classes)),
-        ("GraphTransformer", GraphTransformer(num_features, 32, num_classes, heads=4)),
+        ("GraphTransformer", GraphTransformer(num_features, 32, num_classes, heads=1)), # Reduced heads for stability
     ]
 
     for name, model in model_configs:
         model.eval()
         output_path = models_dir / f"{name}_fp32.onnx"
+        
         print(f"Exporting {name} to {output_path}...")
         
-        # We use a wrapper to handle the tuple of (x, edge_index)
-        # Use legacy exporter (dynamo=False) for better GNN support
+        # GAT and GraphTransformer often have issues with constant folding in OpenVINO-EP
+        use_constant_folding = name not in ["GAT", "GraphTransformer"]
+        
         torch.onnx.export(
             model,
             (x, edge_index),
             str(output_path),
             input_names=["x", "edge_index"],
             output_names=["output"],
-            opset_version=18,
-            do_constant_folding=True,
-            dynamo=False
+            opset_version=15, 
+            do_constant_folding=use_constant_folding,
+            dynamo=False,
+            dynamic_axes={
+                "x": {0: "num_nodes"},
+                "edge_index": {1: "num_edges"},
+                "output": {0: "num_nodes"}
+            }
         )
         print(f"Done.")
         
@@ -160,6 +167,12 @@ def standardize_existing_models(models_dir: Path):
 def quantize_to_int8(onnx_path: Path):
     import onnx
     from onnx import version_converter
+    
+    int8_path = onnx_path.parent / f"{onnx_path.name.replace('_fp32', '_int8')}"
+    if int8_path.exists():
+        print(f"✅ {int8_path.name} already exists, skipping quantization.")
+        return
+
     print(f"Quantizing {onnx_path.name} to INT8...")
     model = onnx.load(str(onnx_path))
     
@@ -188,9 +201,16 @@ def quantize_to_int8(onnx_path: Path):
             else:
                 # Handle dynamic dims (common in GNNs and Transformers)
                 if any(x in name.lower() for x in ["node", "edge", "x", "input", "data"]):
-                    # Heuristic for different model types
                     if "bert" in onnx_path.name.lower():
                         shape.append(1 if len(shape) == 0 else (128 if len(shape) == 1 else 1)) # [1, 128]
+                    elif "transformer" in onnx_path.name.lower():
+                        # Transformers often expect specific dims for heads or nodes
+                        if "node" in name.lower() or "x" == name.lower():
+                            shape.append(2708) # Cora nodes
+                        elif "edge" in name.lower():
+                            shape.append(10000) # Cora edges
+                        else:
+                            shape.append(1)
                     else:
                         shape.append(2708 if "node" in name or "x" == name else 10000)
                 else:

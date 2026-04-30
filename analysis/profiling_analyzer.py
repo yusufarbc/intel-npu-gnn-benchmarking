@@ -1,6 +1,15 @@
 from __future__ import annotations
 
 import argparse
+import os
+# Suppress ORT and OpenVINO logging - MUST be set before import
+os.environ["ORT_LOGGING_LEVEL"] = "4"
+os.environ["OPENVINO_LOG_LEVEL"] = "0"
+
+import onnxruntime as ort
+# Force severity to Fatal
+ort.set_default_logger_severity(4)
+
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -143,6 +152,11 @@ class ProfilingAnalyzer:
         self.config.results_dir.mkdir(parents=True, exist_ok=True)
 
     def run(self) -> None:
+        if not self.config.baseline_json.exists() or not self.config.optimized_json.exists():
+            print(f"⚠️ Profiling data missing at {self.config.results_dir}. Skipping analysis.")
+            print("   Ensure the benchmark was run with profiling enabled.")
+            return
+
         baseline_events = ProfilingTraceLoader.load_events(self.config.baseline_json)
         optimized_events = ProfilingTraceLoader.load_events(self.config.optimized_json)
 

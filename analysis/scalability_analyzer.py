@@ -1,5 +1,14 @@
 from __future__ import annotations
 
+import os
+# Suppress ORT and OpenVINO logging - MUST be set before import
+os.environ["ORT_LOGGING_LEVEL"] = "4"
+os.environ["OPENVINO_LOG_LEVEL"] = "0"
+
+import onnxruntime as ort
+# Force severity to Fatal
+ort.set_default_logger_severity(4)
+
 import argparse
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,7 +18,6 @@ import matplotlib.pyplot as plt
 import scienceplots
 import numpy as np
 import onnx
-import onnxruntime as ort
 import pandas as pd
 from onnx import shape_inference
 
@@ -37,6 +45,7 @@ class ScalabilityConfig:
     repeats: int = 3
     peak_compute_gflops: float = 1000.0
     peak_bandwidth_gbps: float = 30.0
+    enable_profiling: bool = False
 
 
 class ONNXGraphMetrics:
@@ -246,9 +255,10 @@ class ScalabilityVisualizer:
         plt.close()
 
         # New: Pareto Frontier (Performance vs Parameters)
-        self._save_pareto_frontier(ordered, results_dir)
+        ScalabilityVisualizer._save_pareto_frontier(ordered, results_dir)
 
-    def _save_pareto_frontier(self, df: pd.DataFrame, results_dir: Path) -> None:
+    @staticmethod
+    def _save_pareto_frontier(df: pd.DataFrame, results_dir: Path) -> None:
         plt.figure(figsize=(8, 6))
         plt.scatter(df["params_mil"], df["o_mean_ms"], s=100, c=df["ai"], cmap="viridis", edgecolors='k')
         plt.colorbar(label="Arithmetic Intensity (AI)")
@@ -272,11 +282,16 @@ class MultiModelPipeline:
 
     def run(self) -> pd.DataFrame:
         data = []
+        import datetime
         for model in self.config.models:
             print(f"Processing model: {model.name}")
+            start_iso = datetime.datetime.now().strftime("%H:%M:%S")
             try:
                 row = self._benchmark_model(model)
-                data.append(row)
+                if row:
+                    row["start_time"] = start_iso
+                    row["end_time"] = datetime.datetime.now().strftime("%H:%M:%S")
+                    data.append(row)
             except Exception as e:
                 print(f"  -> Skipping model {model.name} due to error: {e}")
         
@@ -287,6 +302,25 @@ class MultiModelPipeline:
         df = pd.DataFrame(data)
         df.to_csv(self.config.results_dir / "scalability_matrix.csv", index=False)
         ScalabilityVisualizer.plot_summary(df, self.config.results_dir)
+
+        # Copy profiling results from the last successful model run to the root results dir
+        # for analysis by profiling_analyzer.py
+        if self.config.enable_profiling and data:
+            import shutil
+            last_model_data = data[-1]
+            last_model_name = last_model_data["model"]
+            last_run_dir = self.config.results_dir / last_model_name / f"run_{self.config.repeats-1:02d}"
+            
+            baseline_src = last_run_dir / "baseline_profiling.json"
+            optimized_src = last_run_dir / "optimized_profiling.json"
+            
+            if baseline_src.exists():
+                shutil.copy2(baseline_src, self.config.results_dir / "baseline_profiling.json")
+                print(f"  -> Exported profiling trace for [{last_model_name}] (Baseline) to results/")
+            if optimized_src.exists():
+                shutil.copy2(optimized_src, self.config.results_dir / "optimized_profiling.json")
+                print(f"  -> Exported profiling trace for [{last_model_name}] (Optimized) to results/")
+
         return df
 
     def _benchmark_model(self, model_path: Path) -> Dict[str, Any]:
@@ -301,7 +335,8 @@ class MultiModelPipeline:
                 device=self.config.device,
                 iterations=self.config.iterations,
                 warmup_iterations=self.config.warmup_iterations,
-                random_seed=42 + r
+                random_seed=42 + r,
+                enable_profiling=self.config.enable_profiling
             ))
             res_df = runner.run()
             baseline_lats.append(res_df.loc[res_df["mode"]=="baseline", "avg_latency_ms"].iloc[0])
@@ -337,6 +372,7 @@ def main() -> None:
     parser.add_argument("--iterations", type=int, default=100)
     parser.add_argument("--warmup", type=int, default=5)
     parser.add_argument("--results-dir", default=str(project_root / "results"))
+    parser.add_argument("--profile", action="store_true", default=True, help="Enable profiling traces.")
     
     args = parser.parse_args()
     
@@ -347,7 +383,8 @@ def main() -> None:
         device=args.device,
         repeats=args.repeats,
         iterations=args.iterations,
-        warmup_iterations=args.warmup
+        warmup_iterations=args.warmup,
+        enable_profiling=args.profile
     )
     
     MultiModelPipeline(config).run()

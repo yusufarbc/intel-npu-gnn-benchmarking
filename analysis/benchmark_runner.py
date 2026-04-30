@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+os.environ["ORT_LOGGING_LEVEL"] = "4"
+os.environ["OPENVINO_LOG_LEVEL"] = "0"
 import shutil
 import time
 from dataclasses import dataclass, field
@@ -149,6 +151,7 @@ class BenchmarkRunner:
         session_options = ort.SessionOptions()
         session_options.enable_profiling = self.config.enable_profiling
         session_options.graph_optimization_level = mode.graph_level
+        session_options.log_severity_level = 4
 
         providers_with_options: List[object] = []
         

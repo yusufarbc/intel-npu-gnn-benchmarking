@@ -31,14 +31,15 @@ Her model iki farklı hassasiyet (precision) seviyesinde test edilmektedir:
 1.  **FP32 (Floating Point 32):** Orijinal hassasiyet. NPU'nun en az verimli olduğu ama doğruluğun en yüksek olduğu mod.
 2.  **INT8 (Integer 8):** NNCF (Neural Network Compression Framework) ile kuantize edilmiş versiyon. NPU'nun donanım hızlandırıcılarını (Movidius VPU/NPU IP) tam kapasite kullandığı "native" mod.
 
-## 4. Teknik Kısıtlamalar ve Kuantizasyon Analizi
+## 4. Teknik Kısıtlamalar ve Karşılaşılan Hatalar
 
-Benchmark sürecinde bazı modellerin (GraphTransformer ve BERT) INT8 versiyonları üretilememiştir. Bu durum akademik raporlamada şu teknik gerekçelerle sunulmalıdır:
+Benchmark sürecinde bazı modellerde mimari uyuşmazlıklar tespit edilmiştir. Bu durumlar akademik raporlamada "NPU Donanım/Yazılım Olgunluk Analizi" kapsamında sunulmalıdır:
 
-*   **GraphTransformer:** Modelin `Self-Attention` katmanlarındaki dinamik tensör şekilleri ve `Sub` operatörü üzerindeki boyut uyuşmazlıkları (Incompatible dimensions), statik kuantizasyon (PTQ) sürecinde "Shape Inference" hatalarına yol açmıştır.
+*   **GAT (Graph Attention Network):** OpenVINO Execution Provider (EP), NPU üzerinde GAT modellerini derlerken `Output names mismatch between OpenVINO and ONNX` hatası vermektedir. Bu durum, NPU plugin'inin dikkat mekanizmasındaki (attention) alt grafiklerin çıktı isimlendirmelerini henüz tam olarak eşleştiremediğini göstermektedir. Bu model, NPU kısıtlaması nedeniyle CPU fallback modunda çalıştırılmaktadır.
+*   **GraphTransformer:** Modelin `Self-Attention` katmanlarındaki dinamik tensör şekilleri ve `Sub` operatörü üzerindeki boyut uyuşmazlıkları (Incompatible dimensions), statik kuantizasyon (PTQ) sürecinde "Shape Inference" hatalarına yol açmıştır. (Giriş şekilleri optimize edilerek bazı versiyonlarda aşılmıştır).
 *   **BERT-tiny:** Opset yükseltme (Opset 11 -> 13) sırasında `Unsqueeze` operatörünün parametre sınırları dışında kalması nedeniyle kuantizasyon motoru (NNCF/ONNX) tarafından reddedilmiştir.
 
-**Akademik Not:** Bu modellerin sadece FP32 olarak sunulması, NPU donanım kütüphanelerinin (OpenVINO/NPU Plugin) henüz çok karmaşık ve dinamik grafik yapıları için tam olgunluğa erişmediğini kanıtlayan bir "bulgu" (finding) olarak makalede kullanılabilir.
+**Akademik Not:** GAT modelinde karşılaşılan derleme hatası ve diğer modellerdeki kuantizasyon zorlukları, Intel Core Ultra NPU mimarisinin (NPU 3720 IP) özellikle dinamik attention mekanizmalarına sahip grafik yapıları için yazılım kütüphanesi seviyesinde (OpenVINO NPU Plugin) geliştirilmeye muhtaç alanlarını kanıtlayan kritik "araştırma bulguları" (research findings) olarak nitelendirilmelidir.
 
 ---
 *Son Güncelleme: 30 Nisan 2026*

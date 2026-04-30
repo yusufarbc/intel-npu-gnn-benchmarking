@@ -1,4 +1,11 @@
-from __future__ import annotations
+import os
+# Suppress ORT and OpenVINO logging - MUST be set before import
+os.environ["ORT_LOGGING_LEVEL"] = "4"
+os.environ["OPENVINO_LOG_LEVEL"] = "0"
+
+import onnxruntime as ort
+# Force severity to Fatal
+ort.set_default_logger_severity(4)
 
 import argparse
 from pathlib import Path
@@ -35,53 +42,56 @@ class HWComparator:
         results = []
 
         for device in devices:
-            start_device = datetime.datetime.now()
-            print(f"[{start_device.strftime('%H:%M:%S')}] Testing device: {device}...")
-            
-            device_latencies = []
-            device_memories = []
-            device_cpus = []
-            
-            for r in range(self.repeats):
-                print(f"  -> Repeat {r+1}/{self.repeats}...")
-                device_results_dir = self.results_dir / device / f"run_{r:02d}"
-                config = BenchmarkConfig(
-                    model_path=self.model_path,
-                    results_dir=device_results_dir,
-                    device=device,
-                    iterations=self.iterations
-                )
-                runner = BenchmarkRunner(config)
-                df = runner.run()
+            try:
+                start_device = datetime.datetime.now()
+                print(f"[{start_device.strftime('%H:%M:%S')}] Testing device: {device}...")
                 
-                # Extract metrics
-                opt_row = df.loc[df["mode"] == "optimized"].iloc[0]
-                opt_lat = opt_row["avg_latency_ms"]
-                peak_mem = opt_row["peak_memory_mb"]
-                cpu_util = opt_row["cpu_utilization_pct"]
+                device_latencies = []
+                device_memories = []
+                device_cpus = []
                 
-                device_latencies.append(opt_lat)
-                device_memories.append(peak_mem)
-                device_cpus.append(cpu_util)
+                for r in range(self.repeats):
+                    print(f"  -> Repeat {r+1}/{self.repeats}...")
+                    device_results_dir = self.results_dir / device / f"run_{r:02d}"
+                    config = BenchmarkConfig(
+                        model_path=self.model_path,
+                        results_dir=device_results_dir,
+                        device=device,
+                        iterations=self.iterations
+                    )
+                    runner = BenchmarkRunner(config)
+                    df = runner.run()
+                    
+                    # Extract metrics
+                    opt_row = df.loc[df["mode"] == "optimized"].iloc[0]
+                    opt_lat = opt_row["avg_latency_ms"]
+                    peak_mem = opt_row["peak_memory_mb"]
+                    cpu_util = opt_row["cpu_utilization_pct"]
+                    
+                    device_latencies.append(opt_lat)
+                    device_memories.append(peak_mem)
+                    device_cpus.append(cpu_util)
 
-            # Average across repeats
-            avg_lat = float(np.mean(device_latencies))
-            std_lat = float(np.std(device_latencies))
-            avg_mem = float(np.mean(device_memories))
-            avg_cpu = float(np.mean(device_cpus))
-            
-            results.append({
-                "device": device,
-                "latency_ms": avg_lat,
-                "std_ms": std_lat,
-                "throughput_ips": 1000.0 / avg_lat if avg_lat > 0 else 0,
-                "peak_memory_mb": avg_mem,
-                "cpu_util_pct": avg_cpu
-            })
-            
-            end_device = datetime.datetime.now()
-            duration_device = (end_device - start_device).total_seconds()
-            print(f"[{end_device.strftime('%H:%M:%S')}] Device {device} completed ({self.repeats} runs) in {duration_device:.2f} seconds.")
+                # Average across repeats
+                avg_lat = float(np.mean(device_latencies))
+                std_lat = float(np.std(device_latencies))
+                avg_mem = float(np.mean(device_memories))
+                avg_cpu = float(np.mean(device_cpus))
+                
+                results.append({
+                    "device": device,
+                    "latency_ms": avg_lat,
+                    "std_ms": std_lat,
+                    "throughput_ips": 1000.0 / avg_lat if avg_lat > 0 else 0,
+                    "peak_memory_mb": avg_mem,
+                    "cpu_util_pct": avg_cpu
+                })
+                
+                end_device = datetime.datetime.now()
+                duration_device = (end_device - start_device).total_seconds()
+                print(f"[{end_device.strftime('%H:%M:%S')}] Device {device} completed ({self.repeats} runs) in {duration_device:.2f} seconds.")
+            except Exception as e:
+                print(f"  ⚠️ Skip: Device {device} failed for {self.model_path.name}: {e}")
 
         summary_df = pd.DataFrame(results)
         summary_df.to_csv(self.results_dir / "hw_comparison_summary.csv", index=False)
@@ -96,6 +106,10 @@ class HWComparator:
         return summary_df
 
     def _plot_results(self, df: pd.DataFrame):
+        if df.empty:
+            print(f"  ⚠️ Skipping plots for {self.model_path.name}: No successful benchmark data.")
+            return
+            
         plt.figure(figsize=(10, 6))
         colors = ["#264653", "#2a9d8f", "#e9c46a"]
         
