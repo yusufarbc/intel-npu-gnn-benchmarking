@@ -1,11 +1,11 @@
 {
-    "FGR": 0.9742888442961389,
+    "FGR": 0.9985128662974847,
     "CEI": 0.0,
-    "FusionGainRatio": 0.9742888442961389,
+    "FusionGainRatio": 0.9985128662974847,
     "CompilationEfficiencyIndex": 0.0,
     "LatencyReduction_ms": 0,
-    "Baseline_Total_ms": 148.49644761904761,
-    "Optimized_Total_ms": 152.41521904761905,
+    "Baseline_Total_ms": 149.7490761904762,
+    "Optimized_Total_ms": 149.97210476190477,
     "NPU_Support_Ratio_Baseline_Pct": 33.12302839116719,
     "NPU_Support_Ratio_Optimized_Pct": 33.12302839116719
 }

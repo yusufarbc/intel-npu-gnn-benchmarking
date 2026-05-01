@@ -22,5 +22,5 @@ pdflatex main.tex
 ```
 
 Notes:
-- Figures are copied automatically from `results/` into `paper/figures/` by `scripts/run_all.py`.
+- Figures are copied from `results/` into `paper/figures/` via the notebook (the artifact sync step).
 - If `pdflatex` is not available on your PATH, install TeX Live or MikTeX and ensure `pdflatex` and `bibtex` are on PATH.

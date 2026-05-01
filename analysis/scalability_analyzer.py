@@ -281,9 +281,26 @@ class MultiModelPipeline:
         self.config = config
 
     def run(self) -> pd.DataFrame:
-        data = []
+        data: List[Dict[str, Any]] = []
+        existing_df = pd.DataFrame()
+        existing_models: set[str] = set()
+
+        matrix_path = self.config.results_dir / "scalability_matrix.csv"
+        if matrix_path.exists():
+            try:
+                existing_df = pd.read_csv(matrix_path)
+                if "model" in existing_df.columns:
+                    existing_models = {str(m).lower() for m in existing_df["model"].dropna().tolist()}
+                    if existing_models:
+                        print(f"Found existing scalability_matrix.csv with {len(existing_models)} models; will skip and append missing.")
+            except Exception as e:
+                print(f"Warning: failed to read existing scalability_matrix.csv ({e}); will regenerate from scratch.")
+                existing_df = pd.DataFrame()
+                existing_models = set()
         import datetime
         for model in self.config.models:
+            if existing_models and model.stem.lower() in existing_models:
+                continue
             print(f"Processing model: {model.name}")
             start_iso = datetime.datetime.now().strftime("%H:%M:%S")
             try:
@@ -295,12 +312,17 @@ class MultiModelPipeline:
             except Exception as e:
                 print(f"  -> Skipping model {model.name} due to error: {e}")
         
-        if not data:
+        if existing_df.empty and not data:
             print("No models were successfully benchmarked.")
             return pd.DataFrame()
-            
-        df = pd.DataFrame(data)
-        df.to_csv(self.config.results_dir / "scalability_matrix.csv", index=False)
+
+        if existing_df.empty:
+            df = pd.DataFrame(data)
+        else:
+            new_df = pd.DataFrame(data) if data else pd.DataFrame()
+            df = pd.concat([existing_df, new_df], ignore_index=True)
+
+        df.to_csv(matrix_path, index=False)
         ScalabilityVisualizer.plot_summary(df, self.config.results_dir)
 
         # Copy profiling results from the last successful model run to the root results dir
@@ -372,11 +394,14 @@ def main() -> None:
     parser.add_argument("--iterations", type=int, default=100)
     parser.add_argument("--warmup", type=int, default=5)
     parser.add_argument("--results-dir", default=str(project_root / "results"))
-    parser.add_argument("--profile", action="store_true", default=True, help="Enable profiling traces.")
+    parser.add_argument("--profile", action="store_true", default=False, help="Enable profiling traces.")
     
     args = parser.parse_args()
     
-    models = sorted(Path(args.models_dir).glob("*.onnx"))
+    models = sorted(
+        p for p in Path(args.models_dir).glob("*.onnx")
+        if not p.name.endswith(".ort_broken.onnx")
+    )
     config = ScalabilityConfig(
         models=models,
         results_dir=Path(args.results_dir).resolve(),

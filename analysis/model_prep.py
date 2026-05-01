@@ -283,6 +283,86 @@ def prepare_baseline_models(models_dir: Path) -> None:
     }
     bert_tiny_url = "https://huggingface.co/optimum/bert-tiny-uncased/resolve/main/model.onnx"
 
+    def _quantize_cnn_to_int8_nncf(fp32_path: Path, int8_path: Path) -> None:
+        """Quantize vision CNN models into an OpenVINO-friendly INT8 ONNX.
+
+        Notes:
+        - Some ONNX Model Zoo CNNs use old IR (v3) and list initializers as graph inputs.
+          That pattern breaks PTQ tooling and can yield invalid graphs for some backends.
+        - We convert opset to >=11, remove initializer-inputs, bump IR version, then apply NNCF PTQ.
+        """
+        if int8_path.exists():
+            # If an old/broken INT8 file exists, we still want to validate it.
+            try:
+                import onnx
+                from onnx import checker
+
+                checker.check_model(onnx.load(str(int8_path)))
+                return
+            except Exception:
+                try:
+                    int8_path.unlink()
+                except Exception:
+                    pass
+
+        try:
+            import onnx
+            import nncf
+            import numpy as np
+            from onnx import checker, version_converter
+
+            model = onnx.load(str(fp32_path))
+
+            # Ensure opset >= 10 for NNCF quantization.
+            opset = max((op.version for op in model.opset_import if (op.domain or "") == ""), default=0)
+            if opset and opset < 11:
+                model = version_converter.convert_version(model, 11)
+
+            # Remove initializer-inputs and bump IR version to modern semantics.
+            init_names = {init.name for init in model.graph.initializer}
+            real_inputs = [vi for vi in model.graph.input if vi.name not in init_names]
+            model.graph.ClearField("input")
+            model.graph.input.extend(real_inputs)
+            model.ir_version = max(int(getattr(model, "ir_version", 0) or 0), 7)
+
+            # Build calibration samples for real inputs.
+            input_info = []
+            for input_node in model.graph.input:
+                name = input_node.name
+                dims = []
+                for dim in input_node.type.tensor_type.shape.dim:
+                    if dim.HasField("dim_value") and dim.dim_value > 0:
+                        dims.append(int(dim.dim_value))
+                    else:
+                        dims.append(1)
+                elem_type = int(input_node.type.tensor_type.elem_type)
+                if elem_type == 7:
+                    dtype = np.int64
+                elif elem_type == 6:
+                    dtype = np.int32
+                else:
+                    dtype = np.float32
+                input_info.append((name, tuple(dims), dtype))
+
+            rng = np.random.default_rng(0)
+            calibration_data = []
+            for _ in range(3):
+                item = {}
+                for name, shape, dtype in input_info:
+                    if np.issubdtype(dtype, np.floating):
+                        item[name] = (rng.standard_normal(shape).astype(dtype) * 0.1)
+                    else:
+                        item[name] = rng.integers(0, 1000, size=shape, dtype=dtype)
+                calibration_data.append(item)
+
+            dataset = nncf.Dataset(calibration_data, lambda x: x)
+            quantized_model = nncf.quantize(model, dataset)
+            onnx.save(quantized_model, str(int8_path))
+            checker.check_model(onnx.load(str(int8_path)))
+            print(f"NNCF INT8 saved: {int8_path.name}")
+        except Exception as exc:
+            print(f"Failed to NNCF-quantize {fp32_path.name} -> {int8_path.name}: {exc}")
+
     print("Fetching Vision Models (FP32)...")
     for name, url in models.items():
         fp32_path = models_dir / f"{name}_fp32.onnx"
@@ -293,7 +373,7 @@ def prepare_baseline_models(models_dir: Path) -> None:
         fp32_path = models_dir / f"{name}_fp32.onnx"
         int8_path = models_dir / f"{name}_int8.onnx"
         if fp32_path.exists():
-            quantize_model(fp32_path, int8_path)
+            _quantize_cnn_to_int8_nncf(fp32_path, int8_path)
 
     print("\nProcessing NLP/Transformer Models...")
     bert_fp32 = models_dir / "bert-tiny_fp32.onnx"
