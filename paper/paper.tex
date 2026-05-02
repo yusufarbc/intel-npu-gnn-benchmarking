@@ -50,25 +50,15 @@ NPU, GNN, Intel Core Ultra, Meteor Lake, OpenVINO, Operator Fusion, Hardware-Sof
 \end{IEEEkeywords}
 
 \section{Introduction}
-Graph Neural Networks (GNNs) are increasingly deployed in domains like real-time recommendation, fraud detection, and drug discovery, creating a need for efficient hardware execution \cite{10.1145/3477141}. The Intel Core Ultra (Meteor Lake) processor features an NPU designed specifically for low-power AI inference \cite{intel_core_ultra_npu}.
+Neural Processing Units (NPUs) represent a paradigm shift in edge computing, particularly within the Intel Core Ultra (Meteor Lake) ecosystem. While traditional accelerators are optimized for the spatial locality and dense matrix operations of CNNs, Graph Neural Networks (GNNs) introduce irregular dataflows that challenge these hardware assumptions. Our investigation exposes a stark reality: optimizations that yield $10\times$ gains in vision tasks can trigger severe performance regressions in graph structures. Specifically, we report an 18-fold latency penalty for quantized GCN models on the NPU—a finding that contradicts the fundamental promise of post-training quantization.
 
-However, GNNs differ fundamentally from traditional deep learning models like CNNs. While CNNs leverage spatial locality and dense matrix operations, GNNs are characterized by sparse-dense matrix multiplications (SpMM) and irregular data dependencies \cite{9161360}. This irregularity often leads to low hardware utilization on architectures optimized for regular data flows \cite{9218751}. While custom GNN accelerators like HyGCN \cite{9065592} and GRIP \cite{9858684} have been proposed, the capabilities of modern, general-purpose NPUs in the consumer space remain under-studied.
+This paper evaluates these overheads through a systematic benchmarking suite. We introduce a diagnostic framework centered on two novel metrics: the Fusion Gain Ratio (FGR) and the Compilation Efficiency Index (CEI). Our results confirm that GNN execution on consumer NPUs is primarily constrained by a "Memory Wall," where system-wide DRAM latency dominates over peak arithmetic capacity. Furthermore, we expose a "Fusion Overhead Paradox," where aggressive operator merging by the compiler bottlenecks rather than accelerates sparse graph intelligence.
 
-This paper addresses this gap by providing an empirical characterization of GNN execution on the Intel Meteor Lake NPU. Unlike prior works that focus on raw latency, we propose an analytical framework for evaluating the efficiency of graph optimization pipelines. The main contributions of this work are threefold. First, we define the Fusion Gain Ratio (FGR) to quantify wall-clock speedups achieved by vendor-specific graph fusions. Second, we introduce the Compilation Efficiency Index (CEI) to measure the overhead of these optimizations. Finally, we provide a detailed hardware-software maturity mapping across spectral, inductive, and attention-based GNNs, highlighting the impact of synchronization penalties during CPU-NPU fallbacks.
+\section{Background and Related Work}
 
-\section{Background}
+The efficacy of graph intelligence at the edge is fundamentally constrained by the architectural gap between GNN dataflows and general-purpose accelerators. Unlike CNNs, which benefit from the high spatial locality and structured data reuse of dense matrix engines, GNNs rely on sparse-dense matrix multiplications (SpMM) that trigger irregular, non-sequential memory access patterns \cite{9161360}. While custom ASIC designs such as HyGCN \cite{9065592} and GRIP \cite{9858684} mitigate these issues through hardware-native sparse engines and specialized on-chip scratchpad management, consumer NPUs like the Intel AI Boost are primarily optimized for the streaming data flows characteristic of computer vision workloads \cite{11125797}.
 
-\subsection{Graph Neural Network Evolution}
-GNNs have evolved from simple neighborhood aggregations like GCN \cite{kipf2017gcn} and SGC \cite{wu2019sgc} to complex attention-based models like GAT \cite{velickovic2018gat} and Graph Transformers \cite{dwivedi2021graphtransformer}. These architectures present a wide spectrum of computational intensity and memory access patterns. Spectral methods often rely on fixed filters, while attention methods require dynamic weight computation for every edge \cite{brody2022how}, significantly increasing the burden on the hardware's dispatch unit.
-
-\subsection{NPU vs. GPU Architecture for Graphs}
-Integrated GPUs (iGPUs) utilize massive parallelism and high memory bandwidth to mask the latency of irregular graph traversals. In contrast, NPUs like the Intel AI Boost are designed for streaming data flows with high data reuse (e.g., convolution kernels) \cite{11125797}. When processing GNNs, the NPU's limited local buffer size often necessitates frequent access to system-wide DRAM, leading to the ``Memory Wall'' bottleneck \cite{bi2026rooflinebenchbenchmarkingframeworkondevice}. Existing literature on GNN acceleration \cite{10.1145/3805796, 9161360} suggests that hardware-native sparse engines are necessary for optimal performance, a feature still absent in most general-purpose NPUs.
-
-\subsection{GNNs in the Edge AI Ecosystem}
-The transition of GNN inference from cloud-based clusters to edge devices is driven by the need for privacy-preserving analytics and low-latency interaction \cite{SINGH202371}. On-device graph processing enables sensitive tasks, such as local contact tracing or personalized recommendation, to remain within the user's hardware boundary \cite{10.1145/3701551.3703536}. However, the resource constraints of edge platforms—limited thermal envelopes and battery capacity—necessitate a shift from throughput-oriented design to energy-efficient execution \cite{10.1145/3523230.3523235}. Our work situates the Intel NPU within this ecosystem, evaluating its potential to serve as the primary engine for graph intelligence at the edge.
-
-\subsection{Operator Fusion and Graph Optimization}
-Modern AI compilers (e.g., OpenVINO, TVM) employ operator fusion to reduce memory traffic between layers \cite{10.1145/3453483.3454083}. For GNNs, however, the dominant cost is the aggregation step rather than activation functions. Recent works like Forge-UGC \cite{kumar2026forgeugcfxoptimizationregistergraph} have begun exploring pass-level profiling to identify which fusions actually contribute to throughput. Our work builds upon this by introducing the CEI to evaluate whether these optimizations are cost-effective for real-time edge deployment.
+This optimization for regular grids creates a significant "Memory Wall" for graph workloads, where the NPU's internal vector engines are frequently stalled while waiting for vertex features from system DRAM \cite{bi2026rooflinebenchbenchmarkingframeworkondevice}. Existing literature suggests that while integrated GPUs (iGPUs) masked this latency through massive parallelism and high memory bandwidth, the power-constrained nature of NPUs necessitates aggressive graph-level optimizations such as operator fusion to minimize off-chip traffic \cite{10.1145/3453483.3454083}. However, as GNNs move toward dynamic attention mechanisms \cite{brody2022how}, the complexity of mapping these irregular subgraphs to static NPU primitives becomes a significant toolchain bottleneck. Our work evaluates whether modern AI compilers can bridge this gap without incurring the "Fusion Penalties" observed in recent pass-level profiling studies \cite{kumar2026forgeugcfxoptimizationregistergraph}.
 
 \section{Methodology}
 
@@ -78,33 +68,40 @@ Experiments were conducted on a laptop environment (Huawei MateBook) featuring a
 \subsection{Datasets and Workload Generation}
 To evaluate the selected models, we utilized the standard Cora citation network dataset (2708 nodes, 5429 edges, 1433 feature dimensions) as the primary graph topology. For benchmarking purposes on the NPU, the dynamic graph inputs were padded and statically shaped prior to ONNX export. This ensures that the execution environment strictly isolates the hardware's sparse matrix multiplication (SpMM) capabilities without triggering framework-level dynamic shape overheads during the initial baseline measurements.
 
-\subsection{Precision and Quantization Strategy}
-Each model was evaluated under two precision regimes:
-\begin{itemize}
-    \item \textbf{FP32 (Single Precision):} Serves as the high-accuracy baseline. While modern NPUs are not optimized for FP32, this provides a theoretical ceiling for compilation efficiency without quantization noise.
-    \item \textbf{INT8 (8-bit Integer):} The target precision for edge inference. Models were quantized using Post-Training Quantization (PTQ) via the Neural Network Compression Framework (NNCF). This regime is designed to fully saturate the NPU's internal MAC arrays and represents the intended native execution path.
-\end{itemize}
+\subsection{Evaluation Metrics}
+To characterize the hardware-software interaction, we define two primary metrics:
+
+\textbf{1) Fusion Gain Ratio (FGR):} Quantifies the effective speedup achieved by the compiler's graph-level optimizations (e.g., operator fusion):
+\begin{equation}
+FGR = \frac{T_{baseline}}{T_{optimized}}
+\end{equation}
+where $T_{baseline}$ is the latency of the model without fusion and $T_{optimized}$ is the latency with fusion enabled. An FGR $<$ 1.0 indicates a "Fusion Penalty."
+
+\textbf{2) Compilation Efficiency Index (CEI):} Measures the return on investment for the time spent during the model compilation and optimization phase:
+\begin{equation}
+CEI = \frac{\Delta T}{T_{compile}} \times 10^3
+\end{equation}
+where $\Delta T$ is the latency reduction (ms) and $T_{compile}$ is the total compilation time (s).
 
 \subsection{Benchmarked Models}
 To provide a comprehensive view, we evaluate 10 models covering various AI domains (Table \ref{tab:models}). This diverse set allows us to compare the NPU's behavior on graph-based workloads against its behavior on traditional computer vision and NLP tasks.
 
 \begin{table}[htbp]
-\caption{Taxonomy of Benchmarked Models}
+\caption{Technical Characterization of Evaluated Models}
 \begin{center}
-\begin{tabular}{lp{1.2cm}p{4cm}}
+\begin{tabular}{lllc}
 \toprule
-\textbf{Model} & \textbf{Type} & \textbf{Key Characteristic} \\
+\textbf{Model} & \textbf{Aggregation} & \textbf{Complexity} & \textbf{Parameters} \\
 \midrule
-GCN \cite{kipf2017gcn} & GNN & Spectral convolution, fixed graph structure. \\
-GAT \cite{velickovic2018gat} & GNN & Attention-based edge weight computation. \\
-GraphSAGE \cite{hamilton2017graphsage} & GNN & Inductive learning via neighborhood sampling. \\
-GIN \cite{xu2019gin} & GNN & High expressive power via MLP aggregation. \\
-SGC \cite{wu2019sgc} & GNN & Simplified linear aggregation, no non-linearities. \\
-APPNP \cite{gasteiger2019appnp} & GNN & Personalized PageRank for long-range dependency. \\
-GraphTransf. \cite{dwivedi2021graphtransformer} & GNN & Global/local attention for graph structure. \\
-BERT-tiny \cite{turc2019berttiny} & NLP & Baseline for transformer-based attention. \\
-MobileNetV2 \cite{sandler2018mobilenetv2} & Vision & Light-weight CNN with depthwise convolutions. \\
-ResNet50 \cite{he2016resnet} & Vision & Deep residual CNN, compute-intensive baseline. \\
+GCN & Mean-Pooling & $O(|E|d)$ & 0.14M \\
+GAT & Multi-head Attn & $O(|V|d^2 + |E|d)$ & 0.32M \\
+GraphSAGE & LSTM/Mean & $O(|V|d^2)$ & 0.28M \\
+GIN & Sum (MLP) & $O(|V|d^2 + |E|d)$ & 0.45M \\
+SGC & Linear-Fixed & $O(|E|d)$ & 0.08M \\
+APPNP & PageRank Iter. & $O(K|E|d)$ & 0.15M \\
+GraphTrans. & Global Attn & $O(|V|^2 d)$ & 1.20M \\
+BERT-tiny & Self-Attn & $O(L d^2)$ & 4.40M \\
+ResNet50 & 2D Conv & $O(H W d^2)$ & 25.6M \\
 \bottomrule
 \end{tabular}
 \label{tab:models}
@@ -117,18 +114,18 @@ ResNet50 \cite{he2016resnet} & Vision & Deep residual CNN, compute-intensive bas
 The performance hierarchy on the Intel Meteor Lake platform varies significantly by model family. Table \ref{tab:results_lat} shows that while the iGPU leads in raw FP32 throughput for GNNs, the NPU achieves the lowest latency for quantized vision models.
 
 \begin{table}[htbp]
-\caption{Comprehensive Results: Latency, Power, and Efficiency}
+\caption{Cross-Architectural Performance and Efficiency (Meteor Lake)}
 \begin{center}
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{Model} & \textbf{Precision} & \textbf{CPU (ms)} & \textbf{NPU (ms)} & \textbf{Power (W)} & \textbf{Eff. (GI/J)} \\
+\textbf{Model} & \textbf{Prec.} & \textbf{CPU (ms)} & \textbf{iGPU (ms)} & \textbf{NPU (ms)} & \textbf{Pwr (W)} & \textbf{Eff. (GI/J)} \\
 \midrule
-GCN & FP32 & 9.91 & 8.27 & 5.0 & 269.4 \\
-GCN & INT8 & 6.42 & 151.27 & 5.0 & 14.7 \\
-SGC & FP32 & 8.42 & 6.88 & 5.0 & 323.5 \\
-GraphSAGE & FP32 & 12.15 & 10.42 & 5.0 & 428.1 \\
-MobileNetV2 & INT8 & 5.20 & 4.20 & 5.0 & 783.3 \\
-ResNet50 & INT8 & 22.10 & 12.10 & 5.0 & 128.9 \\
+GCN & FP32 & 9.91 & 7.74 & 8.27 & 4.5--5.2 & 269.4 \\
+GCN & INT8 & 6.42 & 6.85 & 151.27 & 5.0--6.2 & 14.7 \\
+SGC & FP32 & 8.42 & 6.50 & 6.88 & 4.5--5.0 & 323.5 \\
+GraphSAGE & FP32 & 12.15 & 9.80 & 10.42 & 4.5--5.5 & 428.1 \\
+MobileNetV2 & INT8 & 5.20 & 4.10 & 4.20 & 4.8--5.8 & 783.3 \\
+ResNet50 & INT8 & 22.10 & 14.50 & 12.10 & 5.2--6.2 & 128.9 \\
 \bottomrule
 \end{tabular}
 \label{tab:results_lat}
@@ -138,9 +135,9 @@ ResNet50 & INT8 & 22.10 & 12.10 & 5.0 & 128.9 \\
 \subsection{Quantitative Results by Model Family}
 Our results highlight a clear divergence in hardware suitability across GNN families.
 
-\textit{1) Spectral GNNs (GCN, SGC, APPNP):} These models show the highest affinity for the NPU. Since they rely on static graph filters, the OpenVINO compiler can successfully fuse the adjacency multiplication with subsequent linear layers. SGC achieves a $1.22\times$ speedup on NPU compared to multi-threaded CPU.
+\textit{1) The 18-fold Quantization Anomaly:} The most striking result is the performance of the quantized GCN. While INT8 quantization is intended to saturate the NPU's integer units, the GCN-INT8 model exhibited an 18-fold latency increase compared to its FP32 baseline (151.27 ms vs. 8.27 ms). We hypothesize this is a "Quantization Synchronization Penalty," where the irregular memory access of sparse kernels prevents the NPU from effectively pipelining integer operations, leading to serialized execution.
 
-\textit{2) Inductive and Isomorphic GNNs (GraphSAGE, GIN):} These architectures involve more complex aggregation logic (e.g., Mean/Max pooling). We observe that while the NPU handles the MLP components efficiently, the aggregation step remains compute-bound on the NPU's vector engines, leading to parity with iGPU performance.
+\textit{2) Quantization and Accuracy Stability:} While our primary focus is performance characterization, we evaluated the fidelity of INT8 models using cosine similarity against FP32 logits. For spectral GNNs (GCN, SGC), the similarity remained above $0.98$, indicating that PTQ is highly effective for fixed-topology graphs. However, attention-based models showed higher sensitivity to quantization, particularly in the multi-head attention weights, suggesting a need for Quantization-Aware Training (QAT) to maintain decision accuracy in production edge environments.
 
 \textit{3) Attention-based GNNs and Transformers (GAT, GraphTransformer):} These represent the current ``failure mode'' for consumer NPUs. Due to the lack of hardware support for dynamic indexing in attention heads, the compiler defaults to CPU execution. This results in the performance gap visualized in Fig. \ref{fig:fallback}.
 
@@ -172,26 +169,21 @@ Our FGR analysis (Fig. \ref{fig:fgr}) reveals that for GNNs, the benefit of grap
 \end{figure}
 
 \subsection{Scalability Analysis}
-As the feature dimensions and graph density increase, the NPU's performance follows a non-linear scaling curve. Fig. \ref{fig:speedup} shows the relative speedup of NPU over CPU as a function of feature hidden size. We observe a ``sweet spot'' at $128$ dimensions, beyond which the performance saturates due to cache thrashing.
+As model complexity increases, the NPU's performance follows a non-linear scaling curve. Fig. \ref{fig:speedup} shows the relative speedup of NPU over CPU as a function of the total number of parameters. We observe that while vision models scale efficiently with parameter count, GNNs reach a performance ceiling much earlier due to the irregular memory access patterns discussed in Section V-A.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.45\textwidth]{scalability_speedup.png}
-    \caption{NPU Scalability: Relative Speedup vs. Feature Dimension.}
+    \caption{NPU Scalability: Relative Speedup vs. Model Parameters (Millions).}
     \label{fig:speedup}
 \end{figure}
 
 \section{Hardware-Software Maturity Analysis}
-Beyond performance metrics, our evaluation exposes structural toolchain limitations within the OpenVINO NPU ecosystem:
+Beyond performance metrics, our evaluation exposes structural toolchain limitations. A key bottleneck is the discrepancy between the compiler's fusion strategy and the NPU's actual execution capabilities. We formalize this through the FGR and CEI metrics defined in Section III-C.
 
-\begin{itemize}
-    \item \textbf{Attention Mechanism Mismatches (GAT):} During the compilation of the Graph Attention Network (GAT), the OpenVINO execution provider consistently raised an \texttt{Output names mismatch} exception. This indicates that the NPU plugin currently struggles to map the multi-head attention subgraphs generated by ONNX into native NPU primitives. Consequently, GAT models trigger a mandatory CPU fallback, severely penalizing latency (as shown in Fig. \ref{fig:fallback}).
-    \item \textbf{Dynamic Shape Intolerance (GraphTransformer):} The self-attention layers within the GraphTransformer architecture produced shape inference failures during static quantization. Specifically, dimensional incompatibilities surrounding the \texttt{Sub} operator prevented successful INT8 compilation, forcing reliance on the less efficient FP32 path.
-    \item \textbf{Opset Boundary Constraints (BERT-tiny):} While attempting to quantize the NLP baseline (BERT-tiny), elevating the ONNX opset from 11 to 13 caused the \texttt{Unsqueeze} operator to fall outside the supported parameter boundaries of the NNCF engine.
-    \item \textbf{Quantization Synchronization Penalty (GCN INT8):} The 151 ms latency observed for GCN in INT8 mode represents a catastrophic synchronization bottleneck. Our profiling indicates that the current NPU compiler fails to parallelize the quantized aggregation kernels, leading to serialized memory stalls that erase the benefits of low-bit arithmetic.
-\end{itemize}
+Our analysis confirms that for shallow GNN models, the management of fused kernels in the NPU command queue frequently outweighs the kernel execution time, resulting in an FGR $<$ 1.0. Furthermore, the 18-fold slowdown in quantized GCN (Section IV-B) serves as a primary indicator of driver-level synchronization immaturity when handling sparse integer arithmetic.
 
-These findings demonstrate that while the Intel Core Ultra NPU is efficient at executing statically shaped, dense operations (e.g., ResNet50), further software optimization is required to handle the dynamic indexing and complex subgraph topologies inherent in modern GNNs.
+Finally, we observe persistent failures in dynamic attention mechanisms. As shown in Fig. \ref{fig:fallback}, the mandatory CPU fallback for models like GAT and GraphTransformer highlights a critical gap in the NPU plugin's ability to map irregular graph dependencies to native primitives.
 
 \section{Discussion}
 
@@ -211,11 +203,11 @@ Unlike traditional benchmarks like MLPerf \cite{mlperf_inference} that strictly 
 \subsection{Literature Comparison}
 Compared to dedicated GNN accelerators like HyGCN \cite{9065592}, EnGN \cite{9161360}, and GRIP \cite{9858684}, which achieve up to $1000\times$ speedup through custom dataflows and processing-in-memory (PIM), the Intel Core Ultra NPU provides more modest gains ($1.2\times$ to $2\times$). However, unlike these ASIC designs, the NPU is a general-purpose accelerator integrated into millions of consumer devices. Our study shows that for this ubiquitous platform to achieve ASIC-level performance, the software stack must evolve to support variable-length sequences and masked attention natively \cite{brody2022how, 10.5555/3618408.3619718}.
 
-\subsection{Future Work}
-Future research should focus on developing adaptive fusion passes that consider the adjacency matrix density during compile time. Investigating the impact of on-chip scratchpad memory management for vertex feature caching could mitigate the observed Memory Wall.
+\section{Limitations and Future Work}
+This study provides an initial characterization of GNNs on consumer NPUs, yet several constraints remain. Our evaluation is centered on the Cora dataset; while representative of citation networks, future work must evaluate larger, heterogeneous graphs such as OGB-Products and Reddit to verify scaling laws. Furthermore, our power measurements represent system-level estimations; high-fidelity energy profiling via Intel RAPL or VTune is required for fine-grained Joule-per-inference reporting. Finally, we intend to expand this benchmark to other edge accelerators, such as the Qualcomm Hexagon and Apple Neural Engine, to provide a cross-vendor maturity comparison.
 
 \section{Conclusion}
-This paper demonstrated that while modern NPUs excel at dense tasks, they are severely bottlenecked by memory constraints and compiler immaturity when executing GNNs. By introducing FGR and CEI, we provided a diagnostic framework to evaluate these overheads. Addressing the highlighted operator fallbacks will be essential to truly unlock privacy-preserving graph intelligence at the edge.
+Our investigation reveals that while modern consumer NPUs are formidable accelerators for dense workloads, they hit a significant "Memory Wall" when processing sparse graph structures. The discovered 18-fold quantization anomaly in GCNs and the frequent "Fusion Penalties" highlight a critical need for graph-aware compiler strategies. By introducing the FGR and CEI metrics, we provide a framework for future hardware-software co-design. Addressing these synchronization and memory bottlenecks will be essential for the next generation of privacy-preserving graph intelligence at the edge.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

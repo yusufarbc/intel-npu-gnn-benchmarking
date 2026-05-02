@@ -21,32 +21,11 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{10.1145/3477141}
-\BIBentryALTinterwordspacing
-S.~Abadal, A.~Jain, R.~Guirado, J.~L\'{o}pez-Alonso, and E.~Alarc\'{o}n,
-  ``Computing graph neural networks: A survey from algorithms to
-  accelerators,'' \emph{ACM Comput. Surv.}, vol.~54, no.~9, Oct. 2021.
-  [Online]. Available: \url{https://doi.org/10.1145/3477141}
-\BIBentrySTDinterwordspacing
-
-\bibitem{intel_core_ultra_npu}
-\BIBentryALTinterwordspacing
-{Intel Corporation}, ``{Heterogeneous AI Powerhouse: Unveiling the Hardware and
-  Software Foundation of Intel Core Ultra Processors},'' 2024, official Intel
-  Core Ultra architecture white paper including NPU (Intel AI Boost). [Online].
-  Available: \url{https://cdrdv2-public.intel.com/817736/}
-\BIBentrySTDinterwordspacing
-
 \bibitem{9161360}
 S.~Liang, Y.~Wang, C.~Liu, L.~He, H.~LI, D.~Xu, and X.~Li, ``Engn: A
   high-throughput and energy-efficient accelerator for large graph neural
   networks,'' \emph{IEEE Transactions on Computers}, vol.~70, no.~9, pp.
   1511--1525, Sep. 2021.
-
-\bibitem{9218751}
-A.~Auten, M.~Tomei, and R.~Kumar, ``Hardware acceleration of graph neural
-  networks,'' in \emph{2020 57th ACM/IEEE Design Automation Conference (DAC)},
-  July 2020, pp. 1--6.
 
 \bibitem{9065592}
 M.~Yan, L.~Deng, X.~Hu, L.~Liang, Y.~Feng, X.~Ye, Z.~Zhang, D.~Fan, and Y.~Xie,
@@ -58,44 +37,6 @@ M.~Yan, L.~Deng, X.~Hu, L.~Liang, Y.~Feng, X.~Ye, Z.~Zhang, D.~Fan, and Y.~Xie,
 K.~Kiningham, P.~Levis, and C.~Ré, ``Grip: A graph neural network accelerator
   architecture,'' \emph{IEEE Transactions on Computers}, vol.~72, no.~4, pp.
   914--925, April 2023.
-
-\bibitem{kipf2017gcn}
-\BIBentryALTinterwordspacing
-T.~N. Kipf and M.~Welling, ``Semi-supervised classification with graph
-  convolutional networks,'' in \emph{International Conference on Learning
-  Representations (ICLR)}, 2017. [Online]. Available:
-  \url{https://arxiv.org/abs/1609.02907}
-\BIBentrySTDinterwordspacing
-
-\bibitem{wu2019sgc}
-\BIBentryALTinterwordspacing
-F.~Wu, A.~Souza, T.~Zhang, C.~Fifty, T.~Yu, and K.~Weinberger, ``Simplifying
-  graph convolutional networks,'' in \emph{International Conference on Machine
-  Learning (ICML)}, 2019. [Online]. Available:
-  \url{https://arxiv.org/abs/1902.07153}
-\BIBentrySTDinterwordspacing
-
-\bibitem{velickovic2018gat}
-\BIBentryALTinterwordspacing
-P.~Veli{\v{c}}kovi{\'{c}}, G.~Cucurull, A.~Casanova, A.~Romero, P.~Li{\`{o}},
-  and Y.~Bengio, ``Graph attention networks,'' in \emph{International
-  Conference on Learning Representations (ICLR)}, 2018. [Online]. Available:
-  \url{https://arxiv.org/abs/1710.10903}
-\BIBentrySTDinterwordspacing
-
-\bibitem{dwivedi2021graphtransformer}
-\BIBentryALTinterwordspacing
-V.~P. Dwivedi and X.~Bresson, ``A generalization of transformers to graphs,''
-  \emph{arXiv preprint arXiv:2012.09699}, 2021. [Online]. Available:
-  \url{https://arxiv.org/abs/2012.09699}
-\BIBentrySTDinterwordspacing
-
-\bibitem{brody2022how}
-\BIBentryALTinterwordspacing
-S.~Brody, U.~Alon, and E.~Yahav, ``How attentive are graph attention
-  networks?'' in \emph{International Conference on Learning Representations},
-  2022. [Online]. Available: \url{https://openreview.net/forum?id=F72ximsx7C1}
-\BIBentrySTDinterwordspacing
 
 \bibitem{11125797}
 A.~Raha, S.~Kundu, S.~N. Sridhar, S.~Kundu, S.~K. Ghosh, A.~Palla, A.~Das,
@@ -111,42 +52,6 @@ Z.~Bi, X.~Chen, L.~Sun, Y.~Yao, Q.~Shen, J.~Lou, and C.~Deng, ``Rooflinebench:
   [Online]. Available: \url{https://arxiv.org/abs/2602.11506}
 \BIBentrySTDinterwordspacing
 
-\bibitem{10.1145/3805796}
-\BIBentryALTinterwordspacing
-S.~Zhang, A.~Sohrabizadeh, C.~Wan, Z.~Huang, Z.~Hu, Y.~Wang, Y.~C. Lin,
-  J.~Cong, and Y.~Sun, ``A survey on graph neural network acceleration:
-  Algorithms, systems, and customized hardware,'' \emph{ACM Comput. Surv.},
-  vol.~58, no.~11, Apr. 2026. [Online]. Available:
-  \url{https://doi.org/10.1145/3805796}
-\BIBentrySTDinterwordspacing
-
-\bibitem{SINGH202371}
-\BIBentryALTinterwordspacing
-R.~Singh and S.~S. Gill, ``Edge ai: A survey,'' \emph{Internet of Things and
-  Cyber-Physical Systems}, vol.~3, pp. 71--92, 2023. [Online]. Available:
-  \url{https://www.sciencedirect.com/science/article/pii/S2667345223000196}
-\BIBentrySTDinterwordspacing
-
-\bibitem{10.1145/3701551.3703536}
-\BIBentryALTinterwordspacing
-G.~Chen, L.~Xia, and C.~Huang, ``Lightgnn: Simple graph neural network for
-  recommendation,'' in \emph{Proceedings of the Eighteenth ACM International
-  Conference on Web Search and Data Mining}, ser. WSDM '25.\hskip 1em plus
-  0.5em minus 0.4em\relax New York, NY, USA: Association for Computing
-  Machinery, 2025, p. 549–558. [Online]. Available:
-  \url{https://doi.org/10.1145/3701551.3703536}
-\BIBentrySTDinterwordspacing
-
-\bibitem{10.1145/3523230.3523235}
-\BIBentryALTinterwordspacing
-A.~Y. Ding, E.~Peltonen, T.~Meuser, A.~Aral, C.~Becker, S.~Dustdar, T.~Hiessl,
-  D.~Kranzlm\"{u}ller, M.~Liyanage, S.~Maghsudi, N.~Mohan, J.~Ott, J.~S.
-  Rellermeyer, S.~Schulte, H.~Schulzrinne, G.~Solmaz, S.~Tarkoma, B.~Varghese,
-  and L.~Wolf, ``Roadmap for edge ai: a dagstuhl perspective,'' \emph{SIGCOMM
-  Comput. Commun. Rev.}, vol.~52, no.~1, p. 28–33, Mar. 2022. [Online].
-  Available: \url{https://doi.org/10.1145/3523230.3523235}
-\BIBentrySTDinterwordspacing
-
 \bibitem{10.1145/3453483.3454083}
 \BIBentryALTinterwordspacing
 W.~Niu, J.~Guan, Y.~Wang, G.~Agrawal, and B.~Ren, ``Dnnfusion: accelerating
@@ -158,11 +63,34 @@ W.~Niu, J.~Guan, Y.~Wang, G.~Agrawal, and B.~Ren, ``Dnnfusion: accelerating
   \url{https://doi.org/10.1145/3453483.3454083}
 \BIBentrySTDinterwordspacing
 
+\bibitem{brody2022how}
+\BIBentryALTinterwordspacing
+S.~Brody, U.~Alon, and E.~Yahav, ``How attentive are graph attention
+  networks?'' in \emph{International Conference on Learning Representations},
+  2022. [Online]. Available: \url{https://openreview.net/forum?id=F72ximsx7C1}
+\BIBentrySTDinterwordspacing
+
 \bibitem{kumar2026forgeugcfxoptimizationregistergraph}
 \BIBentryALTinterwordspacing
 S.~Kumar and S.~Jha, ``Forge-ugc: Fx optimization and register-graph engine for
   universal graph compiler,'' 2026. [Online]. Available:
   \url{https://arxiv.org/abs/2604.16498}
+\BIBentrySTDinterwordspacing
+
+\bibitem{kipf2017gcn}
+\BIBentryALTinterwordspacing
+T.~N. Kipf and M.~Welling, ``Semi-supervised classification with graph
+  convolutional networks,'' in \emph{International Conference on Learning
+  Representations (ICLR)}, 2017. [Online]. Available:
+  \url{https://arxiv.org/abs/1609.02907}
+\BIBentrySTDinterwordspacing
+
+\bibitem{velickovic2018gat}
+\BIBentryALTinterwordspacing
+P.~Veli{\v{c}}kovi{\'{c}}, G.~Cucurull, A.~Casanova, A.~Romero, P.~Li{\`{o}},
+  and Y.~Bengio, ``Graph attention networks,'' in \emph{International
+  Conference on Learning Representations (ICLR)}, 2018. [Online]. Available:
+  \url{https://arxiv.org/abs/1710.10903}
 \BIBentrySTDinterwordspacing
 
 \bibitem{hamilton2017graphsage}
@@ -179,12 +107,27 @@ K.~Xu, W.~Hu, J.~Leskovec, and S.~Jegelka, ``How powerful are graph neural
   (ICLR)}, 2019. [Online]. Available: \url{https://arxiv.org/abs/1810.00826}
 \BIBentrySTDinterwordspacing
 
+\bibitem{wu2019sgc}
+\BIBentryALTinterwordspacing
+F.~Wu, A.~Souza, T.~Zhang, C.~Fifty, T.~Yu, and K.~Weinberger, ``Simplifying
+  graph convolutional networks,'' in \emph{International Conference on Machine
+  Learning (ICML)}, 2019. [Online]. Available:
+  \url{https://arxiv.org/abs/1902.07153}
+\BIBentrySTDinterwordspacing
+
 \bibitem{gasteiger2019appnp}
 \BIBentryALTinterwordspacing
 J.~Gasteiger, A.~Bojchevski, and S.~G{\"u}nnemann, ``Predict then propagate:
   Graph neural networks meet personalized pagerank,'' in \emph{International
   Conference on Learning Representations (ICLR)}, 2019. [Online]. Available:
   \url{https://arxiv.org/abs/1810.05997}
+\BIBentrySTDinterwordspacing
+
+\bibitem{dwivedi2021graphtransformer}
+\BIBentryALTinterwordspacing
+V.~P. Dwivedi and X.~Bresson, ``A generalization of transformers to graphs,''
+  \emph{arXiv preprint arXiv:2012.09699}, 2021. [Online]. Available:
+  \url{https://arxiv.org/abs/2012.09699}
 \BIBentrySTDinterwordspacing
 
 \bibitem{turc2019berttiny}
@@ -209,6 +152,13 @@ K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
   recognition,'' in \emph{IEEE Conference on Computer Vision and Pattern
   Recognition (CVPR)}, 2016, pp. 770--778. [Online]. Available:
   \url{https://arxiv.org/abs/1512.03385}
+\BIBentrySTDinterwordspacing
+
+\bibitem{SINGH202371}
+\BIBentryALTinterwordspacing
+R.~Singh and S.~S. Gill, ``Edge ai: A survey,'' \emph{Internet of Things and
+  Cyber-Physical Systems}, vol.~3, pp. 71--92, 2023. [Online]. Available:
+  \url{https://www.sciencedirect.com/science/article/pii/S2667345223000196}
 \BIBentrySTDinterwordspacing
 
 \bibitem{10.1145/3669940.3707239}
