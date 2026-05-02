@@ -1,11 +1,11 @@
 {
-    "FGR": 1.0057348824062309,
-    "CEI": 545.0509116741563,
-    "FusionGainRatio": 1.0057348824062309,
-    "CompilationEfficiencyIndex": 545.0509116741563,
-    "LatencyReduction_ms": 0.844600000000014,
-    "Baseline_Total_ms": 148.11876190476193,
-    "Optimized_Total_ms": 147.2741619047619,
+    "FGR": 1.004028776616072,
+    "CEI": 530.4721683960289,
+    "FusionGainRatio": 1.004028776616072,
+    "CompilationEfficiencyIndex": 530.4721683960289,
+    "LatencyReduction_ms": 0.6094476190476428,
+    "Baseline_Total_ms": 151.88306666666668,
+    "Optimized_Total_ms": 151.27361904761904,
     "NPU_Support_Ratio_Baseline_Pct": 33.12302839116719,
     "NPU_Support_Ratio_Optimized_Pct": 33.12302839116719
 }

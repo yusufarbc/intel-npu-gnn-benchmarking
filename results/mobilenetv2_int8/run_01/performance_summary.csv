@@ -1,3 +1,3 @@
 mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,1.7945950001012534,0.4265888393680614,972.57421875,0.0,100,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2_int8\run_01\baseline_profiling.json
-optimized,1.813359996303916,0.6963385831795779,972.57421875,28.5,100,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2_int8\run_01\optimized_profiling.json
+baseline,6.000042998930439,1.0994255418527983,1053.7265625,747.5,100,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2_int8\run_01\baseline_profiling.json
+optimized,5.772668999852613,0.9625000906562057,1053.7265625,770.7,100,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2_int8\run_01\optimized_profiling.json
