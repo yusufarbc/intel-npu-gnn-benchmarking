@@ -1,4 +1,4 @@
-# NPU GNN Benchmarking: Characterizing Graph Intelligence on Intel Core Ultra
+# Evaluating Operator Fusion and the Memory Wall for GNNs on Edge NPUs
 
 This project provides a comprehensive framework for analyzing the performance of **Graph Neural Networks (GNNs)** on the **Intel Core Ultra (Meteor Lake)** architecture. It enables cross-architectural benchmarking (CPU vs iGPU vs NPU) and introduces formal metrics to quantify the efficiency of graph-based hardware acceleration.
 

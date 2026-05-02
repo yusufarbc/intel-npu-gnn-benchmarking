@@ -23,6 +23,7 @@
 \@writefile{toc}{\contentsline {section}{\numberline {II}Background}{1}{section.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-A}}Graph Neural Network Evolution}{1}{subsection.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-B}}NPU vs. GPU Architecture for Graphs}{1}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}GNNs in the Edge AI Ecosystem}{1}{subsection.2.3}\protected@file@percent }
 \citation{10.1145/3453483.3454083}
 \citation{kumar2026forgeugcfxoptimizationregistergraph}
 \citation{kipf2017gcn}
@@ -35,7 +36,6 @@
 \citation{turc2019berttiny}
 \citation{sandler2018mobilenetv2}
 \citation{he2016resnet}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-C}}GNNs in the Edge AI Ecosystem}{2}{subsection.2.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {II-D}}Operator Fusion and Graph Optimization}{2}{subsection.2.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {III}Methodology}{2}{section.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Experimental Setup}{2}{subsection.3.1}\protected@file@percent }
@@ -49,16 +49,17 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Hardware-Software Latency Comparison}{2}{subsection.4.1}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Comprehensive Results: Latency, Power, and Efficiency}}{2}{table.caption.2}\protected@file@percent }
 \newlabel{tab:results_lat}{{II}{2}{Comprehensive Results: Latency, Power, and Efficiency}{table.caption.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Quantitative Results by Model Family}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Quantitative Results by Model Family}{2}{subsection.4.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Latency Composition Analysis}{3}{subsection.4.3}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Latency Breakdown: Compute vs. Memory vs. Dispatch Overhead.}}{3}{figure.caption.3}\protected@file@percent }
 \newlabel{fig:breakdown}{{1}{3}{Latency Breakdown: Compute vs. Memory vs. Dispatch Overhead}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Scalability Analysis}{3}{subsection.4.4}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces NPU Support Ratio: Percentage of Native NPU Execution.}}{3}{figure.caption.4}\protected@file@percent }
 \newlabel{fig:fallback}{{2}{3}{NPU Support Ratio: Percentage of Native NPU Execution}{figure.caption.4}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Fusion Gain Ratio (FGR) Divergence: GNNs vs. Vision Models.}}{3}{figure.caption.5}\protected@file@percent }
 \newlabel{fig:fgr}{{3}{3}{Fusion Gain Ratio (FGR) Divergence: GNNs vs. Vision Models}{figure.caption.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Scalability Analysis}{3}{subsection.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {V}Hardware-Software Maturity Analysis}{3}{section.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces NPU Scalability: Relative Speedup vs. Feature Dimension.}}{3}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:speedup}{{4}{3}{NPU Scalability: Relative Speedup vs. Feature Dimension}{figure.caption.6}{}}
 \citation{bi2026rooflinebenchbenchmarkingframeworkondevice}
 \citation{SINGH202371,10.1145/3669940.3707239}
 \citation{mlperf_inference}
@@ -69,18 +70,18 @@
 \bibstyle{IEEEtran}
 \bibdata{references}
 \bibcite{10.1145/3477141}{1}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces NPU Scalability: Relative Speedup vs. Feature Dimension.}}{4}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:speedup}{{4}{4}{NPU Scalability: Relative Speedup vs. Feature Dimension}{figure.caption.6}{}}
+\bibcite{intel_core_ultra_npu}{2}
+\bibcite{9161360}{3}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Hardware-Software Maturity Analysis}{4}{section.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{4}{section.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Memory Wall vs. Compute Bound}{4}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}Original Contribution: Metric-Based Characterization}{4}{subsection.6.2}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Roofline Model Analysis: Identifying the Memory Bottleneck.}}{4}{figure.caption.7}\protected@file@percent }
 \newlabel{fig:roofline}{{5}{4}{Roofline Model Analysis: Identifying the Memory Bottleneck}{figure.caption.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}Original Contribution: Metric-Based Characterization}{4}{subsection.6.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}Literature Comparison}{4}{subsection.6.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}Future Work}{4}{subsection.6.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{4}{section.7}\protected@file@percent }
-\bibcite{intel_core_ultra_npu}{2}
-\bibcite{9161360}{3}
+\@writefile{toc}{\contentsline {section}{References}{4}{section*.8}\protected@file@percent }
 \bibcite{9218751}{4}
 \bibcite{9065592}{5}
 \bibcite{9858684}{6}
@@ -106,5 +107,4 @@
 \bibcite{10.1145/3669940.3707239}{26}
 \bibcite{mlperf_inference}{27}
 \bibcite{10.5555/3618408.3619718}{28}
-\@writefile{toc}{\contentsline {section}{References}{5}{section*.8}\protected@file@percent }
 \gdef \@abspage@last{5}
