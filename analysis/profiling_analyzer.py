@@ -21,10 +21,22 @@ import numpy as np
 import pandas as pd
 
 # Use academic style
+# Use academic style
 try:
+    import scienceplots
     plt.style.use(['science', 'ieee', 'no-latex'])
+    plt.rcParams.update({
+        "font.size": 11,
+        "axes.labelsize": 12,
+        "axes.titlesize": 14,
+        "xtick.labelsize": 10,
+        "ytick.labelsize": 10,
+        "legend.fontsize": 9,
+        "figure.dpi": 300
+    })
 except:
-    plt.style.use('ggplot') # Fallback
+    plt.style.use('ggplot')
+    plt.rcParams.update({"font.size": 12})
 
 
 @dataclass
@@ -289,7 +301,8 @@ class ProfilingAnalyzer:
         plt.title("Latency Breakdown: Where is time spent?")
         plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
         plt.tight_layout()
-        plt.savefig(self.config.results_dir / "latency_stacked_100pct.png", dpi=300)
+        plt.savefig(self.config.results_dir / "latency_stacked_100pct.png", dpi=300, bbox_inches='tight')
+        plt.savefig(self.config.results_dir / "latency_stacked_100pct.svg", bbox_inches='tight')
         plt.close()
 
     def _save_fgr_diverging_chart(self, metrics: Dict[str, Any]) -> None:
@@ -305,7 +318,8 @@ class ProfilingAnalyzer:
         plt.title("Optimization Efficiency (Baseline = 1.0)")
         plt.xlim(max(0, fgr - 1.5), fgr + 0.5)
         plt.tight_layout()
-        plt.savefig(self.config.results_dir / "fgr_diverging.png", dpi=300)
+        plt.savefig(self.config.results_dir / "fgr_diverging.png", dpi=300, bbox_inches='tight')
+        plt.savefig(self.config.results_dir / "fgr_diverging.svg", bbox_inches='tight')
         plt.close()
 
     def _save_provider_chart(self, df: pd.DataFrame) -> None:
@@ -318,7 +332,8 @@ class ProfilingAnalyzer:
         plt.title("Execution Provider Distribution: NPU vs CPU Fallback")
         plt.legend(title="Provider", bbox_to_anchor=(1.05, 1), loc='upper left')
         plt.tight_layout()
-        plt.savefig(self.config.results_dir / "provider_fallback_analysis.png", dpi=200)
+        plt.savefig(self.config.results_dir / "provider_fallback_analysis.png", dpi=300, bbox_inches='tight')
+        plt.savefig(self.config.results_dir / "provider_fallback_analysis.svg", bbox_inches='tight')
         plt.close()
 
     def _save_breakdown_chart(self, df: pd.DataFrame) -> None:
@@ -336,7 +351,8 @@ class ProfilingAnalyzer:
         plt.title("Latency Breakdown: Compute vs DMA vs Dispatch")
         plt.legend()
         plt.tight_layout()
-        plt.savefig(self.config.results_dir / "latency_breakdown.png", dpi=200)
+        plt.savefig(self.config.results_dir / "latency_breakdown.png", dpi=300, bbox_inches='tight')
+        plt.savefig(self.config.results_dir / "latency_breakdown.svg", bbox_inches='tight')
         plt.close()
 
     def _generate_summary(self, df: pd.DataFrame, metrics: Dict[str, Any]) -> None:
@@ -378,7 +394,8 @@ class ProfilingAnalyzer:
         plt.title("Operator Breakdown: Baseline vs Optimized")
         plt.legend()
         plt.tight_layout()
-        plt.savefig(self.config.results_dir / "operator_breakdown_topk.png", dpi=200)
+        plt.savefig(self.config.results_dir / "operator_breakdown_topk.png", dpi=300, bbox_inches='tight')
+        plt.savefig(self.config.results_dir / "operator_breakdown_topk.svg", bbox_inches='tight')
         plt.close()
 
 

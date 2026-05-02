@@ -24,8 +24,18 @@ from onnx import shape_inference
 # Use academic style
 try:
     plt.style.use(['science', 'ieee', 'no-latex'])
+    plt.rcParams.update({
+        "font.size": 11,
+        "axes.labelsize": 12,
+        "axes.titlesize": 14,
+        "xtick.labelsize": 10,
+        "ytick.labelsize": 10,
+        "legend.fontsize": 9,
+        "figure.dpi": 300
+    })
 except:
     plt.style.use('ggplot')
+    plt.rcParams.update({"font.size": 12})
 
 # Adjust import after reorganization
 import sys
@@ -206,7 +216,8 @@ class ScalabilityVisualizer:
         plt.title("Optimization Speedup vs Model Size (with Variance)")
         plt.grid(alpha=0.2)
         plt.tight_layout()
-        plt.savefig(results_dir / "scalability_speedup.png", dpi=300)
+        plt.savefig(results_dir / "scalability_speedup.png", dpi=300, bbox_inches='tight')
+        plt.savefig(results_dir / "scalability_speedup.svg", bbox_inches='tight')
         plt.close()
 
         # Plot Roofline
@@ -220,13 +231,21 @@ class ScalabilityVisualizer:
             plt.plot(ai_vals, roofline, 'k--', alpha=0.5, label="Hardware Roofline")
             
             # Plot models
-            for i, row in ordered.iterrows():
-                # GFLOPS = Total_FLOPs / (Mean_Latency_ms / 1000) / 1e9
-                gflops = (row["flops"] / (row["o_mean_ms"] / 1000.0)) / 1e9
-                
-                color = "#d1495b" if "GCN" in row["model"] or "GAT" in row["model"] else "#00798c"
-                plt.scatter(row["ai"], gflops, label=row["model"], s=80, edgecolors='k', color=color, zorder=5)
-                plt.text(row["ai"]*1.1, gflops*1.1, row["model"], fontsize=7)
+            try:
+                from adjustText import adjust_text
+                texts = []
+                for i, row in ordered.iterrows():
+                    gflops = (row["flops"] / (row["o_mean_ms"] / 1000.0)) / 1e9
+                    color = "#d1495b" if "GCN" in row["model"] or "GAT" in row["model"] else "#00798c"
+                    plt.scatter(row["ai"], gflops, label=row["model"], s=100, edgecolors='k', color=color, zorder=5)
+                    texts.append(plt.text(row["ai"], gflops, row["model"], fontsize=9, fontweight='bold'))
+                adjust_text(texts, arrowprops=dict(arrowstyle='->', color='red', lw=0.5))
+            except ImportError:
+                for i, row in ordered.iterrows():
+                    gflops = (row["flops"] / (row["o_mean_ms"] / 1000.0)) / 1e9
+                    color = "#d1495b" if "GCN" in row["model"] or "GAT" in row["model"] else "#00798c"
+                    plt.scatter(row["ai"], gflops, label=row["model"], s=100, edgecolors='k', color=color, zorder=5)
+                    plt.text(row["ai"]*1.05, gflops*1.05, row["model"], fontsize=9)
             
             plt.xscale("log")
             plt.yscale("log")
@@ -236,7 +255,8 @@ class ScalabilityVisualizer:
             plt.grid(True, which="both", ls="-", alpha=0.1)
             plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
             plt.tight_layout()
-            plt.savefig(results_dir / "roofline_model.png", dpi=300)
+            plt.savefig(results_dir / "roofline_model.png", dpi=300, bbox_inches='tight')
+            plt.savefig(results_dir / "roofline_model.svg", bbox_inches='tight')
             plt.close()
 
         # Plot Latency Comparison with Error Bars
@@ -251,7 +271,8 @@ class ScalabilityVisualizer:
         plt.title("Hardware Performance Across Models (with Variance)")
         plt.legend()
         plt.tight_layout()
-        plt.savefig(results_dir / "scalability_latency.png", dpi=300)
+        plt.savefig(results_dir / "scalability_latency.png", dpi=300, bbox_inches='tight')
+        plt.savefig(results_dir / "scalability_latency.svg", bbox_inches='tight')
         plt.close()
 
         # New: Pareto Frontier (Performance vs Parameters)
@@ -264,15 +285,23 @@ class ScalabilityVisualizer:
         plt.colorbar(label="Arithmetic Intensity (AI)")
         
         # Annotate
-        for _, row in df.iterrows():
-            plt.text(row["params_mil"], row["o_mean_ms"], row["model"], fontsize=8)
+        try:
+            from adjustText import adjust_text
+            texts = []
+            for _, row in df.iterrows():
+                texts.append(plt.text(row["params_mil"], row["o_mean_ms"], row["model"], fontsize=9, fontweight='bold'))
+            adjust_text(texts, arrowprops=dict(arrowstyle='->', color='blue', lw=0.5))
+        except ImportError:
+            for _, row in df.iterrows():
+                plt.text(row["params_mil"]*1.05, row["o_mean_ms"]*1.05, row["model"], fontsize=9)
             
         plt.xlabel("Model Size (Millions of Parameters)")
         plt.ylabel("Inference Latency (ms)")
         plt.title("Performance-Complexity Pareto Frontier")
         plt.grid(alpha=0.2)
         plt.tight_layout()
-        plt.savefig(results_dir / "pareto_frontier.png", dpi=300)
+        plt.savefig(results_dir / "pareto_frontier.png", dpi=300, bbox_inches='tight')
+        plt.savefig(results_dir / "pareto_frontier.svg", bbox_inches='tight')
         plt.close()
 
 

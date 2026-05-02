@@ -15,6 +15,23 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import sys
 
+# Use academic style
+try:
+    import scienceplots
+    plt.style.use(['science', 'ieee', 'no-latex'])
+    plt.rcParams.update({
+        "font.size": 11,
+        "axes.labelsize": 12,
+        "axes.titlesize": 14,
+        "xtick.labelsize": 10,
+        "ytick.labelsize": 10,
+        "legend.fontsize": 9,
+        "figure.dpi": 300
+    })
+except:
+    plt.style.use('ggplot')
+    plt.rcParams.update({"font.size": 12})
+
 # Add project root to path for imports
 project_root = Path(__file__).resolve().parent.parent
 sys.path.append(str(project_root))
@@ -219,8 +236,10 @@ class HWComparator:
 
         plt.suptitle(f"Hardware Comparison: {self.model_path.name}\n(Mean of {self.repeats} runs)")
         plt.tight_layout()
-        chart_name = f"hw_compare_{self.model_path.stem}.png"
-        plt.savefig(self.results_dir / chart_name, dpi=200)
+        chart_name_png = f"hw_compare_{self.model_path.stem}.png"
+        chart_name_svg = f"hw_compare_{self.model_path.stem}.svg"
+        plt.savefig(self.results_dir / chart_name_png, dpi=300, bbox_inches='tight')
+        plt.savefig(self.results_dir / chart_name_svg, bbox_inches='tight')
         plt.close()
 
 
