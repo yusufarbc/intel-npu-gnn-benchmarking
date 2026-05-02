@@ -1,6 +1,10 @@
 import argparse
+import logging
 import os
+import shutil
 import urllib.request
+import warnings
+from contextlib import contextmanager
 from pathlib import Path
 
 import numpy as np
@@ -24,6 +28,40 @@ except ImportError:
     quantize_dynamic = None
     QuantType = None
     print("onnxruntime not found. Please pip install onnxruntime")
+
+logging.getLogger("nncf").setLevel(logging.ERROR)
+logging.getLogger("onnxruntime").setLevel(logging.ERROR)
+
+
+@contextmanager
+def suppress_noise_warnings():
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*treespec.*",
+            category=FutureWarning,
+        )
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*overflow encountered in reduce.*",
+            category=RuntimeWarning,
+        )
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*invalid value encountered in cast.*",
+            category=RuntimeWarning,
+        )
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*Dataset contains only.*",
+            category=UserWarning,
+        )
+        warnings.filterwarnings(
+            "ignore",
+            message=r".*per-channel quantization.*per-tensor.*",
+            category=UserWarning,
+        )
+        yield
 
 class GCN(torch.nn.Module):
     def __init__(self, in_channels, hidden_channels, out_channels):
@@ -129,10 +167,73 @@ def download_file(url: str, dest: Path):
         return
     print(f"Downloading {url} to {dest}...")
     try:
-        urllib.request.urlretrieve(url, dest)
+        # NOTE: Some hosts (e.g., Hugging Face) may reject requests without a User-Agent.
+        req = urllib.request.Request(url, headers={"User-Agent": "npu-graph-opt-benchmarking/1.0"})
+        with urllib.request.urlopen(req) as resp, open(dest, "wb") as f:
+            shutil.copyfileobj(resp, f)
         print("Download complete.")
     except Exception as exc:
         print(f"Download failed for {dest.name}: {exc}")
+
+
+def export_bert_tiny_fp32(dest: Path, *, model_id: str = "prajjwal1/bert-tiny", seq_len: int = 128) -> None:
+    """Export a small BERT model to ONNX.
+
+    This is used as a fallback when pre-exported ONNX artifacts are unavailable
+    (e.g., gated/private URLs).
+    """
+    if dest.exists():
+        print(f"File already exists: {dest.name}")
+        return
+
+    try:
+        # Use explicit Bert* classes because some older HF repos don't include
+        # `model_type` in config.json, which breaks AutoModel resolution.
+        from transformers import BertConfig, BertModel
+    except ImportError as exc:
+        raise ImportError(
+            "transformers is required to export BERT-tiny locally. "
+            "Install it with: pip install transformers"
+        ) from exc
+
+    print(f"Exporting BERT-tiny from Transformers ({model_id}) to {dest}...")
+
+    config = BertConfig.from_pretrained(model_id)
+    config.return_dict = False
+    model = BertModel.from_pretrained(model_id, config=config)
+    model.eval()
+
+    batch = 1
+    vocab = int(getattr(config, "vocab_size", 30522) or 30522)
+    input_ids = torch.randint(0, vocab, (batch, seq_len), dtype=torch.long)
+    attention_mask = torch.ones((batch, seq_len), dtype=torch.long)
+    token_type_ids = torch.zeros((batch, seq_len), dtype=torch.long)
+
+    class _Wrapper(torch.nn.Module):
+        def __init__(self, m: torch.nn.Module):
+            super().__init__()
+            self.m = m
+
+        def forward(self, input_ids, attention_mask, token_type_ids):
+            return self.m(
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                token_type_ids=token_type_ids,
+            )
+
+    wrapper = _Wrapper(model)
+
+    torch.onnx.export(
+        wrapper,
+        (input_ids, attention_mask, token_type_ids),
+        str(dest),
+        input_names=["input_ids", "attention_mask", "token_type_ids"],
+        output_names=["last_hidden_state", "pooler_output"],
+        opset_version=18,
+        do_constant_folding=True,
+        training=torch.onnx.TrainingMode.EVAL,
+    )
+    print("Done.")
 
 def quantize_model(input_path: Path, output_path: Path):
     if output_path.exists():
@@ -142,11 +243,18 @@ def quantize_model(input_path: Path, output_path: Path):
     try:
         if quantize_dynamic is None:
             raise RuntimeError("onnxruntime quantization not available")
-        quantize_dynamic(
-            model_input=str(input_path),
-            model_output=str(output_path),
-            weight_type=QuantType.QUInt8,
-        )
+        with suppress_noise_warnings():
+            root_logger = logging.getLogger()
+            prev_level = root_logger.level
+            root_logger.setLevel(logging.ERROR)
+            try:
+                quantize_dynamic(
+                    model_input=str(input_path),
+                    model_output=str(output_path),
+                    weight_type=QuantType.QUInt8,
+                )
+            finally:
+                root_logger.setLevel(prev_level)
         print(f"Quantization complete: {output_path.name}")
     except Exception as e:
         print(f"Failed to quantize {input_path.name}: {e}")
@@ -184,6 +292,7 @@ def export_gnn_models(models_dir: Path) -> None:
             output_names=["output"],
             opset_version=18,
             do_constant_folding=use_constant_folding,
+            training=torch.onnx.TrainingMode.EVAL,
         )
         print("Done.")
 
@@ -259,7 +368,7 @@ def quantize_gnn_to_int8(onnx_path: Path) -> None:
 
         input_info.append((name, tuple(shape), dtype))
 
-    num_calibration_samples = 50
+    num_calibration_samples = 300
     for _ in range(num_calibration_samples):
         item = {}
         for name, shape, dtype in input_info:
@@ -271,7 +380,8 @@ def quantize_gnn_to_int8(onnx_path: Path) -> None:
         calibration_data.append(item)
 
     calibration_dataset = nncf.Dataset(calibration_data, transform_fn)
-    quantized_model = nncf.quantize(model, calibration_dataset)
+    with suppress_noise_warnings():
+        quantized_model = nncf.quantize(model, calibration_dataset)
     onnx.save(quantized_model, str(int8_path))
     print(f"Saved INT8 model to {int8_path}")
 
@@ -281,7 +391,10 @@ def prepare_baseline_models(models_dir: Path) -> None:
         "resnet50": "https://github.com/onnx/models/raw/main/validated/vision/classification/resnet/model/resnet50-v1-7.onnx",
         "mobilenetv2": "https://github.com/onnx/models/raw/main/validated/vision/classification/mobilenet/model/mobilenetv2-7.onnx",
     }
-    bert_tiny_url = "https://huggingface.co/optimum/bert-tiny-uncased/resolve/main/model.onnx"
+    # NOTE: This Hugging Face ONNX artifact has become gated in some environments (HTTP 401).
+    # We keep it as an optional path (when the user has a token), and otherwise export locally.
+    bert_tiny_hf_repo = "optimum/bert-tiny-uncased"
+    bert_tiny_hf_file = "model.onnx"
 
     def _quantize_cnn_to_int8_nncf(fp32_path: Path, int8_path: Path) -> None:
         """Quantize vision CNN models into an OpenVINO-friendly INT8 ONNX.
@@ -313,10 +426,10 @@ def prepare_baseline_models(models_dir: Path) -> None:
 
             model = onnx.load(str(fp32_path))
 
-            # Ensure opset >= 10 for NNCF quantization.
+            # Ensure opset >= 13 for NNCF per-channel quantization support.
             opset = max((op.version for op in model.opset_import if (op.domain or "") == ""), default=0)
-            if opset and opset < 11:
-                model = version_converter.convert_version(model, 11)
+            if opset and opset < 13:
+                model = version_converter.convert_version(model, 13)
 
             # Remove initializer-inputs and bump IR version to modern semantics.
             init_names = {init.name for init in model.graph.initializer}
@@ -346,7 +459,7 @@ def prepare_baseline_models(models_dir: Path) -> None:
 
             rng = np.random.default_rng(0)
             calibration_data = []
-            for _ in range(3):
+            for _ in range(300):
                 item = {}
                 for name, shape, dtype in input_info:
                     if np.issubdtype(dtype, np.floating):
@@ -356,7 +469,8 @@ def prepare_baseline_models(models_dir: Path) -> None:
                 calibration_data.append(item)
 
             dataset = nncf.Dataset(calibration_data, lambda x: x)
-            quantized_model = nncf.quantize(model, dataset)
+            with suppress_noise_warnings():
+                quantized_model = nncf.quantize(model, dataset)
             onnx.save(quantized_model, str(int8_path))
             checker.check_model(onnx.load(str(int8_path)))
             print(f"NNCF INT8 saved: {int8_path.name}")
@@ -378,7 +492,26 @@ def prepare_baseline_models(models_dir: Path) -> None:
     print("\nProcessing NLP/Transformer Models...")
     bert_fp32 = models_dir / "bert-tiny_fp32.onnx"
     if not bert_fp32.exists():
-        download_file(bert_tiny_url, bert_fp32)
+        token = os.environ.get("HF_TOKEN") or os.environ.get("HUGGINGFACE_HUB_TOKEN")
+        if token:
+            try:
+                from huggingface_hub import hf_hub_download
+
+                cached_path = hf_hub_download(
+                    repo_id=bert_tiny_hf_repo,
+                    filename=bert_tiny_hf_file,
+                    token=token,
+                )
+                shutil.copyfile(cached_path, bert_fp32)
+                print(f"Downloaded BERT-tiny ONNX from Hugging Face Hub -> {bert_fp32.name}")
+            except Exception as exc:
+                print(f"Hugging Face ONNX download failed: {exc}")
+
+        if not bert_fp32.exists():
+            try:
+                export_bert_tiny_fp32(bert_fp32)
+            except Exception as exc:
+                print(f"Failed to create {bert_fp32.name}: {exc}")
 
     if bert_fp32.exists():
         bert_int8 = models_dir / "bert-tiny_int8.onnx"

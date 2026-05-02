@@ -1,0 +1,4 @@
+device,latency_ms,std_ms,throughput_ips,peak_memory_mb,cpu_util_pct,status,reason
+CPU,5.1944400048038615,0.0,192.51353352338108,198.015625,831.3,ok,
+GPU,,,0.0,,,skipped,OpenVINO GPU backend fails for this model; GPU results are not supported.
+NPU,6.145310004164155,0.0,162.72572080535969,349.8203125,676.8,ok,

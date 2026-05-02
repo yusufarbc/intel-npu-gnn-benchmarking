@@ -150,6 +150,11 @@ class BenchmarkRunner:
     def _create_session(self, mode: BenchmarkMode) -> ort.InferenceSession:
         session_options = ort.SessionOptions()
         session_options.enable_profiling = self.config.enable_profiling
+        if self.config.enable_profiling:
+            # By default ORT writes `onnxruntime_profile__*.json` into the process CWD.
+            # Put them into the per-run results folder to avoid cluttering the project root.
+            prefix = self.config.results_dir / f"{mode.slug}_onnxruntime_profile"
+            session_options.profile_file_prefix = str(prefix)
         session_options.graph_optimization_level = mode.graph_level
         session_options.log_severity_level = 4
 

@@ -1,2 +1,2 @@
 operator,b_count,b_total_ms,b_avg_ms,o_count,o_total_ms,o_avg_ms,reduction_pct
-OpenVINO-EP-subgraph_202,105.0,15716.34,149.6794285714286,0.0,0.0,0.0,100.0
+OpenVINO-EP-subgraph_143,105.0,15544.399,148.04189523809524,0.0,0.0,0.0,100.0

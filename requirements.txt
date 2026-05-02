@@ -8,6 +8,7 @@ pandas
 matplotlib
 scienceplots
 huggingface_hub
+transformers
 psutil
 torch
 torch-geometric

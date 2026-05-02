@@ -29,6 +29,55 @@ class HWComparator:
         self.results_dir.mkdir(parents=True, exist_ok=True)
         self.iterations = iterations
         self.repeats = repeats
+        self.unsupported_gpu_models = {"bert-tiny_fp32"}
+
+    def _skip_reason(self, device: str) -> str | None:
+        if device == "GPU" and self.model_path.stem in self.unsupported_gpu_models:
+            return "OpenVINO GPU backend fails for this model; GPU results are not supported."
+        return None
+
+    def _write_skipped_outputs(self, device: str, reason: str) -> None:
+        import numpy as np
+
+        for r in range(self.repeats):
+            run_dir = self.results_dir / device / f"run_{r:02d}"
+            run_dir.mkdir(parents=True, exist_ok=True)
+            df = pd.DataFrame(
+                [
+                    {
+                        "mode": "baseline",
+                        "avg_latency_ms": np.nan,
+                        "std_latency_ms": np.nan,
+                        "peak_memory_mb": np.nan,
+                        "cpu_utilization_pct": np.nan,
+                        "iterations": self.iterations,
+                        "providers": "",
+                        "profiling_json": "",
+                        "status": "skipped",
+                        "reason": reason,
+                    },
+                    {
+                        "mode": "optimized",
+                        "avg_latency_ms": np.nan,
+                        "std_latency_ms": np.nan,
+                        "peak_memory_mb": np.nan,
+                        "cpu_utilization_pct": np.nan,
+                        "iterations": self.iterations,
+                        "providers": "",
+                        "profiling_json": "",
+                        "status": "skipped",
+                        "reason": reason,
+                    },
+                ]
+            )
+            df.to_csv(run_dir / "performance_summary.csv", index=False)
+
+            plt.figure(figsize=(5, 3))
+            plt.text(0.5, 0.5, f"{device} skipped\n{reason}", ha="center", va="center")
+            plt.axis("off")
+            plt.tight_layout()
+            plt.savefig(run_dir / "performance_comparison.png", dpi=150)
+            plt.close()
 
     def run(self):
         import datetime
@@ -42,6 +91,23 @@ class HWComparator:
         results = []
 
         for device in devices:
+            reason = self._skip_reason(device)
+            if reason:
+                print(f"  ⚠️ Skip: Device {device} skipped for {self.model_path.name}: {reason}")
+                self._write_skipped_outputs(device, reason)
+                results.append(
+                    {
+                        "device": device,
+                        "latency_ms": np.nan,
+                        "std_ms": np.nan,
+                        "throughput_ips": 0.0,
+                        "peak_memory_mb": np.nan,
+                        "cpu_util_pct": np.nan,
+                        "status": "skipped",
+                        "reason": reason,
+                    }
+                )
+                continue
             try:
                 start_device = datetime.datetime.now()
                 print(f"[{start_device.strftime('%H:%M:%S')}] Testing device: {device}...")
@@ -84,14 +150,29 @@ class HWComparator:
                     "std_ms": std_lat,
                     "throughput_ips": 1000.0 / avg_lat if avg_lat > 0 else 0,
                     "peak_memory_mb": avg_mem,
-                    "cpu_util_pct": avg_cpu
+                    "cpu_util_pct": avg_cpu,
+                    "status": "ok",
                 })
                 
                 end_device = datetime.datetime.now()
                 duration_device = (end_device - start_device).total_seconds()
                 print(f"[{end_device.strftime('%H:%M:%S')}] Device {device} completed ({self.repeats} runs) in {duration_device:.2f} seconds.")
             except Exception as e:
+                reason = f"Exception during benchmarking: {e}"
                 print(f"  ⚠️ Skip: Device {device} failed for {self.model_path.name}: {e}")
+                self._write_skipped_outputs(device, reason)
+                results.append(
+                    {
+                        "device": device,
+                        "latency_ms": np.nan,
+                        "std_ms": np.nan,
+                        "throughput_ips": 0.0,
+                        "peak_memory_mb": np.nan,
+                        "cpu_util_pct": np.nan,
+                        "status": "failed",
+                        "reason": reason,
+                    }
+                )
 
         summary_df = pd.DataFrame(results)
         summary_df.to_csv(self.results_dir / "hw_comparison_summary.csv", index=False)
@@ -109,13 +190,18 @@ class HWComparator:
         if df.empty:
             print(f"  ⚠️ Skipping plots for {self.model_path.name}: No successful benchmark data.")
             return
+
+        df_ok = df[df.get("status", "ok") == "ok"].copy()
+        if df_ok.empty:
+            print(f"  ⚠️ Skipping plots for {self.model_path.name}: All devices skipped.")
+            return
             
         plt.figure(figsize=(10, 6))
         colors = ["#264653", "#2a9d8f", "#e9c46a"]
         
         # Plot Latency
         plt.subplot(1, 2, 1)
-        bars = plt.bar(df["device"], df["latency_ms"], yerr=df.get("std_ms", 0), capsize=5, color=colors)
+        bars = plt.bar(df_ok["device"], df_ok["latency_ms"], yerr=df_ok.get("std_ms", 0), capsize=5, color=colors[: len(df_ok)])
         plt.ylabel("Latency (ms)")
         plt.title("Latency (Lower is Better)")
         for bar in bars:
@@ -124,7 +210,7 @@ class HWComparator:
 
         # Plot Throughput
         plt.subplot(1, 2, 2)
-        bars = plt.bar(df["device"], df["throughput_ips"], color=colors)
+        bars = plt.bar(df_ok["device"], df_ok["throughput_ips"], color=colors[: len(df_ok)])
         plt.ylabel("Inferences / Second")
         plt.title("Throughput (Higher is Better)")
         for bar in bars:
