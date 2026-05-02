@@ -1,36 +1,37 @@
-# Technical Guide: Python Scripts
+# Teknik Rehber: Python Analiz Scriptleri
 
-Proje kapsamında geliştirilen ve güncellenen scriptlerin teknik detayları aşağıdadır.
+Proje kapsamında geliştirilen analiz ve otomasyon scriptlerinin teknik rolleri ve kullanım detayları aşağıdadır.
 
-## 1. Core Engine Scripts
+## 1. Çekirdek İşlem Scriptleri
 
 ### `analysis/benchmark_runner.py`
-ONNX Runtime ve OpenVINO kullanarak modelleri hedeflenen donanımda (NPU/GPU/CPU) koşturur.
-*   **GNN Desteği:** Node features (`x`) ve `edge_index` gibi GNN-spesifik girdileri otomatik üretir.
-*   **Profilleme:** ORT profiling JSON dosyalarını oluşturur.
-*   **Resource Tracking:** `psutil` ile CPU ve bellek kullanımını takip eder.
+Modelleri hedeflenen donanımda (NPU/GPU/CPU) koşturan ana motor.
+*   **GNN Girdileri:** Cora veri seti yapısına uygun `x` ve `edge_index` tensörlerini üretir.
+*   **Profilleme:** ONNX Runtime profiling izlerini (trace) JSON formatında oluşturur.
 
 ### `scripts/generate_gnn_models.py`
-PyTorch Geometric kullanarak benchmark için standart GNN modellerini üretir.
-*   **Desteklenen Modeller:** GCN, GraphSAGE, GAT, GIN, SGC, APPNP, GraphTransformer.
-*   **ONNX Export:** Modelleri NPU uyumluluğu için legacy ONNX exporter (`dynamo=False`) ve sabit shape'lerle (Cora ölçeği) dışa aktarır.
+PyTorch Geometric (PyG) kullanarak 7 farklı GNN mimarisini ONNX formatına dönüştürür.
+*   **Sabit Şekiller:** NPU uyumluluğu için dinamik shape'ler yerine statik shape padding uygular.
 
-## 2. Analysis Scripts
+## 2. Analiz ve Görselleştirme Scriptleri
 
 ### `analysis/profiling_analyzer.py`
-ORT tarafından üretilen JSON profillerini parse eder ve akademik raporları oluşturur.
-*   **Gelişmiş Metrikler:** FGR ve CEI değerlerini hesaplar.
-*   **Breakdown:** Toplam süreyi Compute, DMA ve Dispatch olarak ayrıştırır.
-*   **Görselleştirme:** Operator bazlı hızlanma ve gecikme dağılım grafiklerini (`latency_breakdown.png`) üretir.
+Donanım profil izlerini parse ederek akademik figürler üretir.
+*   **Dışa Aktarma:** `latency_breakdown`, `fgr_diverging` ve `provider_fallback` grafiklerini 300 DPI ve SVG formatında üretir.
+*   **Metrikler:** FGR ve CEI değerlerini hesaplayarak `advanced_metrics.json` dosyasına kaydeder.
 
 ### `analysis/scalability_analyzer.py`
-Farklı model boyutları ve mimarileri arasında performans karşılaştırması yapar.
-*   **Roofline Visualization:** Her modelin aritmetik yoğunluğunu hesaplayıp Roofline grafiğine yerleştirir.
-*   **Scalability Matrix:** Modellerin parametre sayısına göre performans değişimini `scalability_matrix.csv` dosyasına kaydeder.
+Model boyutu ve karmaşıklığına göre performans değişimini ölçer.
+*   **Roofline Modeli:** Donanım limitlerine göre model verimliliğini görselleştirir.
+*   **Pareto Sınırı:** Parametre sayısı ve gecikme arasındaki dengeyi analiz eder.
 
-## 3. Pipeline Orchestrator
+### `analysis/hw_comparison.py`
+Belirli bir model için CPU, iGPU ve NPU arasında 3 yönlü performans karşılaştırması yapar.
+
+## 3. Otomasyon Hattı
 
 ### `run_pipeline.py`
-Tüm süreci tek komutla yönetir.
-*   Sırasıyla: Profilleme -> Analiz -> Scalability -> Hardware Comparison adımlarını çalıştırır.
-*   Nihai görsel sonuçları `paper/figures/` klasörüne kopyalar.
+Tüm süreci uçtan uca yöneten orkestratör. Modelleri üretir, tüm donanımlarda test eder, analizleri yapar ve sonuçları `paper/figures/` dizinine kopyalar.
+
+---
+*Son Güncelleme: 2 Mayıs 2026*

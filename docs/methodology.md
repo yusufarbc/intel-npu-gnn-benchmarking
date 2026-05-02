@@ -1,45 +1,45 @@
-# NPU GNN Benchmarking Methodology
+# NPU GNN Performans Karakterizasyonu Metodolojisi
 
-Bu doküman, Intel Core Ultra NPU mimarisi üzerinde Grafik Sinir Ağları (GNN) için uygulanan performans karakterizasyonu metodolojisini açıklar.
+Bu doküman, Intel Core Ultra NPU mimarisi üzerinde Grafik Sinir Ağları (GNN) için uygulanan bilimsel analiz yöntemlerini detaylandırır.
 
-## 1. Temel Metrikler
+## 1. Temel Performans Metrikleri
 
-Araştırmamızda, standart gecikme (latency) metriklerinin ötesine geçerek GNN optimizasyon verimliliğini ölçen şu metrikleri kullanıyoruz:
+Standart gecikme (latency) ölçümlerinin ötesinde, donanım-yazılım etkileşimini anlamak için şu metrikler kullanılmaktadır:
 
 ### Fusion Gain Ratio (FGR)
-Operatör birleştirme (operator fusion) optimizasyonunun etkinliğini ölçer.
-$$FGR = \frac{Latency_{Baseline}}{Latency_{Optimized}}$$
-*   **FGR > 1:** Fusion başarılı, performans artışı sağlandı.
-*   **FGR < 1:** "Fusion Overhead Paradox" durumu. Fusion maliyeti, hesaplama kazancından fazladır (GNN'lerde sıkça görülür).
+Derleyici seviyesindeki operatör birleştirme (operator fusion) optimizasyonlarının gerçek hızlanma etkisini ölçer.
+$$FGR = \frac{Gecikme_{Baz}}{Gecikme_{Optimize}}$$
+*   **FGR < 1:** "Fusion Overhead Paradox" durumu; optimizasyonun ek yükü kazancından fazladır.
 
 ### Compilation Efficiency Index (CEI)
-Derleme süresinin sağlanan performans artışına oranını temsil eder.
-$$CEI = \frac{Compilation\_Time_{Total}}{Latency\_Reduction}$$
-Bu metrik, OpenVINO'nun "super-linear compilation time" sorununu GNN modellerinin derinliğiyle ilişkilendirmek için kullanılır.
+Modelin derleme (compilation) süresinin, sağladığı performans artışına oranını temsil eder.
+$$CEI = \frac{Derleme\_Suresi}{Gecikme\_Azalimi}$$
 
-### Arithmetic Intensity (AI)
-Modellerin hesaplama-yoğun (compute-bound) mu yoksa bellek-yoğun (memory-bound) mu olduğunu belirler.
-$$AI = \frac{Total\_FLOPs}{Total\_Memory\_Transfer\_Bytes}$$
-
-### NPU Support Ratio
-Modeldeki operatörlerin ne kadarının NPU (OpenVINO EP) üzerinde, ne kadarının CPU fallback ile çalıştığını gösterir.
-$$Support\_Ratio = \frac{Invocations_{NPU}}{Invocations_{Total}} \times 100$$
-Bu metrik, GNN mimarilerinin NPU mimarisiyle uyumluluğunu (mapping efficiency) ölçer.
+### Aritmetik Yoğunluk (AI)
+Modellerin hesaplama odaklı (compute-bound) mu yoksa bellek odaklı (memory-bound) mu olduğunu belirler.
+$$AI = \frac{Toplam\_FLOP}{Toplam\_Bellek\_Transferi\_Bayt}$$
 
 ---
 
-## 2. Enerji Telemetrisi ve Verimlilik
-Watt başına performans analizi için Intel RAPL veya HWiNFO logları üzerinden gerçek güç tüketimi (Package Power) verileri kullanılır.
-*   **Energy Efficiency (EE):** Giga-Inferences per Joule (GI/J).
-*   **Idle vs. Load Power:** NPU'nun aktif olduğu andaki güç sıçraması.
+## 2. Deneysel Düzenek ve Veri Seti
+
+*   **Donanım:** Intel Core Ultra 5 125H (Meteor Lake) NPU 3720.
+*   **Yazılım:** OpenVINO 2024.1, ONNX Runtime 1.17.
+*   **Veri Seti:** **Cora** Alıntı Ağı (2708 düğüm, 5429 kenar). NPU üzerinde statik shape desteği için girişler sabitlenmiş ve padding uygulanmıştır.
+*   **Hassasiyet:** FP32 (baseline) ve INT8 (NNCF ile kuantize edilmiş native NPU modu).
 
 ---
 
-## 3. Roofline Performance Model
-NPU'nun donanım limitlerini (Teorik GFLOPS ve Bellek Bant Genişliği) modelin gerçek performansı ile kıyaslar. GNN'lerin neden "Memory Wall" (Bellek Duvarı) darboğazına takıldığını görselleştirmek için kullanılır.
+## 3. Analitik Modeller
 
-## 3. Latency Breakdown Analysis
-Toplam çıkarım (inference) süresini şu bileşenlere ayırır:
-*   **Compute:** Saf kernel hesaplama süresi.
-*   **DMA (Direct Memory Access):** Veri transfer süresi (CPU <-> NPU).
-*   **Dispatch/Scheduling:** Kernel fırlatma ve koordinasyon maliyeti.
+### Roofline Performans Modeli
+NPU'nun tepe işlem gücü ve bellek bant genişliği limitlerini modelin gerçek performansıyla kıyaslar. GNN'lerin neden "Bellek Duvarı" (Memory Wall) darboğazına takıldığını kanıtlar.
+
+### Latency Breakdown (Gecikme Ayrıştırması)
+Toplam çıkarım süresini şu üç ana bileşene ayırır:
+1.  **Compute:** Saf kernel hesaplama süresi.
+2.  **DMA:** CPU ve NPU arasındaki veri transfer süresi.
+3.  **Dispatch:** Kernel fırlatma ve zamanlama maliyeti.
+
+---
+*Son Güncelleme: 2 Mayıs 2026*
