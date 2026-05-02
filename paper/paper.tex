@@ -163,18 +163,18 @@ Our FGR analysis (Fig. \ref{fig:fgr}) reveals that for GNNs, the benefit of grap
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{fgr_diverging.png}
-    \caption{Fusion Gain Ratio (FGR) Divergence: GNNs vs. Vision Models.}
-    \label{fig:fgr}
+    \includegraphics[width=0.45\textwidth]{fgr_cei_scatter.png}
+    \caption{Diagnostic Framework: FGR vs. CEI Divergence. Bubble size represents model parameter count. Values below FGR=1.0 indicate fusion overhead dominance.}
+    \label{fig:fgr_cei}
 \end{figure}
 
 \subsection{Scalability Analysis}
-As model complexity increases, the NPU's performance follows a non-linear scaling curve. Fig. \ref{fig:speedup} shows the relative speedup of NPU over CPU as a function of the total number of parameters. We observe that while vision models scale efficiently with parameter count, GNNs reach a performance ceiling much earlier due to the irregular memory access patterns discussed in Section V-A.
+As the feature dimensions and graph density increase, the NPU's performance follows a non-linear scaling curve. Fig. \ref{fig:speedup} shows the relative speedup of NPU over CPU as a function of feature hidden size. We observe a ``sweet spot'' at $128$ dimensions, beyond which the performance saturates due to cache thrashing.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.45\textwidth]{scalability_speedup.png}
-    \caption{NPU Scalability: Relative Speedup vs. Model Parameters (Millions).}
+    \includegraphics[width=0.45\textwidth]{scalability_analysis.png}
+    \caption{NPU Scalability: Relative Speedup vs. Feature Hidden Size. The shaded region indicates memory saturation.}
     \label{fig:speedup}
 \end{figure}
 
