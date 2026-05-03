@@ -11,48 +11,57 @@
 \citation{brody2022how}
 \citation{kumar2026forgeugcfxoptimizationregistergraph}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {II}Background and Related Work}{1}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {III}Methodology}{1}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Experimental Setup}{1}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II}Background}{1}{section.2}\protected@file@percent }
 \citation{kipf2017gcn}
-\citation{velickovic2018gat}
-\citation{hamilton2017graphsage}
 \citation{xu2019gin}
-\citation{wu2019sgc}
+\citation{hamilton2017graphsage}
 \citation{gasteiger2019appnp}
 \citation{dwivedi2021graphtransformer}
 \citation{turc2019berttiny}
 \citation{sandler2018mobilenetv2}
 \citation{he2016resnet}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Methodology}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-A}}Experimental Setup}{2}{subsection.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-B}}Datasets and Workload Generation}{2}{subsection.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-C}}Evaluation Metrics}{2}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:metrics}{{\mbox  {III-C}}{2}{Evaluation Metrics}{subsection.3.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {III-D}}Benchmarked Models}{2}{subsection.3.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Technical Characterization of Evaluated Models}}{2}{table.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:models}{{I}{2}{Technical Characterization of Evaluated Models}{table.caption.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {IV}Results}{2}{section.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-A}}Hardware-Software Latency Comparison}{2}{subsection.4.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Taxonomy of Benchmarked Models}}{2}{table.caption.1}\protected@file@percent }
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:models}{{I}{2}{Taxonomy of Benchmarked Models}{table.caption.1}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Cross-Architectural Performance and Efficiency (Meteor Lake)}}{2}{table.caption.2}\protected@file@percent }
 \newlabel{tab:results_lat}{{II}{2}{Cross-Architectural Performance and Efficiency (Meteor Lake)}{table.caption.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Quantitative Results by Model Family}{2}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Fig 1. Cross-architectural speedup analysis: NPU and iGPU performance relative to CPU baseline. The results highlight the parity in GNN tasks vs. the NPU's dominance in dense vision models.}}{2}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:hw_comp}{{1}{2}{Fig 1. Cross-architectural speedup analysis: NPU and iGPU performance relative to CPU baseline. The results highlight the parity in GNN tasks vs. the NPU's dominance in dense vision models}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-B}}Quantitative Results by Model Family}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Latency Composition Analysis}{3}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Scalability Analysis}{3}{subsection.4.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Fig 2. Decomposition of latency components. GNNs are dominated by DMA and dispatch overheads, while CNNs (MobileNetV2) successfully saturate the compute engines.}}{3}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:breakdown}{{2}{3}{Fig 2. Decomposition of latency components. GNNs are dominated by DMA and dispatch overheads, while CNNs (MobileNetV2) successfully saturate the compute engines}{figure.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Fig 3. NPU Plugin Support Ratio. Models with dynamic attention mechanisms (GraphTransformer) trigger partial CPU fallbacks due to opset limitations.}}{3}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:fallback}{{3}{3}{Fig 3. NPU Plugin Support Ratio. Models with dynamic attention mechanisms (GraphTransformer) trigger partial CPU fallbacks due to opset limitations}{figure.caption.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Fig 4. Complexity-Latency Pareto Frontier. GNNs occupy a sub-optimal region characterized by high latency relative to their modest parameter counts.}}{3}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:pareto}{{4}{3}{Fig 4. Complexity-Latency Pareto Frontier. GNNs occupy a sub-optimal region characterized by high latency relative to their modest parameter counts}{figure.caption.6}{}}
 \citation{bi2026rooflinebenchbenchmarkingframeworkondevice}
 \citation{SINGH202371,10.1145/3669940.3707239}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-C}}Latency Composition Analysis}{3}{subsection.4.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Latency Breakdown: Compute vs. Memory vs. Dispatch Overhead.}}{3}{figure.caption.3}\protected@file@percent }
-\newlabel{fig:breakdown}{{1}{3}{Latency Breakdown: Compute vs. Memory vs. Dispatch Overhead}{figure.caption.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces NPU Support Ratio: Percentage of Native NPU Execution.}}{3}{figure.caption.4}\protected@file@percent }
-\newlabel{fig:fallback}{{2}{3}{NPU Support Ratio: Percentage of Native NPU Execution}{figure.caption.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {IV-D}}Scalability Analysis}{3}{subsection.4.4}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Fusion Gain Ratio (FGR) Divergence: GNNs vs. Vision Models.}}{3}{figure.caption.5}\protected@file@percent }
-\newlabel{fig:fgr}{{3}{3}{Fusion Gain Ratio (FGR) Divergence: GNNs vs. Vision Models}{figure.caption.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces NPU Scalability: Relative Speedup vs. Hidden Dimension Size.}}{3}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:speedup}{{4}{3}{NPU Scalability: Relative Speedup vs. Hidden Dimension Size}{figure.caption.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Hardware-Software Maturity Analysis}{3}{section.5}\protected@file@percent }
 \citation{mlperf_inference}
 \citation{9065592}
 \citation{9161360}
 \citation{9858684}
 \citation{brody2022how,10.5555/3618408.3619718}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Fig 5. Diagnostic Correlation: FGR vs. CEI. Values below FGR=1.0 highlight the 'Fusion Overhead Paradox' where aggressive compiler merging hurts performance.}}{4}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:fgr_cei}{{5}{4}{Fig 5. Diagnostic Correlation: FGR vs. CEI. Values below FGR=1.0 highlight the 'Fusion Overhead Paradox' where aggressive compiler merging hurts performance}{figure.caption.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Fig 6. Scaling laws on the NPU. The shaded region denotes the transition from compute-bound to memory-saturated execution.}}{4}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:speedup}{{6}{4}{Fig 6. Scaling laws on the NPU. The shaded region denotes the transition from compute-bound to memory-saturated execution}{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Hardware-Software Maturity Analysis}{4}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{4}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Memory Wall vs. Compute Bound}{4}{subsection.6.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Fig 7. Roofline Model. GNN models (GIN, GCN) fall into the memory-bound slope, failing to reach the NPU's peak arithmetic ceiling.}}{4}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:roofline}{{7}{4}{Fig 7. Roofline Model. GNN models (GIN, GCN) fall into the memory-bound slope, failing to reach the NPU's peak arithmetic ceiling}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}Original Contribution: Metric-Based Characterization}{4}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}Literature Comparison}{4}{subsection.6.3}\protected@file@percent }
 \bibstyle{IEEEtran}
 \bibdata{references}
 \bibcite{9161360}{1}
@@ -64,26 +73,18 @@
 \bibcite{brody2022how}{7}
 \bibcite{kumar2026forgeugcfxoptimizationregistergraph}{8}
 \bibcite{kipf2017gcn}{9}
-\bibcite{velickovic2018gat}{10}
+\bibcite{xu2019gin}{10}
 \bibcite{hamilton2017graphsage}{11}
-\bibcite{xu2019gin}{12}
-\bibcite{wu2019sgc}{13}
-\bibcite{gasteiger2019appnp}{14}
-\bibcite{dwivedi2021graphtransformer}{15}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Discussion}{4}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-A}}Memory Wall vs. Compute Bound}{4}{subsection.6.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Roofline Model Analysis: Identifying the Memory Bottleneck.}}{4}{figure.caption.7}\protected@file@percent }
-\newlabel{fig:roofline}{{5}{4}{Roofline Model Analysis: Identifying the Memory Bottleneck}{figure.caption.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-B}}Original Contribution: Metric-Based Characterization}{4}{subsection.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-C}}Literature Comparison}{4}{subsection.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}Future Work}{4}{subsection.6.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{4}{section.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{References}{4}{section*.8}\protected@file@percent }
-\bibcite{turc2019berttiny}{16}
-\bibcite{sandler2018mobilenetv2}{17}
-\bibcite{he2016resnet}{18}
-\bibcite{SINGH202371}{19}
-\bibcite{10.1145/3669940.3707239}{20}
-\bibcite{mlperf_inference}{21}
-\bibcite{10.5555/3618408.3619718}{22}
+\bibcite{gasteiger2019appnp}{12}
+\bibcite{dwivedi2021graphtransformer}{13}
+\bibcite{turc2019berttiny}{14}
+\bibcite{sandler2018mobilenetv2}{15}
+\bibcite{he2016resnet}{16}
+\bibcite{SINGH202371}{17}
+\bibcite{10.1145/3669940.3707239}{18}
+\bibcite{mlperf_inference}{19}
+\bibcite{10.5555/3618408.3619718}{20}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\mbox  {VI-D}}Limitations and Future Work}{5}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Conclusion}{5}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{5}{section*.10}\protected@file@percent }
 \gdef \@abspage@last{5}
