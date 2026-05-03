@@ -14,27 +14,18 @@ from typing import Dict, List
 import matplotlib.pyplot as plt
 import pandas as pd
 import sys
-
-# Use academic style
-try:
-    import scienceplots
-    plt.style.use(['science', 'ieee', 'no-latex'])
-    plt.rcParams.update({
-        "font.size": 11,
-        "axes.labelsize": 12,
-        "axes.titlesize": 14,
-        "xtick.labelsize": 10,
-        "ytick.labelsize": 10,
-        "legend.fontsize": 9,
-        "figure.dpi": 300
-    })
-except:
-    plt.style.use('ggplot')
-    plt.rcParams.update({"font.size": 12})
+import numpy as np
 
 # Add project root to path for imports
 project_root = Path(__file__).resolve().parent.parent
-sys.path.append(str(project_root))
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
+from analysis.plot_config import (
+    apply_ieee_style, savefig_ieee, shorten_label,
+    SINGLE_COL, DOUBLE_COL, IEEE_COLORS
+)
+apply_ieee_style()
 
 from analysis.benchmark_runner import BenchmarkConfig, BenchmarkRunner
 
@@ -49,12 +40,14 @@ class HWComparator:
         self.unsupported_gpu_models = {"bert-tiny_fp32"}
 
     def _skip_reason(self, device: str) -> str | None:
-        if device == "GPU" and self.model_path.stem in self.unsupported_gpu_models:
-            return "OpenVINO GPU backend fails for this model; GPU results are not supported."
+        if device == "GPU":
+            if self.model_path.stem in self.unsupported_gpu_models:
+                return "OpenVINO GPU backend fails for this model; GPU results are not supported."
+            if self.model_path.stem.endswith("_int8"):
+                return "Intel Graphics Compiler (IGC) fatally crashes on INT8 GNN models; GPU skipped."
         return None
 
     def _write_skipped_outputs(self, device: str, reason: str) -> None:
-        import numpy as np
 
         for r in range(self.repeats):
             run_dir = self.results_dir / device / f"run_{r:02d}"
@@ -93,12 +86,11 @@ class HWComparator:
             plt.text(0.5, 0.5, f"{device} skipped\n{reason}", ha="center", va="center")
             plt.axis("off")
             plt.tight_layout()
-            plt.savefig(run_dir / "performance_comparison.png", dpi=150)
+            plt.savefig(run_dir / "performance_comparison.png", dpi=300)
             plt.close()
 
     def run(self):
         import datetime
-        import numpy as np
         
         start_time_total = datetime.datetime.now()
         print(f"[{start_time_total.strftime('%H:%M:%S')}] Starting 3-way hardware comparison for: {self.model_path.name}")
@@ -163,7 +155,7 @@ class HWComparator:
                 
                 results.append({
                     "device": device,
-                    "latency_ms": avg_lat,
+                    "avg_latency_ms": avg_lat,
                     "std_ms": std_lat,
                     "throughput_ips": 1000.0 / avg_lat if avg_lat > 0 else 0,
                     "peak_memory_mb": avg_mem,
@@ -174,6 +166,10 @@ class HWComparator:
                 end_device = datetime.datetime.now()
                 duration_device = (end_device - start_device).total_seconds()
                 print(f"[{end_device.strftime('%H:%M:%S')}] Device {device} completed ({self.repeats} runs) in {duration_device:.2f} seconds.")
+                
+                # Cleanup after each device
+                import gc
+                gc.collect()
             except Exception as e:
                 reason = f"Exception during benchmarking: {e}"
                 print(f"  ⚠️ Skip: Device {device} failed for {self.model_path.name}: {e}")
@@ -203,44 +199,48 @@ class HWComparator:
         print(f"Results saved in: {self.results_dir}")
         return summary_df
 
-    def _plot_results(self, df: pd.DataFrame):
-        if df.empty:
-            print(f"  ⚠️ Skipping plots for {self.model_path.name}: No successful benchmark data.")
+    def _plot_results(self, df: pd.DataFrame) -> None:
+        """Plot hardware comparison: Latency (ms) and Throughput (IPS)."""
+        valid_df = df[df["status"] == "ok"].copy()
+        if valid_df.empty:
             return
 
-        df_ok = df[df.get("status", "ok") == "ok"].copy()
-        if df_ok.empty:
-            print(f"  ⚠️ Skipping plots for {self.model_path.name}: All devices skipped.")
-            return
-            
-        plt.figure(figsize=(10, 6))
-        colors = ["#264653", "#2a9d8f", "#e9c46a"]
+        fig, ax1 = plt.subplots(figsize=SINGLE_COL)
+        ax2 = ax1.twinx()
+
+        x = np.arange(len(valid_df))
+        width = 0.35
+
+        # Plot Latency on ax1
+        bars1 = ax1.bar(x - width/2, valid_df["avg_latency_ms"], width, 
+                        label="Latency", color=IEEE_COLORS[0], edgecolor="k", linewidth=0.3)
+        ax1.set_ylabel("Latency (ms)", color=IEEE_COLORS[0])
+        ax1.tick_params(axis='y', labelcolor=IEEE_COLORS[0])
+
+        # Plot Throughput on ax2
+        bars2 = ax2.bar(x + width/2, valid_df["throughput_ips"], width,
+                        label="Throughput", color=IEEE_COLORS[2], edgecolor="k", linewidth=0.3)
+        ax2.set_ylabel("Throughput (IPS)", color=IEEE_COLORS[2])
+        ax2.tick_params(axis='y', labelcolor=IEEE_COLORS[2])
+
+        ax1.set_xticks(x)
+        ax1.set_xticklabels(valid_df["device"])
         
-        # Plot Latency
-        plt.subplot(1, 2, 1)
-        bars = plt.bar(df_ok["device"], df_ok["latency_ms"], yerr=df_ok.get("std_ms", 0), capsize=5, color=colors[: len(df_ok)])
-        plt.ylabel("Latency (ms)")
-        plt.title("Latency (Lower is Better)")
-        for bar in bars:
+        # Add values on top of bars
+        for bar in bars1:
             yval = bar.get_height()
-            plt.text(bar.get_x() + bar.get_width()/2, yval, f"{yval:.2f}", ha='center', va='bottom')
+            if not np.isnan(yval):
+                ax1.text(bar.get_x() + bar.get_width()/2, yval, f"{yval:.1f}", 
+                         ha='center', va='bottom', fontsize=7, color=IEEE_COLORS[0])
 
-        # Plot Throughput
-        plt.subplot(1, 2, 2)
-        bars = plt.bar(df_ok["device"], df_ok["throughput_ips"], color=colors[: len(df_ok)])
-        plt.ylabel("Inferences / Second")
-        plt.title("Throughput (Higher is Better)")
-        for bar in bars:
+        for bar in bars2:
             yval = bar.get_height()
-            plt.text(bar.get_x() + bar.get_width()/2, yval, f"{yval:.1f}", ha='center', va='bottom')
+            if not np.isnan(yval):
+                ax2.text(bar.get_x() + bar.get_width()/2, yval, f"{yval:.1f}", 
+                         ha='center', va='bottom', fontsize=7, color=IEEE_COLORS[2])
 
-        plt.suptitle(f"Hardware Comparison: {self.model_path.name}\n(Mean of {self.repeats} runs)")
-        plt.tight_layout()
-        chart_name_png = f"hw_compare_{self.model_path.stem}.png"
-        chart_name_svg = f"hw_compare_{self.model_path.stem}.svg"
-        plt.savefig(self.results_dir / chart_name_png, dpi=300, bbox_inches='tight')
-        plt.savefig(self.results_dir / chart_name_svg, bbox_inches='tight')
-        plt.close()
+        fig.suptitle(f"HW Comparison: {shorten_label(self.model_path.name)}", fontsize=10)
+        savefig_ieee(fig, self.results_dir / f"hw_compare_{self.model_path.stem}")
 
 
 def main():

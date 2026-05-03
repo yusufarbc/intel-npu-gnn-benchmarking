@@ -1,0 +1,3 @@
+mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
+baseline,9.933993333339686,0.8541557375371529,352.55078125,652.4,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GraphTransformer_int8\NPU\run_00\baseline_profiling.json
+optimized,9.605243333339786,0.8626680948046008,352.55078125,778.5,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GraphTransformer_int8\NPU\run_00\optimized_profiling.json

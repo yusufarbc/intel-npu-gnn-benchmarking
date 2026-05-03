@@ -1,3 +1,3 @@
 mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,5.193029996007681,0.5994983573767537,348.08984375,731.2,30,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\bert-tiny_fp32\NPU\run_00\baseline_profiling.json
-optimized,5.0516199960839,0.52536483987289,350.28125,791.3,30,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\bert-tiny_fp32\NPU\run_00\optimized_profiling.json
+baseline,5.474326666666229,1.0330206880537731,351.9765625,891.4,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\bert-tiny_fp32\NPU\run_00\baseline_profiling.json
+optimized,5.3474366666667565,0.7404484089447391,351.9765625,791.3,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\bert-tiny_fp32\NPU\run_00\optimized_profiling.json

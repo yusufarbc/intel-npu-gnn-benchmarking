@@ -1,5 +1,5 @@
 ,sum,sum,count,count
 provider,OpenVINOExecutionProvider,Unknown,OpenVINOExecutionProvider,Unknown
 mode,,,,
-baseline,15939948.0,32147610.0,105,212
-optimized,15876186.0,32090132.0,105,212
+baseline,6201716.0,12528619.0,105,212
+optimized,6206019.0,12531012.0,105,212

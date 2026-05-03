@@ -1,0 +1,76 @@
+
+--------------------------------------------------------------------------
+Intel(R) SoC Watch for Windows* OS Version 2026.2.ww12-pre-release [Mar 17 2026]
+Build Ref: 8924bb08e273e7b4345df1d973daa169f1f297ac
+Driver Version 2.20.5 [Mar 12 2026]
+Post Processed using SoC Watch for Windows* OS Version 2026.2.ww12-pre-release [Mar 17 2026]
+Post Processed Build Ref: 8924bb08e273e7b4345df1d973daa169f1f297ac
+Copyright (c) 2024 Intel Corporation. All Rights Reserved.
+Platform power analysis tool for use with Intel processors/chipsets/platforms.
+*Other names and brands may be claimed as the property of others. 
+--------------------------------------------------------------------------
+
+Command line options: -f power -r int -o results\energy_log_hw_comp_GIN_int8 
+
+Program Started: N/A
+Data Collection Started: 2026-05-03 17:30:33 GMT 
+QPC Clock Frequency (MHz): 10 
+CPU Base Operating Frequency (MHz): 2995.2
+Collection duration (sec): 25.7566
+Collection begin timestamp: 3214426497
+Collection end timestamp: 3471984764
+
+System Name: MATEBOOK
+Operating System: Windows 11 [11.0 build 26200.8246]
+CPU: Meteor Lake
+CPU ID (family.model.stepping): 0x6.0xaa.0x4
+Platform ID: 0b111
+Integrated GPU Device ID: 0x7d55
+Intel(R) PMT: Meteor Lake SoCN (0x130670b2)
+Intel(R) PMT: Meteor Lake SoCN Fixed (0x130671b2)
+Intel(R) PMT: Meteor Lake CDie (0x1a067002)
+Intel(R) PMT: Meteor Lake CDie Fixed (0x1a067102)
+PCH: Meteor Lake SOC-M/P (MTSOC-MP)
+PCH: Meteor Lake IOE-P (MTIOE-P)
+EDRAM Present: No 
+Total # of packages: 1 
+Total # of cores: 14 
+Total # of logical processors: 18
+
+CPU native model:
+Package_0/Core_0 = RWC (P Core)
+Package_0/Core_1 = CMT (E Core)
+Package_0/Core_2 = CMT (E Core)
+Package_0/Core_3 = CMT (E Core)
+Package_0/Core_4 = CMT (E Core)
+Package_0/Core_5 = CMT (E Core)
+Package_0/Core_6 = CMT (E Core)
+Package_0/Core_7 = CMT (E Core)
+Package_0/Core_8 = CMT (E Core)
+Package_0/Core_9 = RWC (P Core)
+Package_0/Core_10 = RWC (P Core)
+Package_0/Core_11 = RWC (P Core)
+Package_0/Core_12 = CMT (LPE Core)
+Package_0/Core_13 = CMT (LPE Core)
+
+
+NOTE: Hyper-V is enabled on this system.
+NOTE: Virtual Secure Mode is enabled on this system.
+NOTE: Hypervisor Enforced Code Integrity is enabled on this system.
+
+=============
+Package Power
+=============
+
+Note: Die-level power is included in package power on platforms with a multi-die CPU topology.
+
+Package Power Summary: Average Rate and Total
+Component    , Metric Type, Average Rate (mW), Total (mJ)
+---------    , -----------, -----------------, ----------
+CPU/Package_0, Power      , 8510.64          , 218864.01 
+
+Package Power Summary: Total Samples Received
+Component    , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+---------    , ------------------, ----------------------------, ----------------------------, ----------------------------
+CPU/Package_0, 277               , 87.39                       , 104.10                      , 92.61                       
+

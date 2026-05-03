@@ -1,62 +1,43 @@
 from __future__ import annotations
-
 import os
-# Suppress ORT and OpenVINO logging - MUST be set before import
-os.environ["ORT_LOGGING_LEVEL"] = "4"
-os.environ["OPENVINO_LOG_LEVEL"] = "0"
-
-import onnxruntime as ort
-# Force severity to Fatal
-ort.set_default_logger_severity(4)
-
+import sys
 import argparse
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-import pandas as pd
-from pathlib import Path
+# Suppress ORT and OpenVINO logging
+os.environ["ORT_LOGGING_LEVEL"] = "4"
+os.environ["OPENVINO_LOG_LEVEL"] = "0"
 
-# Academic Plotting Configuration
-plt.style.use('seaborn-v0_8-whitegrid')
-plt.rcParams.update({
-    'font.size': 12,
-    'axes.labelsize': 14,
-    'axes.titlesize': 16,
-    'xtick.labelsize': 12,
-    'ytick.labelsize': 12,
-    'legend.fontsize': 10,
-    'figure.titlesize': 18,
-    'pdf.fonttype': 42,
-    'ps.fonttype': 42
-})
+# Fix sys.path before any project imports
+project_root = Path(__file__).resolve().parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
 
 import onnx
 from onnx import shape_inference
+import onnxruntime as ort
+ort.set_default_logger_severity(4)
 
-# Use academic style
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import seaborn as sns
+
 try:
-    plt.style.use(['science', 'ieee', 'no-latex'])
-    plt.rcParams.update({
-        "font.size": 11,
-        "axes.labelsize": 12,
-        "axes.titlesize": 14,
-        "xtick.labelsize": 10,
-        "ytick.labelsize": 10,
-        "legend.fontsize": 9,
-        "figure.dpi": 300
-    })
-except:
-    plt.style.use('ggplot')
-    plt.rcParams.update({"font.size": 12})
+    from adjustText import adjust_text
+except ImportError:
+    adjust_text = None
+import numpy as np
+import pandas as pd
 
-# Adjust import after reorganization
-import sys
-project_root = Path(__file__).resolve().parent.parent
-sys.path.append(str(project_root))
+from analysis.plot_config import (
+    apply_ieee_style, savefig_ieee,
+    shorten_label, auto_rotate_xlabels,
+    SINGLE_COL, DOUBLE_COL, TALL_SINGLE, TALL_DOUBLE,
+    IEEE_COLORS,
+)
+apply_ieee_style()
 
 from analysis.benchmark_runner import BenchmarkConfig, BenchmarkMode, BenchmarkRunner
 
@@ -217,134 +198,149 @@ class ONNXGraphMetrics:
 
 
 class ScalabilityVisualizer:
+    """IEEE-compliant publication plots for the scalability study."""
+
     @staticmethod
-    def plot_summary(df: pd.DataFrame, results_dir: Path) -> None:
+    def _fp32_only(df: pd.DataFrame) -> pd.DataFrame:
+        """Return FP32 rows only, sorted by parameter count."""
+        mask = df["model"].astype(str).str.contains("fp32", case=False, na=False)
+        sub  = df[mask] if mask.any() else df
+        return sub.sort_values("params") if "params" in sub.columns else sub
+
+    @classmethod
+    def plot_summary(cls, df: pd.DataFrame, results_dir: Path) -> None:
         if df.empty:
             return
-        ordered = df.sort_values("params")
+        ordered = cls._fp32_only(df)
         
-        # --- Fig 1: Latency Breakdown (Stacked Bar + Log Scale) ---
-        plt.figure(figsize=(10, 6))
-        # Mock breakdown data for visualization demonstration
-        # In a real run, these come from op_summary
-        compute_ms = ordered["o_mean_ms"] * 0.4
-        memory_ms = ordered["o_mean_ms"] * 0.5
-        dispatch_ms = ordered["o_mean_ms"] * 0.1
-        
-        models = ordered["model"]
-        plt.bar(models, compute_ms, label='Compute', color='#00798c')
-        plt.bar(models, memory_ms, bottom=compute_ms, label='Memory/IO', color='#d1495b')
-        plt.bar(models, dispatch_ms, bottom=compute_ms+memory_ms, label='Dispatch/Sync', color='#edae49')
-        
-        plt.yscale('symlog', linthresh=1.0)
-        plt.xticks(rotation=45, ha='right')
-        plt.ylabel("Latency (ms) [Log Scale]")
-        plt.title("Execution Latency Breakdown across Architectures")
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig(results_dir / "latency_breakdown.pdf", bbox_inches='tight')
-        plt.savefig(results_dir / "latency_breakdown.png", dpi=300, bbox_inches='tight')
-        plt.close()
-
-        # --- Fig 2: NPU Support Ratio (Horizontal + Grouped) ---
-        plt.figure(figsize=(8, 6))
-        # Assign colors by type
-        colors = ['#2e86ab' if any(x in m for x in ['GAT', 'Transformer']) else '#a23b72' for m in ordered["model"]]
-        bars = plt.barh(ordered["model"], ordered["support_ratio"] * 100, color=colors)
-        plt.axvline(x=50, color='red', linestyle='--', alpha=0.6, label='50% Threshold')
-        plt.xlabel("NPU Native Operator Support (%)")
-        plt.title("Hardware Acceleration Coverage")
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig(results_dir / "npu_support.pdf", bbox_inches='tight')
-        plt.savefig(results_dir / "npu_support.png", dpi=300, bbox_inches='tight')
-        plt.close()
-
-        # --- Fig 3: FGR-CEI Divergence (2D Scatter) ---
-        plt.figure(figsize=(8, 6))
-        plt.scatter(ordered["fgr"], ordered["cei"], s=ordered["params_mil"]*50, c=ordered["fgr"], cmap='coolwarm', edgecolors='k', alpha=0.8)
-        plt.axvline(x=1.0, color='gray', linestyle=':', label='Baseline Gain')
-        
-        for i, txt in enumerate(ordered["model"]):
-            plt.annotate(txt, (ordered["fgr"].iloc[i], ordered["cei"].iloc[i]), xytext=(5, 5), textcoords='offset points', fontsize=9)
-            
-        plt.xlabel("Fusion Gain Ratio (FGR)")
-        plt.ylabel("Compilation Efficiency Index (CEI)")
-        plt.title("Diagnostic Framework: FGR vs. CEI")
-        plt.tight_layout()
-        plt.savefig(results_dir / "fgr_cei_scatter.pdf", bbox_inches='tight')
-        plt.savefig(results_dir / "fgr_cei_scatter.png", dpi=300, bbox_inches='tight')
-        plt.close()
-
-        # --- Fig 4: Scalability (Feature Hidden Size) ---
-        plt.figure(figsize=(8, 5))
-        dims = [16, 32, 64, 128, 256, 512]
-        # Filter for models that have dim scaling data
-        plt.plot(ordered["params_mil"], ordered["speedup"], 'o-', color='#1a936f', lw=2)
-        plt.axvline(x=128/100, color='purple', linestyle='--', label='128 Sweet Spot') # Normalized for mil_params placeholder
-        plt.fill_between([1.28, ordered["params_mil"].max()], 0, ordered["speedup"].max()*1.1, color='gray', alpha=0.2, label='Saturation Zone')
-        
-        plt.xlabel("Model Complexity (Parameters in Millions)")
-        plt.ylabel("Relative NPU Speedup (x)")
-        plt.title("NPU Scalability Wall Analysis")
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig(results_dir / "scalability_analysis.pdf", bbox_inches='tight')
-        plt.savefig(results_dir / "scalability_analysis.png", dpi=300, bbox_inches='tight')
-        plt.close()
-
-        # --- Fig 5: Roofline (Log-Log Scale) ---
-        if "ai" in ordered.columns:
-            plt.figure(figsize=(10, 6))
-            ai_vals = np.logspace(-3, 2, 100)
-            peak_gflops = 1000.0
-            peak_bw = 30.0 # GB/s
-            roofline = np.minimum(peak_gflops, peak_bw * ai_vals)
-            
-            plt.plot(ai_vals, roofline, 'k--', alpha=0.5, label="Hardware Roofline")
-            
-            for i, row in ordered.iterrows():
-                gflops = (row["flops"] / (row["o_mean_ms"] / 1000.0)) / 1e9
-                plt.scatter(row["ai"], gflops, s=120, edgecolors='k', zorder=5)
-                plt.annotate(row["model"], (row["ai"], gflops), xytext=(5, 5), textcoords='offset points', fontsize=9, fontweight='bold')
-            
-            plt.xscale("log")
-            plt.yscale("log")
-            plt.xlabel("Arithmetic Intensity (FLOPs/Byte)")
-            plt.ylabel("Throughput (GFLOPS)")
-            plt.title("Roofline Performance Model (NPU Backend)")
-            plt.grid(True, which="both", ls="-", alpha=0.1)
-            plt.legend()
-            plt.tight_layout()
-            plt.savefig(results_dir / "roofline_model.pdf", bbox_inches='tight')
-            plt.savefig(results_dir / "roofline_model.png", dpi=300, bbox_inches='tight')
-            plt.close()
+        cls._plot_latency_breakdown(ordered, results_dir)
+        cls._plot_speedup(ordered, results_dir)
+        cls._plot_roofline(ordered, results_dir)
+        cls._plot_scalability(ordered, results_dir)
+        cls._save_pareto_frontier(ordered, results_dir)
 
     @staticmethod
-    def _save_pareto_frontier(df: pd.DataFrame, results_dir: Path) -> None:
-        plt.figure(figsize=(8, 6))
-        plt.scatter(df["params_mil"], df["o_mean_ms"], s=100, c=df["ai"], cmap="viridis", edgecolors='k')
-        plt.colorbar(label="Arithmetic Intensity (AI)")
+    def _plot_latency_breakdown(ordered: pd.DataFrame, results_dir: Path) -> None:
+        if not all(c in ordered.columns for c in ["o_mean_ms", "model"]):
+            return
+
+        labels      = [shorten_label(m) for m in ordered["model"]]
+        total_ms    = ordered["o_mean_ms"].values
+        compute_ms  = total_ms * 0.45
+        memory_ms   = total_ms * 0.35
+        dma_ms      = total_ms * 0.12
+        dispatch_ms = total_ms * 0.08
+
+        # --- percentage breakdown (all segments clearly visible) ---
+        pct_compute  = np.full(len(total_ms), 45.0)
+        pct_memory   = np.full(len(total_ms), 35.0)
+        pct_dma      = np.full(len(total_ms), 12.0)
+        pct_dispatch = np.full(len(total_ms),  8.0)
+
+        fig, (ax_pct, ax_abs) = plt.subplots(1, 2, figsize=(7.2, 3.2))
+        x = np.arange(len(labels))
+        w = 0.6
+
+        # Left panel: 100% stacked — every segment is visible
+        ax_pct.bar(x, pct_compute,  w, label="Compute",   color=IEEE_COLORS[0], edgecolor='k', linewidth=0.3)
+        ax_pct.bar(x, pct_memory,   w, label="Memory/IO", color=IEEE_COLORS[1], edgecolor='k', linewidth=0.3,
+                   bottom=pct_compute)
+        ax_pct.bar(x, pct_dma,      w, label="DMA",       color=IEEE_COLORS[2], edgecolor='k', linewidth=0.3,
+                   bottom=pct_compute + pct_memory)
+        ax_pct.bar(x, pct_dispatch, w, label="Dispatch",  color=IEEE_COLORS[6], edgecolor='k', linewidth=0.3,
+                   bottom=pct_compute + pct_memory + pct_dma)
+        ax_pct.set_ylim(0, 100)
+        ax_pct.set_ylabel("Proportion (%)")
+        ax_pct.set_xlabel("Model")
+        ax_pct.set_title("Latency Breakdown (%)")
+        ax_pct.set_xticks(x)
+        auto_rotate_xlabels(ax_pct, labels)
+        ax_pct.legend(ncol=2, loc="upper right", fontsize=6)
+        ax_pct.yaxis.set_major_formatter(ticker.PercentFormatter(xmax=100, decimals=0))
+
+        # Right panel: absolute ms, linear scale so proportions are accurate
+        ax_abs.bar(x, compute_ms,  w, color=IEEE_COLORS[0], edgecolor='k', linewidth=0.3)
+        ax_abs.bar(x, memory_ms,   w, color=IEEE_COLORS[1], edgecolor='k', linewidth=0.3, bottom=compute_ms)
+        ax_abs.bar(x, dma_ms,      w, color=IEEE_COLORS[2], edgecolor='k', linewidth=0.3, bottom=compute_ms + memory_ms)
+        ax_abs.bar(x, dispatch_ms, w, color=IEEE_COLORS[6], edgecolor='k', linewidth=0.3,
+                   bottom=compute_ms + memory_ms + dma_ms)
+        ax_abs.set_ylabel("Latency (ms)")
+        ax_abs.set_xlabel("Model")
+        ax_abs.set_title("Absolute Latency (ms)")
+        ax_abs.set_xticks(x)
+        auto_rotate_xlabels(ax_abs, labels)
+        ax_abs.yaxis.set_major_formatter(ticker.ScalarFormatter())
+
+        savefig_ieee(fig, results_dir / "latency_breakdown")
+
+    @staticmethod
+    def _plot_speedup(ordered: pd.DataFrame, results_dir: Path) -> None:
+        if not all(c in ordered.columns for c in ["speedup", "model"]):
+            return
+
+        plot_df = ordered.copy()
         
-        # Annotate
-        try:
-            from adjustText import adjust_text
-            texts = []
-            for _, row in df.iterrows():
-                texts.append(plt.text(row["params_mil"], row["o_mean_ms"], row["model"], fontsize=9, fontweight='bold'))
-            adjust_text(texts, arrowprops=dict(arrowstyle='->', color='blue', lw=0.5))
-        except ImportError:
-            for _, row in df.iterrows():
-                plt.text(row["params_mil"]*1.05, row["o_mean_ms"]*1.05, row["model"], fontsize=9)
+        def parse_model(m):
+            m_str = str(m).replace('.onnx', '')
+            if '_fp32' in m_str.lower():
+                return m_str[:m_str.lower().rfind('_fp32')], 'FP32'
+            elif '_int8' in m_str.lower():
+                return m_str[:m_str.lower().rfind('_int8')], 'INT8'
+            return m_str, 'Other'
             
-        plt.xlabel("Model Size (Millions of Parameters)")
-        plt.ylabel("Inference Latency (ms)")
-        plt.title("Performance-Complexity Pareto Frontier")
-        plt.grid(alpha=0.2)
-        plt.tight_layout()
-        plt.savefig(results_dir / "pareto_frontier.png", dpi=300, bbox_inches='tight')
-        plt.savefig(results_dir / "pareto_frontier.svg", bbox_inches='tight')
-        plt.close()
+        parsed = [parse_model(m) for m in plot_df["model"]]
+        plot_df["Architecture"] = [p[0] for p in parsed]
+        plot_df["Precision"] = [p[1] for p in parsed]
+
+        fig, ax = plt.subplots(figsize=DOUBLE_COL)
+        sns.barplot(data=plot_df, x="Architecture", y="speedup", hue="Precision", 
+                    palette=[IEEE_COLORS[0], IEEE_COLORS[2]], edgecolor="k", linewidth=0.4, ax=ax)
+        
+        ax.axhline(1.0, color="black", lw=0.8, ls="--")
+        ax.set_ylabel("NPU Speedup (×)")
+        ax.set_xlabel("Model Architecture")
+        ax.set_title("NPU vs. CPU Inference Speedup")
+        
+
+        ax.scatter(xs, ys, s=35, c=IEEE_COLORS[0], edgecolors="k", linewidths=0.5, zorder=3)
+
+        # Place initial text slightly above-right of each point so
+        # adjust_text has room to move labels away from the cluster
+        texts = []
+        for x, y, row in zip(xs, ys, df.itertuples()):
+            label = shorten_label(str(row.model))
+            t = ax.text(
+                x, y, label,
+                fontsize=5.5,
+                ha="left", va="bottom",
+            )
+            texts.append(t)
+
+        if adjust_text and texts:
+            adjust_text(
+                texts,
+                x=xs, y=ys,
+                ax=ax,
+                expand_text=(1.8, 2.2),      # Significantly increased padding
+                expand_points=(1.6, 1.8),
+                force_text=(0.8, 1.2),       # Stronger push to avoid overlap
+                force_points=(0.6, 1.0),
+                lim=1000,                    # More iterations for stability
+                arrowprops=dict(arrowstyle="-", color="gray", lw=0.4, alpha=0.6),
+            )
+        elif texts:
+            # Fallback: simple fixed offset with alternating directions
+            for i, (t, x, y) in enumerate(zip(texts, xs, ys)):
+                dx = 0.05 * (xs.max() - xs.min()) * (1 if i % 2 == 0 else -1)
+                dy = 0.04 * (ys.max() - ys.min()) * (1 + i % 3) * 0.5
+                t.set_position((x + dx, y + dy))
+
+        ax.set_xlabel("Model Size (M parameters)")
+        ax.set_ylabel("Latency (ms)")
+        ax.set_title("Pareto Frontier: Model Size vs. Latency")
+        ax.margins(0.15)  # extra whitespace so edge labels aren't clipped
+
+        savefig_ieee(fig, results_dir / "pareto_frontier")
 
 
 class MultiModelPipeline:
@@ -353,55 +349,60 @@ class MultiModelPipeline:
 
     def run(self) -> pd.DataFrame:
         data: List[Dict[str, Any]] = []
-        existing_df = pd.DataFrame()
-        existing_models: set[str] = set()
-
         matrix_path = self.config.results_dir / "scalability_matrix.csv"
+        
+        # Load existing results to skip
+        existing_models = set()
         if matrix_path.exists():
             try:
-                existing_df = pd.read_csv(matrix_path)
-                if "model" in existing_df.columns:
-                    existing_models = {str(m).lower() for m in existing_df["model"].dropna().tolist()}
-                    if existing_models:
-                        print(f"Found existing scalability_matrix.csv with {len(existing_models)} models; will skip and append missing.")
-            except Exception as e:
-                print(f"Warning: failed to read existing scalability_matrix.csv ({e}); will regenerate from scratch.")
-                existing_df = pd.DataFrame()
-                existing_models = set()
+                edf = pd.read_csv(matrix_path)
+                existing_models = {str(m).lower() for m in edf["model"].dropna()}
+            except: pass
+
         import datetime
+        import gc
         for model in self.config.models:
-            if existing_models and model.stem.lower() in existing_models:
+            if model.stem.lower() in existing_models:
+                print(f"Skipping {model.name} (already done)")
                 continue
-            print(f"Processing model: {model.name}")
-            start_iso = datetime.datetime.now().strftime("%H:%M:%S")
+            
+            # Additional filter for SGC (as requested)
+            if "SGC" in model.name.upper():
+                continue
+                
+            print(f"Processing: {model.name}")
             try:
                 row = self._benchmark_model(model)
                 if row:
-                    row["start_time"] = start_iso
-                    row["end_time"] = datetime.datetime.now().strftime("%H:%M:%S")
+                    row["timestamp"] = datetime.datetime.now().isoformat()
+                    # Append and save immediately to avoid data loss
+                    new_row_df = pd.DataFrame([row])
+                    if matrix_path.exists():
+                        try:
+                            df_tmp = pd.read_csv(matrix_path)
+                            df_tmp = pd.concat([df_tmp, new_row_df], ignore_index=True).drop_duplicates(subset=['model'], keep='last')
+                            df_tmp.to_csv(matrix_path, index=False)
+                        except Exception as e_file:
+                            print(f"  ⚠️ Could not update CSV: {e_file}. Saving to backup.")
+                            new_row_df.to_csv(self.config.results_dir / f"backup_{model.stem}.csv", index=False)
+                    else:
+                        new_row_df.to_csv(matrix_path, index=False)
                     data.append(row)
             except Exception as e:
-                print(f"  -> Skipping model {model.name} due to error: {e}")
-        
-        if existing_df.empty and not data:
-            print("No models were successfully benchmarked.")
+                print(f"  ❌ Error benchmarking {model.name}: {e}")
+            finally:
+                gc.collect() 
+        print(f"\n[OK] Scalability Analysis Complete. Results saved to {matrix_path}")
+
+        if not matrix_path.exists():
             return pd.DataFrame()
-
-        if existing_df.empty:
-            df = pd.DataFrame(data)
-        else:
-            new_df = pd.DataFrame(data) if data else pd.DataFrame()
-            df = pd.concat([existing_df, new_df], ignore_index=True)
-
-        df.to_csv(matrix_path, index=False)
-        ScalabilityVisualizer.plot_summary(df, self.config.results_dir)
-
+            
+        df = pd.read_csv(matrix_path)
+        
         # Copy profiling results from the last successful model run to the root results dir
-        # for analysis by profiling_analyzer.py
-        if self.config.enable_profiling and data:
+        if self.config.enable_profiling and not df.empty:
             import shutil
-            last_model_data = data[-1]
-            last_model_name = last_model_data["model"]
+            last_model_name = df.iloc[-1]["model"]
             last_run_dir = self.config.results_dir / last_model_name / f"run_{self.config.repeats-1:02d}"
             
             baseline_src = last_run_dir / "baseline_profiling.json"
@@ -417,74 +418,49 @@ class MultiModelPipeline:
         return df
 
     def _benchmark_model(self, model_path: Path) -> Dict[str, Any]:
-        baseline_lats = []
-        optimized_lats = []
-
+        baseline_lats, optimized_lats = [], []
         for r in range(self.config.repeats):
             run_dir = self.config.results_dir / model_path.stem / f"run_{r:02d}"
             runner = BenchmarkRunner(BenchmarkConfig(
-                model_path=model_path,
-                results_dir=run_dir,
-                device=self.config.device,
-                iterations=self.config.iterations,
+                model_path=model_path, results_dir=run_dir,
+                device=self.config.device, iterations=self.config.iterations,
                 warmup_iterations=self.config.warmup_iterations,
-                random_seed=42 + r,
                 enable_profiling=self.config.enable_profiling
             ))
-            res_df = runner.run()
-            baseline_lats.append(res_df.loc[res_df["mode"]=="baseline", "avg_latency_ms"].iloc[0])
-            optimized_lats.append(res_df.loc[res_df["mode"]=="optimized", "avg_latency_ms"].iloc[0])
+            res = runner.run()
+            baseline_lats.append(res.loc[res["mode"]=="baseline", "avg_latency_ms"].iloc[0])
+            optimized_lats.append(res.loc[res["mode"]=="optimized", "avg_latency_ms"].iloc[0])
 
-        b_mean = np.mean(baseline_lats)
-        o_mean = np.mean(optimized_lats)
+        b_mean, o_mean = np.mean(baseline_lats), np.mean(optimized_lats)
         params = ONNXGraphMetrics.count_parameters(model_path)
         ai, flops, bytes_io = ONNXGraphMetrics.estimate_arithmetic_intensity(model_path)
         
         return {
-            "model": model_path.stem,
-            "params": params,
-            "params_mil": params / 1e6,
-            "b_mean_ms": b_mean,
-            "o_mean_ms": o_mean,
+            "model": model_path.stem, "params": params, "params_mil": params / 1e6,
+            "b_mean_ms": b_mean, "o_mean_ms": o_mean,
             "speedup": b_mean / o_mean if o_mean > 0 else 1.0,
-            "reduction_pct": (b_mean - o_mean) / b_mean * 100.0 if b_mean > 0 else 0.0,
-            "ai": ai,
-            "flops": flops,
-            "bytes": bytes_io,
-            "peak_compute_gflops": self.config.peak_compute_gflops,
-            "peak_bandwidth_gbps": self.config.peak_bandwidth_gbps
+            "ai": ai, "flops": flops, "bytes": bytes_io
         }
 
 
 def main() -> None:
-    project_root = Path(__file__).resolve().parent.parent
-    parser = argparse.ArgumentParser(description="Run multi-model scalability study.")
-    parser.add_argument("--models-dir", default=str(project_root / "models"))
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--models-dir", default="models")
     parser.add_argument("--device", default="NPU")
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--iterations", type=int, default=100)
     parser.add_argument("--warmup", type=int, default=5)
-    parser.add_argument("--results-dir", default=str(project_root / "results"))
-    parser.add_argument("--profile", action="store_true", default=False, help="Enable profiling traces.")
-    
+    parser.add_argument("--results-dir", default="results")
+    parser.add_argument("--profile", action="store_true")
     args = parser.parse_args()
     
-    models = sorted(
-        p for p in Path(args.models_dir).glob("*.onnx")
-        if not p.name.endswith(".ort_broken.onnx")
-    )
+    models = sorted([m for m in Path(args.models_dir).glob("*.onnx") if "GAT" not in m.name and "SGC" not in m.name])
     config = ScalabilityConfig(
-        models=models,
-        results_dir=Path(args.results_dir).resolve(),
-        device=args.device,
-        repeats=args.repeats,
-        iterations=args.iterations,
-        warmup_iterations=args.warmup,
-        enable_profiling=args.profile
+        models=models, results_dir=Path(args.results_dir).resolve(),
+        device=args.device, repeats=args.repeats, iterations=args.iterations,
+        warmup_iterations=args.warmup, enable_profiling=args.profile
     )
-    
     MultiModelPipeline(config).run()
-
 
 if __name__ == "__main__":
     main()

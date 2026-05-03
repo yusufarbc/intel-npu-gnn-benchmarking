@@ -44,3 +44,17 @@ Benchmark sürecinde bazı modellerde mimari uyuşmazlıklar tespit edilmiştir.
 
 ---
 *Son Güncelleme: 30 Nisan 2026*
+
+### Intel Core Ultra NPU (VPUX37XX) Donanım ve Derleyici Limitasyonları
+
+Benchmarking çalışmaları sırasında Intel NPU çekirdek sürücüsü (OpenVINO NPU Plugin) seviyesinde bazı mimari kısıtlamalar tespit edilmiştir:
+
+1.  **Negatif Post-Shift Kuantizasyon Hatası:**
+    Özellikle Message-Passing tabanlı bazı GNN modellerinin (örn. `APPNP_int8.onnx`) INT8 kuantizasyon sürecinde aşırı uçlarda ölçekleme faktörleri (scale factors) üretilmektedir. NPU donanımı (VPUX37XX mimarisi) derleme esnasında şu hatayı fırlatmaktadır:
+    `ConvertIEToVPUNCE Pass failed : Encountered an attempt to approximate 56674.56 as mult = 28337, shift = 0, postShift = -1 ... but postShift is not supported`
+    Bu hata, donanımın o spesifik tensor için hesaplanan kuantizasyon `post-shift` değerini (örn: `-1`) donanımsal olarak desteklememesinden kaynaklanır. Bu modellerin çalışması OpenVINO tarafından otomatik olarak iptal edilir.
+    
+2.  **Intel Graphics Compiler (IGC) Çökmeleri:**
+    NPU ve GPU backend'leri tarafından ortak olarak kullanılan IGC derleyicisi, bazı INT8 Quantized GNN grafikleri işlenirken `intersects with V37` şeklinde ölümcül bellek segmentasyon hataları (Memory Access / Intersection Error) vermektedir. Pipeline bu hataların tüm Python sürecini çökertmemesi için koruma mekanizmaları (GPU Bypass) ile donatılmıştır.
+
+Bu kısıtlamalar bir yazılım hatasından (bug) ziyade, GNN'lerin standart CNN ve Transformer modelleri için tasarlanmış NPU donanım/yazılım yığınlarıyla mevcut uyumsuzluklarını gösteren kıymetli araştırma bulgularıdır.

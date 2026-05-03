@@ -1,3 +1,3 @@
 mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,49.02217333243849,8.93990166935839,318.89453125,663.1,30,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GIN_fp32\CPU\run_00\baseline_profiling.json
-optimized,43.38256666281571,1.9492195524083449,323.5078125,719.2,30,OpenVINOExecutionProvider | CPUExecutionProvider,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GIN_fp32\CPU\run_00\optimized_profiling.json
+baseline,39.836600000002896,2.9487759205135973,320.578125,677.9,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GIN_fp32\CPU\run_00\baseline_profiling.json
+optimized,40.15779000000445,2.41261124888417,323.59375,678.0,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GIN_fp32\CPU\run_00\optimized_profiling.json

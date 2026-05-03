@@ -1,0 +1,3 @@
+mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
+baseline,8.273200000000239,1.083968585341189,200.21484375,737.5,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\bert-tiny_int8\CPU\run_00\baseline_profiling.json
+optimized,8.630103333331363,0.9469384983488337,200.89453125,862.5,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\bert-tiny_int8\CPU\run_00\optimized_profiling.json

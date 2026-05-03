@@ -15,28 +15,23 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import sys
+from pathlib import Path as _Path
+_project_root = _Path(__file__).resolve().parent.parent
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
 import matplotlib.pyplot as plt
-import scienceplots
 import numpy as np
 import pandas as pd
 
-# Use academic style
-# Use academic style
-try:
-    import scienceplots
-    plt.style.use(['science', 'ieee', 'no-latex'])
-    plt.rcParams.update({
-        "font.size": 11,
-        "axes.labelsize": 12,
-        "axes.titlesize": 14,
-        "xtick.labelsize": 10,
-        "ytick.labelsize": 10,
-        "legend.fontsize": 9,
-        "figure.dpi": 300
-    })
-except:
-    plt.style.use('ggplot')
-    plt.rcParams.update({"font.size": 12})
+from analysis.plot_config import (
+    apply_ieee_style, savefig_ieee,
+    shorten_label, auto_rotate_xlabels,
+    SINGLE_COL, DOUBLE_COL, TALL_SINGLE, TALL_DOUBLE,
+    IEEE_COLORS,
+)
+apply_ieee_style()
 
 
 @dataclass
@@ -286,74 +281,129 @@ class ProfilingAnalyzer:
         self._save_fgr_diverging_chart(metrics_summary)
         self._save_provider_chart(df)
         self._generate_summary(comparison, metrics_summary)
+        
+        # Explicit memory cleanup
+        import gc
+        plt.close('all')
+        gc.collect()
+
+    def _save_chart(self, comparison: pd.DataFrame) -> None:
+        """Plot top K operators comparison (Baseline vs Optimized)."""
+        top_df = comparison.head(self.config.top_k).copy()
+        if top_df.empty:
+            return
+
+        fig, ax = plt.subplots(figsize=DOUBLE_COL)
+        x = np.arange(len(top_df))
+        width = 0.35
+
+        ax.bar(x - width/2, top_df["b_total_ms"], width, 
+               label="Baseline", color=IEEE_COLORS[0], edgecolor="k", linewidth=0.3)
+        ax.bar(x + width/2, top_df["o_total_ms"], width, 
+               label="Optimized", color=IEEE_COLORS[2], edgecolor="k", linewidth=0.3)
+
+        ax.set_ylabel("Total Latency (ms)")
+        ax.set_title(f"Top {self.config.top_k} Operators: Latency Comparison")
+        ax.set_xticks(x)
+        ax.set_xticklabels([shorten_label(str(op)) for op in top_df["operator"]], 
+                          rotation=45, ha="right", fontsize=8)
+        ax.legend(framealpha=0.9)
+
+        savefig_ieee(fig, self.config.results_dir / "operator_latency_comparison")
 
     def _save_latency_stacked_bar(self, df: pd.DataFrame) -> None:
-        """100% Stacked Bar Chart for Latency Breakdown."""
-        plt.figure(figsize=(8, 5))
-        
-        # Normalize to percentages
-        pivot_df = df.set_index("mode")[["compute_ms", "dma_ms", "dispatch_ms"]]
-        pivot_df_pct = pivot_df.div(pivot_df.sum(axis=1), axis=0) * 100
-        
-        ax = pivot_df_pct.plot(kind="barh", stacked=True, color=["#264653", "#2a9d8f", "#e9c46a"])
-        
-        plt.xlabel("Percentage of Total Latency (%)")
-        plt.title("Latency Breakdown: Where is time spent?")
-        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-        plt.tight_layout()
-        plt.savefig(self.config.results_dir / "latency_stacked_100pct.png", dpi=300, bbox_inches='tight')
-        plt.savefig(self.config.results_dir / "latency_stacked_100pct.svg", bbox_inches='tight')
-        plt.close()
+        """100% stacked horizontal bar: where is time spent?"""
+        pivot = df.set_index("mode")[["compute_ms", "dma_ms", "dispatch_ms"]]
+        pivot_pct = pivot.div(pivot.sum(axis=1), axis=0) * 100
+
+        fig, ax = plt.subplots(figsize=SINGLE_COL)
+        left = np.zeros(len(pivot_pct))
+        colors = [IEEE_COLORS[0], IEEE_COLORS[2], IEEE_COLORS[6]]
+        labels = ["Compute", "DMA", "Dispatch"]
+        for col, color, lbl in zip(pivot_pct.columns, colors, labels):
+            ax.barh(pivot_pct.index, pivot_pct[col], left=left,
+                    color=color, label=lbl, edgecolor="k", linewidth=0.3)
+            left += pivot_pct[col].values
+
+        ax.set_xlabel("Percentage of Total Latency (%)")
+        ax.set_title("Latency Component Breakdown")
+        ax.legend(loc="lower right", framealpha=0.9)
+        ax.set_xlim(0, 100)
+
+        savefig_ieee(fig, self.config.results_dir / "latency_stacked_100pct")
 
     def _save_fgr_diverging_chart(self, metrics: Dict[str, Any]) -> None:
-        """Diverging Bar Chart for Fusion Gain Ratio (FGR)."""
-        fgr = metrics.get("FGR", 1.0)
-        plt.figure(figsize=(6, 4))
-        
-        color = "forestgreen" if fgr >= 1.0 else "crimson"
-        plt.barh(["GCN (Target)"], [fgr - 1.0], left=1.0, color=color)
-        
-        plt.axvline(1.0, color='black', linestyle='--', alpha=0.7)
-        plt.xlabel("Fusion Gain Ratio (FGR)")
-        plt.title("Optimization Efficiency (Baseline = 1.0)")
-        plt.xlim(max(0, fgr - 1.5), fgr + 0.5)
-        plt.tight_layout()
-        plt.savefig(self.config.results_dir / "fgr_diverging.png", dpi=300, bbox_inches='tight')
-        plt.savefig(self.config.results_dir / "fgr_diverging.svg", bbox_inches='tight')
-        plt.close()
+        """Diverging bar for Fusion Gain Ratio."""
+        fgr   = metrics.get("FGR", 1.0)
+        color = IEEE_COLORS[2] if fgr >= 1.0 else IEEE_COLORS[4]
+
+        fig, ax = plt.subplots(figsize=SINGLE_COL)
+        ax.barh(["Model"], [fgr - 1.0], left=1.0, color=color,
+                edgecolor="k", linewidth=0.4)
+        ax.axvline(1.0, color="black", lw=0.8, ls="--", label="Baseline (FGR = 1)")
+        ax.set_xlabel("Fusion Gain Ratio (FGR)")
+        ax.set_title("Graph Optimization Efficiency")
+        ax.legend(framealpha=0.9)
+        lo = min(0.5, fgr - 0.3)
+        hi = max(1.5, fgr + 0.3)
+        ax.set_xlim(lo, hi)
+
+        savefig_ieee(fig, self.config.results_dir / "fgr_diverging")
 
     def _save_provider_chart(self, df: pd.DataFrame) -> None:
-        plt.figure(figsize=(10, 6))
-        # Pivot for provider distribution by duration
-        pivot_df = df.groupby(["mode", "provider"])["duration_us"].sum().unstack(fill_value=0) / 1000.0
-        pivot_df.plot(kind="bar", stacked=True, ax=plt.gca(), colormap="viridis")
-        
-        plt.ylabel("Total Latency (ms)")
-        plt.title("Execution Provider Distribution: NPU vs CPU Fallback")
-        plt.legend(title="Provider", bbox_to_anchor=(1.05, 1), loc='upper left')
-        plt.tight_layout()
-        plt.savefig(self.config.results_dir / "provider_fallback_analysis.png", dpi=300, bbox_inches='tight')
-        plt.savefig(self.config.results_dir / "provider_fallback_analysis.svg", bbox_inches='tight')
-        plt.close()
+        """Stacked bar of execution time per provider per mode."""
+        pivot = (
+            df.groupby(["mode", "provider"])["duration_us"]
+            .sum()
+            .unstack(fill_value=0)
+            / 1000.0
+        )
+        providers = pivot.columns.tolist()
+        modes     = pivot.index.tolist()
+        x         = np.arange(len(modes))
+
+        fig, ax = plt.subplots(figsize=DOUBLE_COL)
+        bottom = np.zeros(len(modes))
+        for i, prov in enumerate(providers):
+            ax.bar(x, pivot[prov], bottom=bottom,
+                   label=shorten_label(str(prov), max_len=20),
+                   color=IEEE_COLORS[i % len(IEEE_COLORS)],
+                   edgecolor="k", linewidth=0.3)
+            bottom += pivot[prov].values
+
+        ax.set_xticks(x)
+        ax.set_xticklabels([m.capitalize() for m in modes])
+        ax.set_ylabel("Cumulative Latency (ms)")
+        ax.set_title("Execution Provider Distribution (NPU vs. CPU)")
+        ax.legend(title="Provider", framealpha=0.9,
+                  loc="upper right", fontsize=7)
+
+        savefig_ieee(fig, self.config.results_dir / "provider_fallback_analysis")
 
     def _save_breakdown_chart(self, df: pd.DataFrame) -> None:
-        plt.figure(figsize=(10, 6))
-        modes = df["mode"].tolist()
-        compute = df["compute_ms"].tolist()
-        dma = df["dma_ms"].tolist()
+        """Grouped + stacked bar: compute / DMA / dispatch per mode."""
+        modes    = df["mode"].tolist()
+        compute  = df["compute_ms"].tolist()
+        dma      = df["dma_ms"].tolist()
         dispatch = df["dispatch_ms"].tolist()
+        x        = np.arange(len(modes))
 
-        plt.bar(modes, compute, label="Compute (Kernels)", color="#264653")
-        plt.bar(modes, dma, bottom=compute, label="DMA (Transfer)", color="#2a9d8f")
-        plt.bar(modes, dispatch, bottom=[c + d for c, d in zip(compute, dma)], label="Dispatch Overhead", color="#e9c46a")
+        fig, ax = plt.subplots(figsize=SINGLE_COL)
+        ax.bar(x, compute,  label="Compute",  color=IEEE_COLORS[0],
+               edgecolor="k", linewidth=0.3)
+        ax.bar(x, dma,      label="DMA",      color=IEEE_COLORS[2],
+               bottom=compute, edgecolor="k", linewidth=0.3)
+        ax.bar(x, dispatch, label="Dispatch", color=IEEE_COLORS[6],
+               bottom=[c + d for c, d in zip(compute, dma)],
+               edgecolor="k", linewidth=0.3)
 
-        plt.ylabel("Latency (ms)")
-        plt.title("Latency Breakdown: Compute vs DMA vs Dispatch")
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig(self.config.results_dir / "latency_breakdown.png", dpi=300, bbox_inches='tight')
-        plt.savefig(self.config.results_dir / "latency_breakdown.svg", bbox_inches='tight')
-        plt.close()
+        ax.set_xticks(x)
+        ax.set_xticklabels([m.capitalize() for m in modes])
+        ax.set_ylabel("Latency (ms)")
+        ax.set_title("Latency: Compute vs. DMA vs. Dispatch")
+        ax.legend(framealpha=0.9)
+
+        savefig_ieee(fig, self.config.results_dir / "latency_breakdown")
 
     def _generate_summary(self, df: pd.DataFrame, metrics: Dict[str, Any]) -> None:
         top_speedup = df[df["b_total_ms"] > 0].sort_values("reduction_pct", ascending=False).head(self.config.top_speedup_k)
@@ -380,23 +430,7 @@ class ProfilingAnalyzer:
         print(f"Optimized Latency: {metrics['Optimized_Total_ms']:.2f} ms")
         print(f"Latency Reduction: {metrics['LatencyReduction_ms']:.2f} ms")
         print("=" * 40 + "\n")
-        print(f"Detailed analysis saved to {self.config.results_dir}")
-
-    def _save_chart(self, df: pd.DataFrame) -> None:
-        top_df = df.head(self.config.top_k)
-        plt.figure(figsize=(10, 6))
-        x = range(len(top_df))
-        width = 0.35
-        plt.bar([i - width/2 for i in x], top_df["b_total_ms"], width, label="Baseline", color="#d1495b")
-        plt.bar([i + width/2 for i in x], top_df["o_total_ms"], width, label="Optimized", color="#00798c")
-        plt.xticks(x, top_df["operator"], rotation=45, ha="right")
-        plt.ylabel("Total Time (ms)")
-        plt.title("Operator Breakdown: Baseline vs Optimized")
-        plt.legend()
-        plt.tight_layout()
-        plt.savefig(self.config.results_dir / "operator_breakdown_topk.png", dpi=300, bbox_inches='tight')
-        plt.savefig(self.config.results_dir / "operator_breakdown_topk.svg", bbox_inches='tight')
-        plt.close()
+        print(f"Detailed analysis complete.")
 
 
 

@@ -270,9 +270,7 @@ def export_gnn_models(models_dir: Path) -> None:
     model_configs = [
         ("GCN", GCN(num_features, 64, num_classes)),
         ("GraphSAGE", GraphSAGE(num_features, 64, num_classes)),
-        ("GAT", GAT(num_features, 32, num_classes, heads=1)),
         ("GIN", GIN(num_features, 64, num_classes)),
-        ("SGC", SGC(num_features, num_classes)),
         ("APPNP", APPNPModel(num_features, 64, num_classes)),
         ("GraphTransformer", GraphTransformer(num_features, 32, num_classes, heads=1)),
     ]
@@ -381,7 +379,8 @@ def quantize_gnn_to_int8(onnx_path: Path) -> None:
 
     calibration_dataset = nncf.Dataset(calibration_data, transform_fn)
     with suppress_noise_warnings():
-        quantized_model = nncf.quantize(model, calibration_dataset)
+        # Using MIXED preset to avoid aggressive symmetric scale factors that cause NPU post-shift errors
+        quantized_model = nncf.quantize(model, calibration_dataset, preset=nncf.QuantizationPreset.MIXED)
     onnx.save(quantized_model, str(int8_path))
     print(f"Saved INT8 model to {int8_path}")
 
@@ -457,25 +456,33 @@ def prepare_baseline_models(models_dir: Path) -> None:
                     dtype = np.float32
                 input_info.append((name, tuple(dims), dtype))
 
-            rng = np.random.default_rng(0)
-            calibration_data = []
-            for _ in range(300):
-                item = {}
-                for name, shape, dtype in input_info:
-                    if np.issubdtype(dtype, np.floating):
-                        item[name] = (rng.standard_normal(shape).astype(dtype) * 0.1)
-                    else:
-                        item[name] = rng.integers(0, 1000, size=shape, dtype=dtype)
-                calibration_data.append(item)
+            def calibration_generator():
+                rng = np.random.default_rng(0)
+                for _ in range(50):  # Reduced to 50 for 6GB RAM limit
+                    item = {}
+                    for name, shape, dtype in input_info:
+                        if np.issubdtype(dtype, np.floating):
+                            item[name] = (rng.standard_normal(shape).astype(dtype) * 0.1)
+                        else:
+                            item[name] = rng.integers(0, 1000, size=shape, dtype=dtype)
+                    yield item
 
-            dataset = nncf.Dataset(calibration_data, lambda x: x)
+            dataset = nncf.Dataset(calibration_generator())
             with suppress_noise_warnings():
                 quantized_model = nncf.quantize(model, dataset)
+            
             onnx.save(quantized_model, str(int8_path))
-            checker.check_model(onnx.load(str(int8_path)))
             print(f"NNCF INT8 saved: {int8_path.name}")
+            
+            # Explicit cleanup
+            del model
+            del quantized_model
+            import gc
+            gc.collect()
         except Exception as exc:
             print(f"Failed to NNCF-quantize {fp32_path.name} -> {int8_path.name}: {exc}")
+            import gc
+            gc.collect()
 
     print("Fetching Vision Models (FP32)...")
     for name, url in models.items():

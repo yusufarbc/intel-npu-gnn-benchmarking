@@ -136,7 +136,7 @@ class ResultsVisualizer:
             )
 
         plt.tight_layout()
-        plt.savefig(output_path, dpi=200)
+        plt.savefig(output_path, dpi=300)
         plt.close()
 
 
@@ -251,7 +251,8 @@ class BenchmarkRunner:
             
         return output_path
 
-    def _run_mode(self, mode: BenchmarkMode) -> Tuple[float, float, Path, List[str]]:
+    def _run_mode(self, mode: BenchmarkMode) -> Tuple[float, float, float, float, Path, List[str]]:
+        import gc
         session = self._create_session(mode)
         inputs = self._prepare_inputs(session)
 
@@ -276,16 +277,16 @@ class BenchmarkRunner:
         # End tracking resource utilization
         cpu_end = process.cpu_percent(interval=None)
         mem_info = process.memory_info()
-        mem_end_mb = mem_info.rss / (1024 * 1024)
-        
-        # In Windows, peak_wset is available. On Linux it's not. 
-        # We'll use a generic approach for peak memory approximation.
         peak_mem_mb = getattr(mem_info, "peak_wset", mem_info.rss) / (1024 * 1024)
 
         mean_latency = float(np.mean(latencies_ms))
         std_latency = float(np.std(latencies_ms))
         
-        return mean_latency, std_latency, cpu_end, peak_mem_mb, profiling_path, session.get_providers()
+        # Explicitly destroy the session to free NPU/RAM resources
+        del session
+        gc.collect()
+        
+        return mean_latency, std_latency, cpu_end, peak_mem_mb, profiling_path, []
 
     def run(self) -> pd.DataFrame:
         records = []

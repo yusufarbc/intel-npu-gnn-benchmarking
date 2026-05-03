@@ -1,4 +1,4 @@
-device,latency_ms,std_ms,throughput_ips,peak_memory_mb,cpu_util_pct,status,reason
-CPU,5.549293339330082,0.0,180.20312476772426,198.54296875,708.6,ok,
-GPU,,,0.0,,,skipped,OpenVINO GPU backend fails for this model; GPU results are not supported.
-NPU,5.0516199960839,0.0,197.9562993208548,350.28125,791.3,ok,
+device,avg_latency_ms,std_ms,throughput_ips,peak_memory_mb,cpu_util_pct,status,latency_ms,reason
+CPU,5.354733333331296,0.0,186.75066296492457,197.7109375,841.3,ok,,
+GPU,,,0.0,,,skipped,,OpenVINO GPU backend fails for this model; GPU results are not supported.
+NPU,5.3474366666667565,0.0,187.00548736434774,351.9765625,791.3,ok,,
