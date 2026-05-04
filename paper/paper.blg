@@ -10,68 +10,49 @@ Reallocating 'singl_function' (item size: 4) to 100 items.
 Reallocating 'wiz_functions' (item size: 4) to 6000 items.
 Reallocating 'singl_function' (item size: 4) to 100 items.
 Database file #1: references.bib
-Repeated entry---line 1085 of file references.bib
- : @inproceedings{11125797
- :                        ,
-I'm skipping whatever remains of this entry
-I was expecting a `,' or a `}'---line 1397 of file references.bib
- :   
- :   abstract = {The rising popularity of intelligent mobile devices and the daunting computational cost of deep learning-based models call for efficient and accurate on-device inference schemes. We propose a quantization scheme that allows inference to be carried out using integer-only arithmetic, which can be implemented more efficiently than floating point inference on commonly available integer-only hardware. We also co-design a training procedure to preserve end-to-end model accuracy post quantization. As a result, the proposed quantization scheme improves the tradeoff between accuracy and on-device latency. The improvements are significant even on MobileNets, a model family known for run-time efficiency, and are demonstrated in ImageNet classification and COCO detection on popular CPUs.}
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-I was expecting a `,' or a `}'---line 1417 of file references.bib
- : 
- : abstract = {Graph neural networks (GNNs) have demonstrated strong performance on a wide variety of tasks due to their ability to model non-uniform structured data. Despite their promise, there exists little research exploring methods to make them more efficient at inference time. In this work, we explore the viability of training quantized GNNs, enabling the usage of low precision integer arithmetic during inference. For GNNs seemingly unimportant choices in quantization implementation cause dramatic changes in performance. We identify the sources of error that uniquely arise when attempting to quantize GNNs, and propose an architecturally-agnostic and stable method, Degree-Quant, to improve performance over existing quantization-aware training baselines commonly used on other architectures, such as CNNs. We validate our method on six datasets and show, unlike previous quantization attempts, that models generalize to unseen graphs. Models trained with Degree-Quant for INT8 quantization perform as well as FP32 models in most cases; for INT4 models, we obtain up to 26% gains over the baselines. Our work enables up to 4.7x speedups on CPU when using INT8 arithmetic.}
-(Error may have been on previous line)
-I'm skipping whatever remains of this entry
-Repeated entry---line 1659 of file references.bib
- : @article{SINGH202371
- :                     ,
-I'm skipping whatever remains of this entry
 -- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
 -- http://www.michaelshell.org/tex/ieeetran/bibtex/
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
 
 Done.
-You've used 20 entries,
+You've used 25 entries,
             4087 wiz_defined-function locations,
-            940 strings with 11972 characters,
-and the built_in function-call counts, 14415 in all, are:
-= -- 1102
-> -- 414
+            961 strings with 12993 characters,
+and the built_in function-call counts, 16385 in all, are:
+= -- 1269
+> -- 434
 < -- 61
-+ -- 212
-- -- 87
-* -- 719
-:= -- 2204
-add.period$ -- 43
-call.type$ -- 20
-change.case$ -- 21
++ -- 222
+- -- 92
+* -- 792
+:= -- 2577
+add.period$ -- 53
+call.type$ -- 25
+change.case$ -- 30
 chr.to.int$ -- 141
-cite$ -- 20
-duplicate$ -- 1067
-empty$ -- 1261
-format.name$ -- 106
-if$ -- 3353
+cite$ -- 25
+duplicate$ -- 1230
+empty$ -- 1446
+format.name$ -- 111
+if$ -- 3786
 int.to.chr$ -- 0
-int.to.str$ -- 20
-missing$ -- 220
-newline$ -- 113
-num.names$ -- 20
-pop$ -- 577
+int.to.str$ -- 25
+missing$ -- 259
+newline$ -- 136
+num.names$ -- 25
+pop$ -- 686
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 1117
+skip$ -- 1270
 stack$ -- 0
-substring$ -- 387
-swap$ -- 779
+substring$ -- 400
+swap$ -- 873
 text.length$ -- 14
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 20
+type$ -- 25
 warning$ -- 0
-while$ -- 45
-width$ -- 22
-write$ -- 242
-(There were 4 error messages)
+while$ -- 50
+width$ -- 27
+write$ -- 293

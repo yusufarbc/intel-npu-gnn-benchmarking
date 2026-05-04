@@ -45,11 +45,45 @@ A.~Raha, S.~Kundu, S.~N. Sridhar, S.~Kundu, S.~K. Ghosh, A.~Palla, A.~Das,
   International Conference on Omni-layer Intelligent Systems (COINS)}, Aug
   2025, pp. 1--8.
 
+\bibitem{intel_meteorlake_hotchips_2023}
+\BIBentryALTinterwordspacing
+{Intel Corporation}, ``{Intel Meteor Lake: A Client Platform Built on the Intel
+  4 Process and Foveros Packaging (Hot Chips 2023)},'' 2023, conference
+  presentation materials describing Meteor Lake tile-based architecture and
+  packaging. [Online]. Available: \url{https://hotchips.org/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{intel_core_ultra_npu}
+\BIBentryALTinterwordspacing
+------, ``{Heterogeneous AI Powerhouse: Unveiling the Hardware and Software
+  Foundation of Intel Core Ultra Processors},'' 2024, official Intel Core Ultra
+  architecture white paper including NPU (Intel AI Boost). [Online]. Available:
+  \url{https://cdrdv2-public.intel.com/817736/}
+\BIBentrySTDinterwordspacing
+
+\bibitem{intel_core_ultra_product_brief}
+------, ``{Intel Core Ultra Processor Product Brief (Meteor Lake)},'' 2023,
+  intel product brief summarizing platform features, including NPU (Intel AI
+  Boost) positioning and peak AI throughput claims.
+
+\bibitem{openvino_npu_docs}
+\BIBentryALTinterwordspacing
+------, ``{OpenVINO Documentation: NPU Devices, INT8 Inference, and Release
+  Notes},'' 2025. [Online]. Available: \url{https://docs.openvino.ai/}
+\BIBentrySTDinterwordspacing
+
 \bibitem{bi2026rooflinebenchbenchmarkingframeworkondevice}
 \BIBentryALTinterwordspacing
 Z.~Bi, X.~Chen, L.~Sun, Y.~Yao, Q.~Shen, J.~Lou, and C.~Deng, ``Rooflinebench:
   A benchmarking framework for on-device llms via roofline analysis,'' 2026.
   [Online]. Available: \url{https://arxiv.org/abs/2602.11506}
+\BIBentrySTDinterwordspacing
+
+\bibitem{lam2024_meteorlake_npu}
+\BIBentryALTinterwordspacing
+C.~Lam, ``{Intel Meteor Lake's NPU},'' Apr. 2024, technical analysis of Meteor
+  Lake NPU internals; not peer-reviewed. [Online]. Available:
+  \url{https://chipsandcheese.com/p/intel-meteor-lakes-npu}
 \BIBentrySTDinterwordspacing
 
 \bibitem{10.1145/3453483.3454083}

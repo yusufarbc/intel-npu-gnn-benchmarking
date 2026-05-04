@@ -540,21 +540,6 @@ location = {Rotterdam, Netherlands},
 series = {ASPLOS '25}
 }
 
-@inproceedings{11125797,
-  author={Raha, Arnab and Kundu, Souvik and Sridhar, Sharath Nittur and Kundu, Shamik and Ghosh, Soumendu Kumar and Palla, Alessandro and Das, Arghadip and Crews, Darren and Mathaikutty, Deepak A.},
-  booktitle={2025 IEEE International Conference on Omni-layer Intelligent Systems (COINS)}, 
-  title={LLM-NPU: Towards Efficient Foundation Model Inference on Low-Power Neural Processing Units}, 
-  year={2025},
-  volume={},
-  number={},
-  pages={1-8},
-  abstract={Neural processing units (NPUs) have become essential in modern client and edge platforms, offering unparalleled efficiency by delivering high throughput at low power. This is critical to improve the TOPS/W of the NPU, leading to longer battery life. While NPUs were initially designed to efficiently execute computer vision (CV) workloads such as CNNs, the rising demand to run transformer-based large language models (LLMs) locally now calls for significant architectural and software adaptation. This paper presents LLM-NPU, a comprehensive software-hardware co-optimization framework that enables scalable, power-efficient LLM deployment on NPUs under tight compute and memory budgets. We present software solutions such as vertical and horizontal operator fusion, quantization-aware weight compression, hybrid key-value (KV) quantization, eviction strategies, and static-shape inference that target memory bottlenecks and compute inefficiencies in LLM execution. On the hardware side, we explore domain-specialized NPU enhancements, including processing-in-memory architectures, extended input channel accumulation, structured sparsity acceleration, GEMM engine optimizations, mixed precision, microscaling format support, and fusion-aware execution pipelines. These co-designed innovations can collectively improve the energy, throughput, and latency of NPUs for LLM workloads.},
-  keywords={Technological innovation;Quantization (signal);Large language models;Pipelines;Throughput;Transformers;Software;Hardware;Intelligent systems;Optimization;Energy-efficient inference;on-device AI;weight quantization;KV optimization;operator fusion;processing-in-memory;structured sparsity},
-  doi={10.1109/COINS65080.2025.11125797},
-  ISSN={2996-5330},
-  month={Aug}
-}
-
 @article{2026arXiv260424785R,
        author = {{Renney}, Harri and {Trad}, Fouad and {Mattarock}, Michael and {Wood}, Zena},
         title = "{Cloud to Edge: Benchmarking LLM Inference On Hardware-Accelerated Single-Board Computers}",
@@ -695,7 +680,7 @@ series = {ASPLOS '24}
   booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
   year      = {2018},
   pages     = {2704--2713},
-  doi       = {10.1109/CVPR.2018.00286}
+  doi       = {10.1109/CVPR.2018.00286},
   abstract = {The rising popularity of intelligent mobile devices and the daunting computational cost of deep learning-based models call for efficient and accurate on-device inference schemes. We propose a quantization scheme that allows inference to be carried out using integer-only arithmetic, which can be implemented more efficiently than floating point inference on commonly available integer-only hardware. We also co-design a training procedure to preserve end-to-end model accuracy post quantization. As a result, the proposed quantization scheme improves the tradeoff between accuracy and on-device latency. The improvements are significant even on MobileNets, a model family known for run-time efficiency, and are demonstrated in ImageNet classification and COCO detection on popular CPUs.}
 }
 
@@ -705,7 +690,7 @@ title={Degree-Quant: Quantization-Aware Training for Graph Neural Networks},
 author={Shyam Anil Tailor and Javier Fernandez-Marques and Nicholas Donald Lane},
 booktitle={International Conference on Learning Representations},
 year={2021},
-url={https://openreview.net/forum?id=NSBrFgJAHg}
+url={https://openreview.net/forum?id=NSBrFgJAHg},
 abstract = {Graph neural networks (GNNs) have demonstrated strong performance on a wide variety of tasks due to their ability to model non-uniform structured data. Despite their promise, there exists little research exploring methods to make them more efficient at inference time. In this work, we explore the viability of training quantized GNNs, enabling the usage of low precision integer arithmetic during inference. For GNNs seemingly unimportant choices in quantization implementation cause dramatic changes in performance. We identify the sources of error that uniquely arise when attempting to quantize GNNs, and propose an architecturally-agnostic and stable method, Degree-Quant, to improve performance over existing quantization-aware training baselines commonly used on other architectures, such as CNNs. We validate our method on six datasets and show, unlike previous quantization attempts, that models generalize to unseen graphs. Models trained with Degree-Quant for INT8 quantization perform as well as FP32 models in most cases; for INT4 models, we obtain up to 26% gains over the baselines. Our work enables up to 4.7x speedups on CPU when using INT8 arithmetic.}
 }
 
@@ -827,20 +812,6 @@ archivePrefix = {arXiv},
   bibsource    = {dblp computer science bibliography, https://dblp.org}
 }
 
-@article{SINGH202371,
-title = {Edge AI: A survey},
-journal = {Internet of Things and Cyber-Physical Systems},
-volume = {3},
-pages = {71-92},
-year = {2023},
-issn = {2667-3452},
-doi = {https://doi.org/10.1016/j.iotcps.2023.02.004},
-url = {https://www.sciencedirect.com/science/article/pii/S2667345223000196},
-author = {Raghubir Singh and Sukhpal Singh Gill},
-keywords = {Edge AI, Edge computing, Artificial intelligence, Fog computing, Machine learning, Cloud computing},
-abstract = {Artificial Intelligence (AI) at the edge is the utilization of AI in real-world devices. Edge AI refers to the practice of doing AI computations near the users at the network's edge, instead of centralised location like a cloud service provider's data centre. With the latest innovations in AI efficiency, the proliferation of Internet of Things (IoT) devices, and the rise of edge computing, the potential of edge AI has now been unlocked. This study provides a thorough analysis of AI approaches and capabilities as they pertain to edge computing, or Edge AI. Further, a detailed survey of edge computing and its paradigms including transition to Edge AI is presented to explore the background of each variant proposed for implementing Edge Computing. Furthermore, we discussed the Edge AI approach to deploying AI algorithms and models on edge devices, which are typically resource-constrained devices located at the edge of the network. We also presented the technology used in various modern IoT applications, including autonomous vehicles, smart homes, industrial automation, healthcare, and surveillance. Moreover, the discussion of leveraging machine learning algorithms optimized for resource-constrained environments is presented. Finally, important open challenges and potential research directions in the field of edge computing and edge AI have been identified and investigated. We hope that this article will serve as a common goal for a future blueprint that will unite important stakeholders and facilitates to accelerate development in the field of Edge AI.}
-}
-
 @software{npukernelbench,
   author = {{NPUKernelBench Contributors}},
   title  = {{NPUKernelBench: A Cross-Platform Operator Benchmarking Suite for NPUs}},
@@ -855,6 +826,30 @@ abstract = {Artificial Intelligence (AI) at the edge is the utilization of AI in
   year   = {2024},
   url    = {https://cdrdv2-public.intel.com/817736/},
   note   = {Official Intel Core Ultra architecture white paper including NPU (Intel AI Boost)}
+}
+
+@misc{intel_core_ultra_product_brief,
+  author = {{Intel Corporation}},
+  title  = {{Intel Core Ultra Processor Product Brief (Meteor Lake)}},
+  year   = {2023},
+  note   = {Intel product brief summarizing platform features, including NPU (Intel AI Boost) positioning and peak AI throughput claims}
+}
+
+@misc{intel_meteorlake_hotchips_2023,
+  author = {{Intel Corporation}},
+  title  = {{Intel Meteor Lake: A Client Platform Built on the Intel 4 Process and Foveros Packaging (Hot Chips 2023)}},
+  year   = {2023},
+  url    = {https://hotchips.org/},
+  note   = {Conference presentation materials describing Meteor Lake tile-based architecture and packaging}
+}
+
+@misc{lam2024_meteorlake_npu,
+  author = {Lam, Chester},
+  title  = {{Intel Meteor Lake's NPU}},
+  year   = {2024},
+  month  = apr,
+  url    = {https://chipsandcheese.com/p/intel-meteor-lakes-npu},
+  note   = {Technical analysis of Meteor Lake NPU internals; not peer-reviewed}
 }
 
 @misc{openvino_npu_docs,

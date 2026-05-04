@@ -51,4 +51,4 @@ python run_pipeline.py --iterations 100 --repeats 3
 Our analysis indicates that while the Intel Core Ultra NPU excels at dense CNN workloads (ResNet50), it is significantly bottlenecked by memory subsystems when executing sparse GNNs. We identify a **"Fusion Overhead Paradox"** where aggressive compiler optimizations can lead to performance regression in shallow graph structures.
 
 ---
-*Developed by Yusuf Talha ARABACI (Karabük University) & Antigravity AI Assistant*
+*Developed by Yusuf Talha ARABACI (Karabük University)*
