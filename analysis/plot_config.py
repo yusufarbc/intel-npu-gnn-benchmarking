@@ -21,6 +21,8 @@ import matplotlib.ticker as ticker
 import numpy as np
 import re
 
+import gc
+
 
 # ---------------------------------------------------------------------------
 # Core style settings
@@ -60,17 +62,34 @@ _IEEE_RC = {
     "ytick.right":         True,
 }
 
-def savefig_ieee(fig: mpl.figure.Figure, base_path: Path | str, *, dpi: int = 300) -> None:
+def savefig_ieee(
+    fig: mpl.figure.Figure,
+    base_path: Path | str,
+    *,
+    dpi: int = 300,
+) -> None:
+    """Save figure as both PNG (300 dpi) and SVG.
+
+    Notes:
+    - Export is deterministic: exactly `{base}.png` and `{base}.svg`.
+    - Uses `bbox_inches="tight"` to fit IEEE-style layouts.
+    """
     base = Path(base_path)
     base.parent.mkdir(parents=True, exist_ok=True)
+
+    # Temporarily disable constrained_layout when saving; it can be fragile
+    # with bbox_inches='tight' on complex figures.
+    original_cl = fig.get_constrained_layout()
+    fig.set_constrained_layout(False)
     try:
         fig.savefig(base.with_suffix(".png"), dpi=dpi, bbox_inches="tight")
-        fig.savefig(base.with_suffix(".svg"),           bbox_inches="tight")
-        fig.savefig(base.with_suffix(".pdf"),           bbox_inches="tight") # Vektörel PDF eklendi
+        fig.savefig(base.with_suffix(".svg"), bbox_inches="tight")
     except Exception as e:
-        print(f"⚠️ Save error: {e}. Fallback to standard save.")
+        print(f"Save error for {base}: {e}. Falling back to standard save.")
         fig.savefig(base.with_suffix(".png"), dpi=dpi)
+        fig.savefig(base.with_suffix(".svg"))
     finally:
+        fig.set_constrained_layout(original_cl)
         gc.collect()
 
 # IEEE-friendly qualitative colour palette (colour-blind safe)
@@ -97,42 +116,6 @@ def apply_ieee_style() -> None:
 
     mpl.rcParams.update(_IEEE_RC)
     mpl.rcParams["axes.prop_cycle"] = mpl.cycler(color=IEEE_COLORS)
-
-
-# ---------------------------------------------------------------------------
-# Save helper
-# ---------------------------------------------------------------------------
-
-import gc
-
-def savefig_ieee(
-    fig: mpl.figure.Figure,
-    base_path: Path | str,
-    *,
-    dpi: int = 300,
-) -> None:
-    """Save figure as both PNG (300 dpi) and SVG with memory cleanup."""
-    base = Path(base_path)
-    base.parent.mkdir(parents=True, exist_ok=True)
-    
-    # Disable constrained_layout temporarily
-    original_cl = fig.get_constrained_layout()
-    fig.set_constrained_layout(False)
-    
-    try:
-        # Try to save with tight layout first
-        fig.savefig(base.with_suffix(".png"), dpi=dpi, bbox_inches="tight")
-        fig.savefig(base.with_suffix(".svg"),           bbox_inches="tight")
-    except Exception as e:
-        # If any error (MemoryError, etc.) occurs, fall back to standard save
-        print(f"⚠️ Memory/Layout error on {base_path}. Saving with fixed layout as fallback. ({e})")
-        try:
-            fig.savefig(base.with_suffix(".png"), dpi=dpi)
-        except:
-            pass
-    finally:
-        fig.set_constrained_layout(original_cl)
-        gc.collect()
 
 
 # ---------------------------------------------------------------------------

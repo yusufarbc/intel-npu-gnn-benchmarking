@@ -20,6 +20,11 @@ from torch_geometric.nn import (
     TransformerConv,
 )
 
+try:
+    from torch_geometric.nn import GATv2Conv  # type: ignore
+except Exception:
+    GATv2Conv = None
+
 import nncf
 
 try:
@@ -94,6 +99,21 @@ class GAT(torch.nn.Module):
         super().__init__()
         self.conv1 = GATConv(in_channels, hidden_channels, heads=heads)
         self.conv2 = GATConv(hidden_channels * heads, out_channels, heads=1)
+
+    def forward(self, x, edge_index):
+        x = self.conv1(x, edge_index)
+        x = F.relu(x)
+        x = self.conv2(x, edge_index)
+        return x
+
+
+class GATv2(torch.nn.Module):
+    def __init__(self, in_channels, hidden_channels, out_channels, heads=1):
+        super().__init__()
+        if GATv2Conv is None:
+            raise RuntimeError("GATv2Conv is not available in this torch-geometric version")
+        self.conv1 = GATv2Conv(in_channels, hidden_channels, heads=heads)
+        self.conv2 = GATv2Conv(hidden_channels * heads, out_channels, heads=1)
 
     def forward(self, x, edge_index):
         x = self.conv1(x, edge_index)
@@ -259,28 +279,41 @@ def quantize_model(input_path: Path, output_path: Path):
     except Exception as e:
         print(f"Failed to quantize {input_path.name}: {e}")
 
-def export_gnn_models(models_dir: Path) -> None:
-    # Cora dataset size: 2708 nodes, 1433 features, 7 classes
-    num_nodes = 2708
-    num_features = 1433
-    num_classes = 7
-    edge_index = torch.randint(0, num_nodes, (2, 10000))
+def export_gnn_models(
+    models_dir: Path,
+    *,
+    num_nodes: int = 2708,
+    num_features: int = 1433,
+    num_classes: int = 7,
+    num_edges: int = 10000,
+) -> None:
+    # Default matches Cora-like sizing.
+    edge_index = torch.randint(0, num_nodes, (2, num_edges))
     x = torch.randn(num_nodes, num_features)
 
     model_configs = [
         ("GCN", GCN(num_features, 64, num_classes)),
+        ("GAT", GAT(num_features, 32, num_classes, heads=2)),
         ("GraphSAGE", GraphSAGE(num_features, 64, num_classes)),
         ("GIN", GIN(num_features, 64, num_classes)),
+        ("SGC", SGC(num_features, num_classes, K=2)),
         ("APPNP", APPNPModel(num_features, 64, num_classes)),
         ("GraphTransformer", GraphTransformer(num_features, 32, num_classes, heads=1)),
     ]
+
+    # Optional GATv2 (if available)
+    if GATv2Conv is not None:
+        try:
+            model_configs.insert(2, ("GATv2", GATv2(num_features, 32, num_classes, heads=2)))
+        except Exception as exc:
+            print(f"Skipping GATv2 export: {exc}")
 
     for name, model in model_configs:
         model.eval()
         output_path = models_dir / f"{name}_fp32.onnx"
 
         print(f"Exporting {name} to {output_path}...")
-        use_constant_folding = name not in ["GAT", "GraphTransformer"]
+        use_constant_folding = name not in ["GAT", "GATv2", "GraphTransformer"]
 
         torch.onnx.export(
             model,
@@ -525,16 +558,121 @@ def prepare_baseline_models(models_dir: Path) -> None:
         quantize_model(bert_fp32, bert_int8)
 
 
+def export_efficientnet_b0_fp32(dest: Path) -> None:
+    if dest.exists():
+        print(f"File already exists: {dest.name}")
+        return
+    try:
+        import torchvision  # type: ignore
+        from torchvision.models import efficientnet_b0  # type: ignore
+    except Exception as exc:
+        print(f"Skipping EfficientNet-B0 export (torchvision missing): {exc}")
+        return
+
+    print(f"Exporting EfficientNet-B0 to {dest}...")
+    model = efficientnet_b0(weights=None)
+    model.eval()
+    dummy = torch.randn(1, 3, 224, 224)
+    torch.onnx.export(
+        model,
+        dummy,
+        str(dest),
+        input_names=["input"],
+        output_names=["logits"],
+        opset_version=18,
+        do_constant_folding=True,
+        training=torch.onnx.TrainingMode.EVAL,
+    )
+    print("Done.")
+
+
+def export_vit_tiny_fp32(dest: Path, *, image_size: int = 224) -> None:
+    if dest.exists():
+        print(f"File already exists: {dest.name}")
+        return
+    try:
+        from transformers import ViTConfig, ViTModel  # type: ignore
+    except Exception as exc:
+        print(f"Skipping ViT-tiny export (transformers missing): {exc}")
+        return
+
+    print(f"Exporting ViT-tiny (random weights) to {dest}...")
+    # Tiny-ish config: intended for attention workload characterization, not accuracy.
+    config = ViTConfig(
+        image_size=image_size,
+        patch_size=16,
+        num_channels=3,
+        hidden_size=192,
+        num_hidden_layers=12,
+        num_attention_heads=3,
+        intermediate_size=768,
+        qkv_bias=True,
+        hidden_act="gelu",
+        return_dict=False,
+    )
+    model = ViTModel(config)
+    model.eval()
+    dummy = torch.randn(1, 3, image_size, image_size)
+
+    torch.onnx.export(
+        model,
+        (dummy,),
+        str(dest),
+        input_names=["pixel_values"],
+        output_names=["last_hidden_state", "pooler_output"],
+        opset_version=18,
+        do_constant_folding=True,
+        training=torch.onnx.TrainingMode.EVAL,
+    )
+    print("Done.")
+
+
 def main():
     project_root = Path(__file__).resolve().parent.parent
     models_dir = project_root / "models"
     models_dir.mkdir(exist_ok=True)
 
-    export_gnn_models(models_dir)
-    prepare_baseline_models(models_dir)
+    parser = argparse.ArgumentParser(description="Prepare GNN + baseline ONNX model suite")
+    parser.add_argument("--models-dir", default=str(models_dir))
+    parser.add_argument("--gnn-nodes", type=int, default=2708)
+    parser.add_argument("--gnn-edges", type=int, default=10000)
+    parser.add_argument("--gnn-features", type=int, default=1433)
+    parser.add_argument("--gnn-classes", type=int, default=7)
+    parser.add_argument(
+        "--only-gnn",
+        action="store_true",
+        help="Export only GNN models (skip baseline CV/NLP models)",
+    )
+    parser.add_argument(
+        "--skip-optional-baselines",
+        action="store_true",
+        help="Skip optional modern baselines (EfficientNet/ViT)",
+    )
+    args = parser.parse_args()
+
+    models_dir = Path(args.models_dir).resolve()
+    models_dir.mkdir(exist_ok=True)
+
+    export_gnn_models(
+        models_dir,
+        num_nodes=int(args.gnn_nodes),
+        num_edges=int(args.gnn_edges),
+        num_features=int(args.gnn_features),
+        num_classes=int(args.gnn_classes),
+    )
+    if not args.only_gnn:
+        prepare_baseline_models(models_dir)
+
+        # Optional modern baselines (best-effort)
+        if not args.skip_optional_baselines:
+            export_efficientnet_b0_fp32(models_dir / "efficientnet-b0_fp32.onnx")
+            export_vit_tiny_fp32(models_dir / "vit-tiny_fp32.onnx")
 
     print("\nAcademic Model Preparation Complete.")
-    print("You now have GNNs plus CNN/NLP baselines ready.")
+    if args.only_gnn:
+        print("You now have GNN ONNX models ready.")
+    else:
+        print("You now have GNNs plus CNN/NLP baselines ready.")
 
 if __name__ == "__main__":
     main()

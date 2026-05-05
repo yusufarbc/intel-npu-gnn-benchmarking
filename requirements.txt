@@ -11,7 +11,9 @@ huggingface_hub
 transformers
 psutil
 torch
+torchvision
 torch-geometric
+ogb
 notebook
 ipykernel
 ipywidgets

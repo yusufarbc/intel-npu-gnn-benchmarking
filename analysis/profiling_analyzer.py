@@ -13,7 +13,7 @@ ort.set_default_logger_severity(4)
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import sys
 from pathlib import Path as _Path
@@ -45,112 +45,13 @@ class AnalyzeConfig:
     total_run_event_name: str = "model_run"
 
 
-class ProfilingTraceLoader:
-    @staticmethod
-    def load_events(path: Path) -> List[Dict[str, Any]]:
-        if not path.exists():
-            raise FileNotFoundError(f"Profiling file not found: {path}")
-
-        text = path.read_text(encoding="utf-8").strip()
-        if not text:
-            return []
-
-        try:
-            payload = json.loads(text)
-        except json.JSONDecodeError:
-            payload = []
-            for line in text.splitlines():
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    payload.append(json.loads(line))
-                except json.JSONDecodeError:
-                    continue
-
-        if isinstance(payload, list):
-            return [event for event in payload if isinstance(event, dict)]
-
-        if isinstance(payload, dict):
-            trace_events = payload.get("traceEvents", [])
-            if isinstance(trace_events, list):
-                return [event for event in trace_events if isinstance(event, dict)]
-
-        return []
-
-
-class OperatorEventParser:
-    @staticmethod
-    def _extract_operator_name(event: Dict[str, Any]) -> Optional[str]:
-        args = event.get("args", {}) if isinstance(event.get("args"), dict) else {}
-        op_name = args.get("op_name") or event.get("op_name")
-        if isinstance(op_name, str) and op_name.strip():
-            return op_name.strip()
-
-        raw_name = event.get("name")
-        if not isinstance(raw_name, str) or not raw_name.strip():
-            return None
-
-        cleaned = raw_name.strip()
-        if cleaned.endswith("_kernel_time"):
-            cleaned = cleaned.replace("_kernel_time", "")
-        if "(" in cleaned:
-            cleaned = cleaned.split("(", 1)[0].strip()
-        if "::" in cleaned:
-            cleaned = cleaned.split("::")[-1].strip()
-        return cleaned or None
-
-    @staticmethod
-    def _extract_duration_us(event: Dict[str, Any]) -> Optional[float]:
-        duration = event.get("dur")
-        if isinstance(duration, (int, float)) and duration >= 0:
-            return float(duration)
-        args = event.get("args", {}) if isinstance(event.get("args"), dict) else {}
-        for key in ["dur", "duration", "duration_us", "op_time_us"]:
-            value = args.get(key)
-            if isinstance(value, (int, float)) and value >= 0:
-                return float(value)
-        return None
-
-    @classmethod
-    def parse_operator_rows(cls, events: List[Dict[str, Any]], mode: str) -> List[Dict[str, Any]]:
-        rows: List[Dict[str, Any]] = []
-        for event in events:
-            op_name = cls._extract_operator_name(event)
-            duration_us = cls._extract_duration_us(event)
-            if op_name is None or duration_us is None:
-                continue
-            
-            # Extract provider from args
-            args = event.get("args", {})
-            provider = args.get("provider", "Unknown")
-            
-            category = "compute"
-            name_lower = op_name.lower()
-            if any(x in name_lower for x in ["memcpy", "dma", "copy", "transfer"]):
-                category = "dma"
-            
-            rows.append({
-                "mode": mode, 
-                "operator": op_name, 
-                "duration_us": duration_us,
-                "category": category,
-                "provider": provider
-            })
-        return rows
-
-    @staticmethod
-    def extract_compilation_time_ms(events: List[Dict[str, Any]], event_name: str) -> float:
-        for event in events:
-            if event.get("name") == event_name:
-                return float(event.get("dur", 0)) / 1000.0
-        return 0.0
-
-    @staticmethod
-    def extract_total_inference_time_ms(events: List[Dict[str, Any]], event_name: str) -> float:
-        # model_run events occur multiple times, we average them
-        runs = [float(e.get("dur", 0)) / 1000.0 for e in events if e.get("name") == event_name]
-        return float(np.mean(runs)) if runs else 0.0
+from analysis.ort_profile_utils import (
+    extract_compilation_time_ms,
+    extract_total_inference_time_ms,
+    iter_operator_events,
+    load_events,
+    summarize_trace,
+)
 
 
 class ProfilingAnalyzer:
@@ -164,12 +65,21 @@ class ProfilingAnalyzer:
             print("   Ensure the benchmark was run with profiling enabled.")
             return
 
-        baseline_events = ProfilingTraceLoader.load_events(self.config.baseline_json)
-        optimized_events = ProfilingTraceLoader.load_events(self.config.optimized_json)
+        baseline_events = load_events(self.config.baseline_json)
+        optimized_events = load_events(self.config.optimized_json)
 
         rows: List[Dict[str, Any]] = []
-        rows.extend(OperatorEventParser.parse_operator_rows(baseline_events, mode="baseline"))
-        rows.extend(OperatorEventParser.parse_operator_rows(optimized_events, mode="optimized"))
+        for mode, events in ("baseline", baseline_events), ("optimized", optimized_events):
+            for op_name, dur_us, provider, category in iter_operator_events(events):
+                rows.append(
+                    {
+                        "mode": mode,
+                        "operator": op_name,
+                        "duration_us": float(dur_us),
+                        "category": category,
+                        "provider": provider,
+                    }
+                )
 
         if not rows:
             print("No operator events found.")
@@ -195,12 +105,12 @@ class ProfilingAnalyzer:
         breakdown = df.groupby(["mode", "category"])["duration_us"].sum().unstack(fill_value=0) / 1000.0
         
         # Total Inference Times from trace
-        t_base_ms = OperatorEventParser.extract_total_inference_time_ms(baseline_events, self.config.total_run_event_name)
-        t_opt_ms = OperatorEventParser.extract_total_inference_time_ms(optimized_events, self.config.total_run_event_name)
+        t_base_ms = extract_total_inference_time_ms(baseline_events, self.config.total_run_event_name)
+        t_opt_ms = extract_total_inference_time_ms(optimized_events, self.config.total_run_event_name)
         
         # Compilation Times
-        c_base_ms = OperatorEventParser.extract_compilation_time_ms(baseline_events, self.config.compilation_event_name)
-        c_opt_ms = OperatorEventParser.extract_compilation_time_ms(optimized_events, self.config.compilation_event_name)
+        c_base_ms = extract_compilation_time_ms(baseline_events, self.config.compilation_event_name)
+        c_opt_ms = extract_compilation_time_ms(optimized_events, self.config.compilation_event_name)
 
         # FGR: Fusion Gain Ratio
         fgr = t_base_ms / t_opt_ms if t_opt_ms > 0 else 0.0
@@ -229,6 +139,62 @@ class ProfilingAnalyzer:
             })
         
         stats_df = pd.DataFrame(stats)
+
+        # --- CPU fallback: which operators ran on CPU, and how much ---
+        cpu_mask = df["provider"].astype(str).str.lower().str.contains("cpu")
+        cpu_ops = (
+            df[cpu_mask]
+            .groupby(["mode", "operator"], as_index=False)
+            .agg(total_us=("duration_us", "sum"), count=("duration_us", "size"))
+            .sort_values(["mode", "total_us"], ascending=[True, False])
+        )
+        cpu_ops["total_ms"] = cpu_ops["total_us"] / 1000.0
+        cpu_ops.to_csv(self.config.results_dir / "cpu_fallback_ops.csv", index=False)
+
+        provider_op = (
+            df.groupby(["mode", "provider", "operator"], as_index=False)
+            .agg(total_us=("duration_us", "sum"), count=("duration_us", "size"))
+            .sort_values(["mode", "total_us"], ascending=[True, False])
+        )
+        provider_op["total_ms"] = provider_op["total_us"] / 1000.0
+        provider_op.to_csv(self.config.results_dir / "operator_by_provider.csv", index=False)
+
+        # Trace-level summary: makes the "memory-bound" and fallback claims quantitative
+        base_summary = summarize_trace(
+            baseline_events,
+            compilation_event_name=self.config.compilation_event_name,
+            total_run_event_name=self.config.total_run_event_name,
+        )
+        opt_summary = summarize_trace(
+            optimized_events,
+            compilation_event_name=self.config.compilation_event_name,
+            total_run_event_name=self.config.total_run_event_name,
+        )
+        trace_summary_df = pd.DataFrame(
+            [
+                {
+                    "mode": "baseline",
+                    "total_ms": base_summary.total_ms,
+                    "compute_ms": base_summary.compute_ms,
+                    "dma_ms": base_summary.dma_ms,
+                    "dispatch_ms": base_summary.dispatch_ms,
+                    "compilation_ms": base_summary.compilation_ms,
+                    "cpu_fallback_ms": base_summary.cpu_fallback_ms,
+                    "cpu_fallback_pct": base_summary.cpu_fallback_pct,
+                },
+                {
+                    "mode": "optimized",
+                    "total_ms": opt_summary.total_ms,
+                    "compute_ms": opt_summary.compute_ms,
+                    "dma_ms": opt_summary.dma_ms,
+                    "dispatch_ms": opt_summary.dispatch_ms,
+                    "compilation_ms": opt_summary.compilation_ms,
+                    "cpu_fallback_ms": opt_summary.cpu_fallback_ms,
+                    "cpu_fallback_pct": opt_summary.cpu_fallback_pct,
+                },
+            ]
+        )
+        trace_summary_df.to_csv(self.config.results_dir / "trace_summary.csv", index=False)
         
         # Original Operator breakdown
         aggregated = (

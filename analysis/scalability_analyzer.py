@@ -40,6 +40,7 @@ from analysis.plot_config import (
 apply_ieee_style()
 
 from analysis.benchmark_runner import BenchmarkConfig, BenchmarkMode, BenchmarkRunner
+from analysis.ort_profile_utils import load_events, summarize_trace
 
 
 @dataclass
@@ -53,6 +54,8 @@ class ScalabilityConfig:
     peak_compute_gflops: float = 1000.0
     peak_bandwidth_gbps: float = 30.0
     enable_profiling: bool = False
+    input_source: str = "auto"
+    dataset_root: Path | None = None
 
 
 class ONNXGraphMetrics:
@@ -226,16 +229,29 @@ class ScalabilityVisualizer:
 
         labels      = [shorten_label(m) for m in ordered["model"]]
         total_ms    = ordered["o_mean_ms"].values
-        compute_ms  = total_ms * 0.45
-        memory_ms   = total_ms * 0.35
-        dma_ms      = total_ms * 0.12
-        dispatch_ms = total_ms * 0.08
 
-        # --- percentage breakdown (all segments clearly visible) ---
-        pct_compute  = np.full(len(total_ms), 45.0)
-        pct_memory   = np.full(len(total_ms), 35.0)
-        pct_dma      = np.full(len(total_ms), 12.0)
-        pct_dispatch = np.full(len(total_ms),  8.0)
+        # Prefer trace-derived breakdown (from ORT profiling), otherwise fall back.
+        if all(c in ordered.columns for c in ["o_compute_ms", "o_dma_ms", "o_dispatch_ms"]):
+            compute_ms = ordered["o_compute_ms"].fillna(0.0).values
+            dma_ms = ordered["o_dma_ms"].fillna(0.0).values
+            dispatch_ms = ordered["o_dispatch_ms"].fillna(0.0).values
+            memory_ms = np.maximum(0.0, total_ms - (compute_ms + dma_ms + dispatch_ms))
+
+            denom = np.maximum(total_ms, 1e-9)
+            pct_compute = compute_ms / denom * 100.0
+            pct_memory = memory_ms / denom * 100.0
+            pct_dma = dma_ms / denom * 100.0
+            pct_dispatch = dispatch_ms / denom * 100.0
+        else:
+            compute_ms  = total_ms * 0.45
+            memory_ms   = total_ms * 0.35
+            dma_ms      = total_ms * 0.12
+            dispatch_ms = total_ms * 0.08
+
+            pct_compute  = np.full(len(total_ms), 45.0)
+            pct_memory   = np.full(len(total_ms), 35.0)
+            pct_dma      = np.full(len(total_ms), 12.0)
+            pct_dispatch = np.full(len(total_ms),  8.0)
 
         fig, (ax_pct, ax_abs) = plt.subplots(1, 2, figsize=(7.2, 3.2))
         x = np.arange(len(labels))
@@ -366,9 +382,7 @@ class MultiModelPipeline:
                 print(f"Skipping {model.name} (already done)")
                 continue
             
-            # Additional filter for SGC (as requested)
-            if "SGC" in model.name.upper():
-                continue
+            
                 
             print(f"Processing: {model.name}")
             try:
@@ -419,27 +433,50 @@ class MultiModelPipeline:
 
     def _benchmark_model(self, model_path: Path) -> Dict[str, Any]:
         baseline_lats, optimized_lats = [], []
+        last_opt_trace: Path | None = None
         for r in range(self.config.repeats):
             run_dir = self.config.results_dir / model_path.stem / f"run_{r:02d}"
             runner = BenchmarkRunner(BenchmarkConfig(
                 model_path=model_path, results_dir=run_dir,
                 device=self.config.device, iterations=self.config.iterations,
                 warmup_iterations=self.config.warmup_iterations,
-                enable_profiling=self.config.enable_profiling
+                enable_profiling=self.config.enable_profiling,
+                input_source=self.config.input_source,
+                dataset_root=self.config.dataset_root,
             ))
             res = runner.run()
             baseline_lats.append(res.loc[res["mode"]=="baseline", "avg_latency_ms"].iloc[0])
             optimized_lats.append(res.loc[res["mode"]=="optimized", "avg_latency_ms"].iloc[0])
 
+            opt_trace = run_dir / "optimized_profiling.json"
+            if opt_trace.exists():
+                last_opt_trace = opt_trace
+
         b_mean, o_mean = np.mean(baseline_lats), np.mean(optimized_lats)
         params = ONNXGraphMetrics.count_parameters(model_path)
         ai, flops, bytes_io = ONNXGraphMetrics.estimate_arithmetic_intensity(model_path)
+
+        breakdown: Dict[str, float] = {}
+        if self.config.enable_profiling and last_opt_trace and last_opt_trace.exists():
+            try:
+                events = load_events(last_opt_trace)
+                summary = summarize_trace(events)
+                breakdown = {
+                    "o_total_ms_trace": float(summary.total_ms),
+                    "o_compute_ms": float(summary.compute_ms),
+                    "o_dma_ms": float(summary.dma_ms),
+                    "o_dispatch_ms": float(summary.dispatch_ms),
+                    "o_cpu_fallback_pct": float(summary.cpu_fallback_pct),
+                }
+            except Exception:
+                breakdown = {}
         
         return {
             "model": model_path.stem, "params": params, "params_mil": params / 1e6,
             "b_mean_ms": b_mean, "o_mean_ms": o_mean,
             "speedup": b_mean / o_mean if o_mean > 0 else 1.0,
-            "ai": ai, "flops": flops, "bytes": bytes_io
+            "ai": ai, "flops": flops, "bytes": bytes_io,
+            **breakdown,
         }
 
 
@@ -452,13 +489,26 @@ def main() -> None:
     parser.add_argument("--warmup", type=int, default=5)
     parser.add_argument("--results-dir", default="results")
     parser.add_argument("--profile", action="store_true")
+    parser.add_argument(
+        "--input-source",
+        default="auto",
+        help="Input source: auto|synthetic|cora|reddit|ogbn-arxiv|ogbn-products (auto uses Cora for GNNs).",
+    )
+    parser.add_argument(
+        "--dataset-root",
+        default=None,
+        help="Root folder for dataset downloads/caches (default: ./data).",
+    )
     args = parser.parse_args()
     
-    models = sorted([m for m in Path(args.models_dir).glob("*.onnx") if "GAT" not in m.name and "SGC" not in m.name])
+    models = sorted([m for m in Path(args.models_dir).glob("*.onnx")])
     config = ScalabilityConfig(
         models=models, results_dir=Path(args.results_dir).resolve(),
         device=args.device, repeats=args.repeats, iterations=args.iterations,
-        warmup_iterations=args.warmup, enable_profiling=args.profile
+        warmup_iterations=args.warmup,
+        enable_profiling=args.profile,
+        input_source=str(args.input_source),
+        dataset_root=Path(args.dataset_root).resolve() if args.dataset_root else None,
     )
     MultiModelPipeline(config).run()
 
