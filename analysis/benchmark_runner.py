@@ -1,16 +1,34 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
 import json
 import os
 os.environ["ORT_LOGGING_LEVEL"] = "4"
 os.environ["OPENVINO_LOG_LEVEL"] = "0"
 import shutil
+import sys
 import time
+import builtins
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
+
+
+@contextlib.contextmanager
+def _suppress_stdout_stderr():
+    """Temporarily suppress stdout/stderr to hide tqdm progress bars."""
+    old_stdout = sys.stdout
+    old_stderr = sys.stderr
+    sys.stdout = io.StringIO()
+    sys.stderr = io.StringIO()
+    try:
+        yield
+    finally:
+        sys.stdout = old_stdout
+        sys.stderr = old_stderr
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -18,6 +36,18 @@ import onnx
 import onnxruntime as ort
 import pandas as pd
 import psutil
+
+# PyTorch 2.6+ compatibility: torch.load defaults to weights_only=True,
+# which breaks torch_geometric dataset deserialization.
+import torch as _torch
+_orig_torch_load = _torch.load
+
+def _patched_torch_load(*args, **kwargs):
+    if "weights_only" not in kwargs:
+        kwargs["weights_only"] = False
+    return _orig_torch_load(*args, **kwargs)
+
+_torch.load = _patched_torch_load
 
 
 class BenchmarkMode(Enum):
@@ -42,8 +72,9 @@ class BenchmarkConfig:
     warmup_iterations: int = 5
     random_seed: int = 42
     enable_profiling: bool = False
-    input_source: str = "auto"  # auto|synthetic|cora|reddit|ogbn-arxiv|ogbn-products
+    input_source: str = "ogbn-arxiv"  # ogbn-arxiv|synthetic|cora|reddit|ogbn-products
     dataset_root: Path | None = None
+    verbose_cache: bool = False
 
 
 class ProviderSelector:
@@ -115,7 +146,8 @@ class ONNXModelValidator:
     def validate(model_path: Path) -> None:
         if not model_path.exists():
             raise FileNotFoundError(f"Model file not found: {model_path}")
-        onnx.load(model_path)
+        model = onnx.load(model_path)
+        onnx.checker.check_model(model)
 
 
 class ResultsVisualizer:
@@ -143,13 +175,30 @@ class ResultsVisualizer:
 
 
 class BenchmarkRunner:
+    # Static cache to avoid re-downloading/re-loading datasets across models
+    _dataset_cache: Dict[Tuple[str, str], Any] = {}
+    _openvino_warned: set[Tuple[str, str]] = set()
+
     def __init__(self, config: BenchmarkConfig) -> None:
         self.config = config
         self.config.results_dir.mkdir(parents=True, exist_ok=True)
         ProviderSelector.prepare_runtime()
         self.selected_providers = ProviderSelector.select()
+        self._last_fallback_to_cpu = False
+
+    def _log_progress(self, message: str) -> None:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        line = f"[{timestamp}] {message}"
+        try:
+            log_path = self.config.results_dir / "progress.log"
+            with log_path.open("a", encoding="utf-8") as handle:
+                handle.write(line + "\n")
+        except Exception:
+            pass
+        print(line, flush=True)
 
     def _create_session(self, mode: BenchmarkMode) -> ort.InferenceSession:
+        self._last_fallback_to_cpu = False
         session_options = ort.SessionOptions()
         session_options.enable_profiling = self.config.enable_profiling
         if self.config.enable_profiling:
@@ -178,11 +227,34 @@ class BenchmarkRunner:
             else:
                 providers_with_options.append(provider)
 
-        return ort.InferenceSession(
-            str(self.config.model_path),
-            sess_options=session_options,
-            providers=providers_with_options,
-        )
+        try:
+            return ort.InferenceSession(
+                str(self.config.model_path),
+                sess_options=session_options,
+                providers=providers_with_options,
+            )
+        except Exception as exc:
+            has_openvino = any(
+                (isinstance(p, tuple) and p[0] == "OpenVINOExecutionProvider")
+                or p == "OpenVINOExecutionProvider"
+                for p in providers_with_options
+            )
+            msg = str(exc)
+            if has_openvino and ("OpenVINO" in msg or "openvino" in msg or "FrontEnd API failed" in msg):
+                warn_key = (self.config.model_path.name, str(self.config.device))
+                if warn_key not in BenchmarkRunner._openvino_warned:
+                    print(
+                        f"  [warn] OpenVINO EP failed for {self.config.model_path.name} "
+                        f"(device={self.config.device}); falling back to CPUExecutionProvider."
+                    )
+                    BenchmarkRunner._openvino_warned.add(warn_key)
+                self._last_fallback_to_cpu = True
+                return ort.InferenceSession(
+                    str(self.config.model_path),
+                    sess_options=session_options,
+                    providers=["CPUExecutionProvider"],
+                )
+            raise
 
     def _prepare_inputs(self, session: ort.InferenceSession) -> Dict[str, np.ndarray]:
         rng = np.random.default_rng(self.config.random_seed)
@@ -192,9 +264,9 @@ class BenchmarkRunner:
         has_edge_index = any("edge_index" in name.lower() for name in input_names)
         has_x = any(name.lower() == "x" for name in input_names)
 
-        resolved_source = (self.config.input_source or "auto").strip().lower()
+        resolved_source = (self.config.input_source or "ogbn-arxiv").strip().lower()
         if resolved_source == "auto":
-            resolved_source = "cora" if (has_edge_index and has_x) else "synthetic"
+            resolved_source = "ogbn-arxiv" if (has_edge_index and has_x) else "synthetic"
 
         dataset_payload: Dict[str, np.ndarray] = {}
         dataset_meta: Dict[str, object] = {"input_source": resolved_source}
@@ -257,28 +329,52 @@ class BenchmarkRunner:
         _Path(data_root).mkdir(parents=True, exist_ok=True)
 
         name = dataset_name.strip().lower()
-        data: Data
-        if name in {"cora", "citeseer", "pubmed"}:
-            from torch_geometric.datasets import Planetoid  # type: ignore
+        data_root_str = str(data_root)
+        cache_key = (name, data_root_str)
 
-            dataset = Planetoid(root=str(_Path(data_root) / "planetoid"), name=name.capitalize())
-            data = dataset[0]
-        elif name == "reddit":
-            from torch_geometric.datasets import Reddit  # type: ignore
-
-            dataset = Reddit(root=str(_Path(data_root) / "reddit"))
-            data = dataset[0]
-        elif name in {"ogbn-arxiv", "ogbn-products"}:
-            try:
-                from ogb.nodeproppred import PygNodePropPredDataset  # type: ignore
-            except Exception as exc:
-                raise RuntimeError(
-                    "OGBN datasets require the 'ogb' package. Install with: pip install ogb"
-                ) from exc
-            dataset = PygNodePropPredDataset(name=name, root=str(_Path(data_root) / "ogb"))
-            data = dataset[0]
+        if cache_key in BenchmarkRunner._dataset_cache:
+            data = BenchmarkRunner._dataset_cache[cache_key]
+            if self.config.verbose_cache:
+                print(f"  [cache] Using cached dataset: {name}")
         else:
-            raise ValueError(f"Unknown dataset: {dataset_name}")
+            data: Data
+            if name in {"cora", "citeseer", "pubmed"}:
+                from torch_geometric.datasets import Planetoid  # type: ignore
+
+                with _suppress_stdout_stderr():
+                    dataset = Planetoid(root=str(_Path(data_root) / "planetoid"), name=name.capitalize())
+                    data = dataset[0]
+            elif name == "reddit":
+                from torch_geometric.datasets import Reddit  # type: ignore
+
+                with _suppress_stdout_stderr():
+                    dataset = Reddit(root=str(_Path(data_root) / "reddit"))
+                    data = dataset[0]
+            elif name in {"ogbn-arxiv", "ogbn-products", "ogbn-proteins"}:
+                try:
+                    from ogb.nodeproppred import PygNodePropPredDataset  # type: ignore
+                except Exception as exc:
+                    raise RuntimeError(
+                        "OGBN datasets require the 'ogb' package. Install with: pip install ogb"
+                    ) from exc
+                with _suppress_stdout_stderr():
+                    _orig_input = builtins.input
+
+                    def _auto_decline_dataset_update(prompt: str):
+                        if "update the dataset now" in prompt.lower():
+                            print(f"{prompt}n")
+                            return "n"
+                        return _orig_input(prompt)
+
+                    builtins.input = _auto_decline_dataset_update
+                    try:
+                        dataset = PygNodePropPredDataset(name=name, root=str(_Path(data_root)))
+                        data = dataset[0]
+                    finally:
+                        builtins.input = _orig_input
+            else:
+                raise ValueError(f"Unknown dataset: {dataset_name}")
+            BenchmarkRunner._dataset_cache[cache_key] = data
 
         input_metas = {i.name: i for i in session.get_inputs()}
         x_name = next((n for n in input_metas if n.lower() == "x"), None)
@@ -439,13 +535,25 @@ class BenchmarkRunner:
             
         return output_path
 
-    def _run_mode(self, mode: BenchmarkMode) -> Tuple[float, float, float, float, Path, List[str]]:
+    def _run_mode(self, mode: BenchmarkMode) -> Tuple[float, float, float, float, Path, List[str], bool]:
         import gc
+        self._log_progress(
+            f"start mode={mode.slug} model={self.config.model_path.name} device={self.config.device} "
+            f"warmup={self.config.warmup_iterations} iters={self.config.iterations}"
+        )
+        self._log_progress("creating session")
         session = self._create_session(mode)
+        active_providers = list(session.get_providers())
+        self._log_progress(f"session ready providers={' | '.join(active_providers)}")
+        fallback_to_cpu = bool(self._last_fallback_to_cpu)
+        self._log_progress("preparing inputs")
         inputs = self._prepare_inputs(session)
+        self._log_progress("inputs ready")
 
+        self._log_progress("warmup start")
         for _ in range(self.config.warmup_iterations):
             session.run(None, inputs)
+        self._log_progress("warmup done")
 
         latencies_ms: List[float] = []
         process = psutil.Process(os.getpid())
@@ -454,11 +562,18 @@ class BenchmarkRunner:
         cpu_start = process.cpu_percent(interval=None)
         mem_start_mb = process.memory_info().rss / (1024 * 1024)
 
-        for _ in range(self.config.iterations):
+        self._log_progress("benchmark iterations start")
+        heartbeat_every = max(1, self.config.iterations // 4)
+        iter_start = time.perf_counter()
+        for idx in range(self.config.iterations):
             start = time.perf_counter()
             session.run(None, inputs)
             end = time.perf_counter()
             latencies_ms.append((end - start) * 1000.0)
+            if (idx + 1) % heartbeat_every == 0:
+                elapsed_s = time.perf_counter() - iter_start
+                self._log_progress(f"iteration {idx + 1}/{self.config.iterations} elapsed_s={elapsed_s:.1f}")
+        self._log_progress("benchmark iterations done")
 
         profiling_path = self._save_profiling(session, mode)
 
@@ -469,18 +584,21 @@ class BenchmarkRunner:
 
         mean_latency = float(np.mean(latencies_ms))
         std_latency = float(np.std(latencies_ms))
+        self._log_progress(
+            f"mode complete mode={mode.slug} mean_ms={mean_latency:.3f} std_ms={std_latency:.3f}"
+        )
         
         # Explicitly destroy the session to free NPU/RAM resources
         del session
         gc.collect()
         
-        return mean_latency, std_latency, cpu_end, peak_mem_mb, profiling_path, []
+        return mean_latency, std_latency, cpu_end, peak_mem_mb, profiling_path, active_providers, fallback_to_cpu
 
     def run(self) -> pd.DataFrame:
         records = []
 
         for mode in [BenchmarkMode.BASELINE, BenchmarkMode.OPTIMIZED]:
-            mean_latency, std_latency, cpu_percent, peak_mem_mb, profile_path, active_providers = self._run_mode(mode)
+            mean_latency, std_latency, cpu_percent, peak_mem_mb, profile_path, active_providers, fallback_to_cpu = self._run_mode(mode)
             records.append(
                 {
                     "mode": mode.slug,
@@ -490,6 +608,7 @@ class BenchmarkRunner:
                     "cpu_utilization_pct": cpu_percent,
                     "iterations": self.config.iterations,
                     "providers": " | ".join(active_providers),
+                    "fallback_to_cpu": bool(fallback_to_cpu),
                     "profiling_json": str(profile_path),
                 }
             )
@@ -519,8 +638,8 @@ def parse_args() -> BenchmarkConfig:
     parser.add_argument("--profile", action="store_true", help="Enable ONNX Runtime profiling traces.")
     parser.add_argument(
         "--input-source",
-        default="auto",
-        help="Input source: auto|synthetic|cora|reddit|ogbn-arxiv|ogbn-products (auto uses Cora for GNNs).",
+        default="ogbn-arxiv",
+        help="Input source: ogbn-arxiv|synthetic|cora|reddit|ogbn-products (default: ogbn-arxiv).",
     )
     parser.add_argument(
         "--dataset-root",

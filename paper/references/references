@@ -976,3 +976,20 @@ abstract = {Artificial Intelligence (AI) at the edge is the utilization of AI in
   year    = {2019},
   url     = {https://arxiv.org/abs/1908.08962}
 }
+
+@Article{Bayraktar2026,
+author={Bayraktar, Cihan},
+title={Beyond GNNs: a methodological benchmark of feature efficiency for link prediction in sparse developer networks},
+journal={Knowledge and Information Systems},
+year={2026},
+month={Apr},
+day={24},
+volume={68},
+number={1},
+pages={135},
+abstract={This study presents a methodological investigation into the performance--efficiency trade-off of using classical feature-based models instead of graph neural networks (GNNs) for link prediction in sparse social networks. The study aims to systematically evaluate the effectiveness of engineered topological features compared to machine learning approaches in the context of GitHub developer collaborations. Using the MUSAE GitHub dataset (37,000 nodes, 289,000 links), we compare traditional machine learning models such as Logistic Regression, Random Forest, and LightGBM with modern GNN architectures such as Graph Convolutional Networks, GraphSAGE, and Graph Attention Networks. Our key finding is that, especially on sparse graphs, the LightGBM model, using rigorously engineered features (Common Neighbours, Jaccard Similarity, Adamic-Adar, Preferential Attachment, Node2Vec similarity), consistently outperforms standard GNN implementations (e.g., 99.3{\%} accuracy and 0.9996 ROC-AUC in the ML community). These results challenge the tendency to automatically favour complex GNNs and provide powerful methodological insight that feature-based learning for sparse networks can deliver both high performance and computational efficiency. The main contribution of this work is to provide a rigorous and data-driven guide for model selection in graph-based learning and to challenge the automatic preference for GNNs in sparse networks. We also implemented a recommendation system prototype that serves as a practical demonstration of the methodological insights obtained.},
+issn={0219-3116},
+doi={10.1007/s10115-026-02765-7},
+url={https://doi.org/10.1007/s10115-026-02765-7}
+}
+

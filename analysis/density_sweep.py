@@ -1,20 +1,19 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
+# Add project root to Python path for imports
+project_root = Path(__file__).parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
 from analysis.scalability_analyzer import MultiModelPipeline, ScalabilityConfig
 
 
-DEFAULT_EDGES_PER_NODE = {
-    # Approximate average degrees (directed edge_index counts vary by dataset).
-    "cora": 4,
-    "ogbn-arxiv": 13,
-    "ogbn-products": 25,
-    "reddit": 50,
-}
 
 
 @dataclass
@@ -30,6 +29,7 @@ class SweepConfig:
     enable_profiling: bool = True
     dataset_root: Path | None = None
     auto_models: bool = False
+    auto_models_int8: bool = False
     gnn_nodes: int = 4096
     gnn_features: int = 1433
     gnn_classes: int = 7
@@ -43,6 +43,7 @@ def _ensure_dataset_gnn_models(
     nodes: int,
     features: int,
     classes: int,
+    quantize_int8: bool,
 ) -> Path:
     ds = dataset.strip().lower()
     edges_per_node = int(DEFAULT_EDGES_PER_NODE.get(ds, 25))
@@ -63,6 +64,7 @@ def _ensure_dataset_gnn_models(
         num_edges=edges,
         num_features=features,
         num_classes=classes,
+        quantize_int8=quantize_int8,
     )
     return out_dir
 
@@ -99,6 +101,7 @@ def run_sweep(cfg: SweepConfig) -> None:
                     nodes=int(cfg.gnn_nodes),
                     features=int(cfg.gnn_features),
                     classes=int(cfg.gnn_classes),
+                    quantize_int8=bool(cfg.auto_models_int8),
                 )
                 models = sorted([m for m in ds_models_dir.glob("*.onnx")])
 
@@ -124,8 +127,8 @@ def parse_args() -> SweepConfig:
     parser.add_argument("--results-dir", default="results/density_sweep")
     parser.add_argument(
         "--datasets",
-        default="ogbn-arxiv,reddit,ogbn-products",
-        help="Comma-separated list: ogbn-arxiv, reddit, ogbn-products (and/or cora).",
+        default="ogbn-arxiv,ogbn-proteins,ogbn-products",
+        help="Comma-separated list: ogbn-arxiv, ogbn-proteins, ogbn-products (and/or cora).",
     )
     parser.add_argument("--device", default="NPU")
     parser.add_argument(
@@ -142,6 +145,11 @@ def parse_args() -> SweepConfig:
         "--auto-models",
         action="store_true",
         help="Auto-export a GNN-only ONNX model suite per dataset with dataset-specific edge density.",
+    )
+    parser.add_argument(
+        "--auto-models-int8",
+        action="store_true",
+        help="Enable INT8 quantization when auto-exporting per-dataset GNN models (slow, high RAM).",
     )
     parser.add_argument("--gnn-nodes", type=int, default=4096, help="Node count used when --auto-models is set")
     parser.add_argument("--gnn-features", type=int, default=1433, help="Feature dim used when --auto-models is set")
@@ -168,6 +176,7 @@ def parse_args() -> SweepConfig:
         enable_profiling=bool(args.profile),
         dataset_root=Path(args.dataset_root).resolve() if args.dataset_root else None,
         auto_models=bool(args.auto_models),
+        auto_models_int8=bool(args.auto_models_int8),
         gnn_nodes=int(args.gnn_nodes),
         gnn_features=int(args.gnn_features),
         gnn_classes=int(args.gnn_classes),

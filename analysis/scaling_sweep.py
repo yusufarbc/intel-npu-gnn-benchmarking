@@ -64,7 +64,15 @@ def run_scaling(cfg: ScalingConfig) -> Path:
         )
         MultiModelPipeline(scfg).run()
 
-        mat = pd.read_csv(results_dir / "scalability_matrix.csv")
+        matrix_path = results_dir / "scalability_matrix.csv"
+        if not matrix_path.exists():
+            print(f"  ⚠️ No results for n={n}, e={e}: {matrix_path} not found. Skipping.")
+            continue
+
+        mat = pd.read_csv(matrix_path)
+        if mat.empty:
+            print(f"  ⚠️ Empty results for n={n}, e={e}. Skipping.")
+            continue
         # Take first row (single model)
         r = mat.iloc[0].to_dict()
         r.update({"num_nodes": n, "num_edges": e, "edges_per_node": float(e) / float(n)})
@@ -73,14 +81,47 @@ def run_scaling(cfg: ScalingConfig) -> Path:
     df = pd.DataFrame(rows).sort_values("num_nodes")
     df.to_csv(cfg.out_dir / "scaling_sweep.csv", index=False)
 
-    fig, ax = plt.subplots(figsize=(4.8, 3.2))
-    ax.plot(df["num_nodes"], df["o_mean_ms"], marker="o", color=IEEE_COLORS[0], linewidth=1.3)
-    ax.set_xlabel("#Nodes (N)")
-    ax.set_ylabel("Latency (ms) [optimized]")
-    ax.set_title(f"Scaling: {cfg.model_filter} on {cfg.dataset} ({cfg.device})")
-    ax.grid(True, alpha=0.2)
+    # Create comprehensive scaling figure with both node and edge scaling
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(7.16, 3.0))
 
-    out = cfg.out_dir / "scaling_nodes_vs_latency"
+    # Panel 1: Nodes vs Latency
+    ax1.plot(df["num_nodes"], df["o_mean_ms"], marker="o", color=IEEE_COLORS[0],
+             linewidth=1.5, markersize=6, label='Measured')
+
+    # Add trend line
+    z = np.polyfit(df["num_nodes"], df["o_mean_ms"], 1)
+    p = np.poly1d(z)
+    ax1.plot(df["num_nodes"], p(df["num_nodes"]), "--", color=IEEE_COLORS[4],
+             linewidth=1.0, alpha=0.7, label=f'Linear fit (slope={z[0]:.4f})')
+
+    ax1.set_xlabel("Number of Nodes (N)", fontsize=9)
+    ax1.set_ylabel("Latency (ms)", fontsize=9)
+    ax1.set_title(f"Scaling by Nodes\n{cfg.model_filter} on {cfg.dataset}", fontsize=9)
+    ax1.legend(fontsize=7, framealpha=0.9)
+    ax1.grid(True, alpha=0.3, linestyle='--', linewidth=0.4)
+
+    # Panel 2: Edges vs Latency
+    ax2.plot(df["num_edges"], df["o_mean_ms"], marker="s", color=IEEE_COLORS[1],
+             linewidth=1.5, markersize=6, label='Measured')
+
+    # Add trend line
+    z2 = np.polyfit(df["num_edges"], df["o_mean_ms"], 1)
+    p2 = np.poly1d(z2)
+    ax2.plot(df["num_edges"], p2(df["num_edges"]), "--", color=IEEE_COLORS[4],
+             linewidth=1.0, alpha=0.7, label=f'Linear fit (slope={z2[0]:.6f})')
+
+    ax2.set_xlabel("Number of Edges (E)", fontsize=9)
+    ax2.set_ylabel("Latency (ms)", fontsize=9)
+    ax2.set_title(f"Scaling by Edges\n{cfg.model_filter} on {cfg.dataset}", fontsize=9)
+    ax2.legend(fontsize=7, framealpha=0.9)
+    ax2.grid(True, alpha=0.3, linestyle='--', linewidth=0.4)
+
+    fig.suptitle('REQUIRED FIGURE 6: Scaling Characteristics\n(O(N) vs O(E) behavior analysis)',
+                 fontsize=10, y=1.02)
+
+    plt.tight_layout()
+
+    out = cfg.out_dir / "fig6_scaling_nodes_edges_vs_latency"
     savefig_ieee(fig, out)
     plt.close(fig)
     return out.with_suffix(".png")

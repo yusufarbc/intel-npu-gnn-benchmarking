@@ -205,3 +205,21 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Large model files (too big for GitHub)
+data/ogbn_arxiv/
+data/ogbn_products/
+data/ogbn_proteins/
+*.onnx
+*.onnx.data
+*.failed
+
+# Paper build artifacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/paper.pdf
+paper/figures/*.png
+paper/figures/*.svg

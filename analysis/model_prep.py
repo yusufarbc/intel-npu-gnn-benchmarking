@@ -1,7 +1,8 @@
 import argparse
-import logging
 import os
+import logging
 import shutil
+import sys
 import urllib.request
 import warnings
 from contextlib import contextmanager
@@ -67,6 +68,18 @@ def suppress_noise_warnings():
             category=UserWarning,
         )
         yield
+
+
+@contextmanager
+def _suppress_stdout_stderr():
+    """Completely silence stdout and stderr (for noisy NNCF quantization)."""
+    import io
+    old_stdout, old_stderr = sys.stdout, sys.stderr
+    sys.stdout, sys.stderr = io.StringIO(), io.StringIO()
+    try:
+        yield
+    finally:
+        sys.stdout, sys.stderr = old_stdout, old_stderr
 
 class GCN(torch.nn.Module):
     def __init__(self, in_channels, hidden_channels, out_channels):
@@ -181,6 +194,41 @@ class GraphTransformer(torch.nn.Module):
         return x
 
 
+class MPNN(torch.nn.Module):
+    """
+    Message Passing Neural Network (simplified for ONNX export).
+    Uses basic mean aggregation without dynamic shapes.
+    """
+    def __init__(self, in_channels, hidden_channels, out_channels, num_nodes=2708):
+        super().__init__()
+        self.lin_upd = torch.nn.Linear(in_channels * 2, hidden_channels)
+        self.lin_out = torch.nn.Linear(hidden_channels, out_channels)
+        self.num_nodes = num_nodes
+
+    def forward(self, x, edge_index):
+        # Manual aggregation using index operations (ONNX-compatible)
+        src, dst = edge_index
+        
+        # Get neighbor features
+        messages = x[src]
+        
+        # Aggregate by index (manual scatter_mean)
+        aggr = torch.zeros_like(x)
+        counts = torch.zeros(x.size(0), 1, device=x.device)
+        
+        aggr.index_add_(0, dst, messages)
+        counts.index_add_(0, dst, torch.ones_like(dst, dtype=torch.float).unsqueeze(1))
+        
+        # Safe division with epsilon
+        counts = counts.clamp(min=1)
+        aggr = aggr / counts
+        
+        # Update with concatenation
+        upd = torch.cat([x, aggr], dim=-1)
+        upd = F.relu(self.lin_upd(upd))
+        return self.lin_out(upd)
+
+
 def download_file(url: str, dest: Path):
     if dest.exists():
         print(f"File already exists: {dest.name}")
@@ -242,6 +290,7 @@ def export_bert_tiny_fp32(dest: Path, *, model_id: str = "prajjwal1/bert-tiny", 
             )
 
     wrapper = _Wrapper(model)
+    wrapper.eval()
 
     torch.onnx.export(
         wrapper,
@@ -256,8 +305,12 @@ def export_bert_tiny_fp32(dest: Path, *, model_id: str = "prajjwal1/bert-tiny", 
     print("Done.")
 
 def quantize_model(input_path: Path, output_path: Path):
+    failed_marker = output_path.with_suffix(output_path.suffix + ".failed")
     if output_path.exists():
         print(f"Quantized model already exists: {output_path.name}")
+        return
+    if failed_marker.exists():
+        print(f"Skipping INT8 (previous failure): {output_path.name}")
         return
     print(f"Quantizing {input_path.name} to INT8...")
     try:
@@ -268,16 +321,30 @@ def quantize_model(input_path: Path, output_path: Path):
             prev_level = root_logger.level
             root_logger.setLevel(logging.ERROR)
             try:
-                quantize_dynamic(
-                    model_input=str(input_path),
-                    model_output=str(output_path),
-                    weight_type=QuantType.QUInt8,
-                )
+                # Try newer onnxruntime API first (with optimize_model)
+                try:
+                    quantize_dynamic(
+                        model_input=str(input_path),
+                        model_output=str(output_path),
+                        weight_type=QuantType.QUInt8,
+                        optimize_model=False,
+                    )
+                except TypeError:
+                    # Fallback for older onnxruntime without optimize_model param
+                    quantize_dynamic(
+                        model_input=str(input_path),
+                        model_output=str(output_path),
+                        weight_type=QuantType.QUInt8,
+                    )
             finally:
                 root_logger.setLevel(prev_level)
         print(f"Quantization complete: {output_path.name}")
     except Exception as e:
         print(f"Failed to quantize {input_path.name}: {e}")
+        try:
+            failed_marker.write_text(str(e))
+        except Exception:
+            pass
 
 def export_gnn_models(
     models_dir: Path,
@@ -286,6 +353,7 @@ def export_gnn_models(
     num_features: int = 1433,
     num_classes: int = 7,
     num_edges: int = 10000,
+    quantize_int8: bool = True,
 ) -> None:
     # Default matches Cora-like sizing.
     edge_index = torch.randint(0, num_nodes, (2, num_edges))
@@ -299,6 +367,7 @@ def export_gnn_models(
         ("SGC", SGC(num_features, num_classes, K=2)),
         ("APPNP", APPNPModel(num_features, 64, num_classes)),
         ("GraphTransformer", GraphTransformer(num_features, 32, num_classes, heads=1)),
+        ("MPNN", MPNN(num_features, 64, num_classes)),
     ]
 
     # Optional GATv2 (if available)
@@ -311,6 +380,21 @@ def export_gnn_models(
     for name, model in model_configs:
         model.eval()
         output_path = models_dir / f"{name}_fp32.onnx"
+        int8_path = models_dir / f"{name}_int8.onnx"
+
+        if output_path.exists():
+            print(f"FP32 model already exists: {output_path.name}")
+            if quantize_int8 and not int8_path.exists():
+                try:
+                    quantize_gnn_to_int8(
+                        output_path,
+                        num_nodes=num_nodes,
+                        num_features=num_features,
+                        num_edges=num_edges,
+                    )
+                except Exception as e:
+                    print(f"Quantization failed for {name}: {e}")
+            continue
 
         print(f"Exporting {name} to {output_path}...")
         use_constant_folding = name not in ["GAT", "GATv2", "GraphTransformer"]
@@ -327,19 +411,45 @@ def export_gnn_models(
         )
         print("Done.")
 
-        try:
-            quantize_gnn_to_int8(output_path)
-        except Exception as e:
-            print(f"Quantization failed for {name}: {e}")
+        if quantize_int8:
+            try:
+                quantize_gnn_to_int8(
+                    output_path,
+                    num_nodes=num_nodes,
+                    num_features=num_features,
+                    num_edges=num_edges,
+                )
+            except Exception as e:
+                print(f"Quantization failed for {name}: {e}")
 
     standardize_existing_models(models_dir)
-    for f in models_dir.glob("*_fp32.onnx"):
-        int8_name = f.parent / f"{f.name.replace('_fp32', '_int8')}"
-        if not int8_name.exists():
-            try:
-                quantize_gnn_to_int8(f)
-            except Exception as e:
-                print(f"Failed to quantize {f.name}: {e}")
+    if quantize_int8:
+        for f in models_dir.glob("*_fp32.onnx"):
+            int8_name = f.parent / f"{f.name.replace('_fp32', '_int8')}"
+            if not int8_name.exists():
+                try:
+                    # Fallback quantization - try to extract dimensions from model path
+                    # Path format: .../ogbn-arxiv_n4096_e53248/GCN_fp32.onnx
+                    try:
+                        parent_name = f.parent.name  # e.g., "ogbn-arxiv_n4096_e53248"
+                        if "_n" in parent_name and "_e" in parent_name:
+                            parts = parent_name.split("_n")[1].split("_e")
+                            fb_nodes = int(parts[0])
+                            fb_edges = int(parts[1])
+                        else:
+                            # Default to export params if path parsing fails
+                            fb_nodes, fb_edges = num_nodes, num_edges
+                    except Exception:
+                        fb_nodes, fb_edges = num_nodes, num_edges
+                    
+                    quantize_gnn_to_int8(
+                        f,
+                        num_nodes=fb_nodes,
+                        num_features=num_features,
+                        num_edges=fb_edges,
+                    )
+                except Exception as e:
+                    print(f"Failed to quantize {f.name}: {e}")
 
 
 def standardize_existing_models(models_dir: Path) -> None:
@@ -355,49 +465,63 @@ def standardize_existing_models(models_dir: Path) -> None:
                 f.unlink()
 
 
-def quantize_gnn_to_int8(onnx_path: Path) -> None:
+def quantize_gnn_to_int8(
+    onnx_path: Path,
+    num_nodes: int = 2708,
+    num_features: int = 1433,
+    num_edges: int = 10000,
+) -> None:
     import onnx
 
     int8_path = onnx_path.parent / f"{onnx_path.name.replace('_fp32', '_int8')}"
     if int8_path.exists():
-        print(f"{int8_path.name} already exists, skipping quantization.")
         return
 
-    print(f"Quantizing {onnx_path.name} to INT8...")
+    # Quantize to INT8 (verbose output suppressed)
     model = onnx.load(str(onnx_path))
 
     def transform_fn(data_item):
         return data_item
 
+    # Build calibration dataset with EXACT shapes used during export
     calibration_data = []
     input_info = []
+    
+    # Model-specific hidden dimensions (used in model architecture, not input)
+    model_name_lower = onnx_path.name.lower()
+    hidden_dim = 64  # Most models use 64 as hidden dimension
+    if "gat" in model_name_lower:
+        hidden_dim = 64  # GAT uses 32*2=64
+    elif "transformer" in model_name_lower:
+        hidden_dim = 32
+    elif "sgc" in model_name_lower:
+        hidden_dim = num_features  # SGC doesn't reduce features
+    
     for input_node in model.graph.input:
         name = input_node.name
-        shape = []
-        for dim in input_node.type.tensor_type.shape.dim:
-            if dim.HasField("dim_value"):
-                shape.append(dim.dim_value)
-            else:
-                if any(x in name.lower() for x in ["node", "edge", "x", "input", "data"]):
-                    if "transformer" in onnx_path.name.lower():
-                        if "node" in name.lower() or name.lower() == "x":
-                            shape.append(2708)
-                        elif "edge" in name.lower():
-                            shape.append(10000)
-                        else:
-                            shape.append(1)
-                    else:
-                        shape.append(2708 if "node" in name or name == "x" else 10000)
+        
+        # Use the EXACT shapes from export parameters
+        if name.lower() == "x":
+            # x is [num_nodes, num_features] - must match export exactly
+            final_shape = (num_nodes, num_features)
+        elif name.lower() == "edge_index":
+            # edge_index is [2, num_edges] - must match export exactly  
+            final_shape = (2, num_edges)
+        else:
+            # Fallback for any other inputs
+            final_shape = []
+            for dim in input_node.type.tensor_type.shape.dim:
+                if dim.HasField("dim_value") and dim.dim_value > 0:
+                    final_shape.append(dim.dim_value)
                 else:
-                    shape.append(1)
-
-        shape = [s if isinstance(s, int) and s > 0 else 1 for s in shape]
+                    final_shape.append(1)
+            final_shape = tuple(final_shape)
 
         dtype = np.float32
         if input_node.type.tensor_type.elem_type == 7:
             dtype = np.int64
 
-        input_info.append((name, tuple(shape), dtype))
+        input_info.append((name, final_shape, dtype))
 
     num_calibration_samples = 300
     for _ in range(num_calibration_samples):
@@ -406,16 +530,18 @@ def quantize_gnn_to_int8(onnx_path: Path) -> None:
             if dtype == np.float32:
                 item[name] = (np.random.randn(*shape).astype(dtype) * 0.1)
             else:
-                max_value = 2708 if "edge" in name.lower() or "index" in name.lower() else 100
-                item[name] = np.random.randint(0, max_value, shape).astype(dtype)
+                max_value = num_nodes if "edge" in name.lower() or "index" in name.lower() else 100
+                item[name] = np.random.randint(0, max_value, size=shape).astype(dtype)
         calibration_data.append(item)
 
     calibration_dataset = nncf.Dataset(calibration_data, transform_fn)
-    with suppress_noise_warnings():
-        # Using MIXED preset to avoid aggressive symmetric scale factors that cause NPU post-shift errors
-        quantized_model = nncf.quantize(model, calibration_dataset, preset=nncf.QuantizationPreset.MIXED)
-    onnx.save(quantized_model, str(int8_path))
-    print(f"Saved INT8 model to {int8_path}")
+    try:
+        with suppress_noise_warnings(), _suppress_stdout_stderr():
+            quantized_model = nncf.quantize(model, calibration_dataset, preset=nncf.QuantizationPreset.MIXED)
+        onnx.save(quantized_model, str(int8_path))
+    except Exception as e:
+        print(f"  NNCF quantization failed: {e}")
+        quantize_model(onnx_path, int8_path)
 
 
 def prepare_baseline_models(models_dir: Path) -> None:
@@ -475,11 +601,37 @@ def prepare_baseline_models(models_dir: Path) -> None:
             for input_node in model.graph.input:
                 name = input_node.name
                 dims = []
-                for dim in input_node.type.tensor_type.shape.dim:
+                for i, dim in enumerate(input_node.type.tensor_type.shape.dim):
                     if dim.HasField("dim_value") and dim.dim_value > 0:
                         dims.append(int(dim.dim_value))
+                    elif dim.HasField("dim_param"):
+                        # Dynamic dimension - use standard CNN defaults
+                        if i == 0:  # Batch dimension
+                            dims.append(1)
+                        elif i == 1:  # Channels
+                            dims.append(3)
+                        else:  # Height/Width
+                            dims.append(224)
                     else:
-                        dims.append(1)
+                        # Unknown dimension - infer based on position
+                        if i == 0:
+                            dims.append(1)  # Batch
+                        elif i == 1:
+                            dims.append(3)  # RGB channels
+                        else:
+                            dims.append(224)  # Spatial dim
+                
+                # Validate we have at least 4 dims for image [N, C, H, W]
+                if len(dims) < 4:
+                    # Pad to 4 dims with standard values
+                    while len(dims) < 4:
+                        if len(dims) == 0:
+                            dims.append(1)
+                        elif len(dims) == 1:
+                            dims.append(3)
+                        else:
+                            dims.append(224)
+                
                 elem_type = int(input_node.type.tensor_type.elem_type)
                 if elem_type == 7:
                     dtype = np.int64
@@ -501,19 +653,17 @@ def prepare_baseline_models(models_dir: Path) -> None:
                     yield item
 
             dataset = nncf.Dataset(calibration_generator())
-            with suppress_noise_warnings():
+            with suppress_noise_warnings(), _suppress_stdout_stderr():
                 quantized_model = nncf.quantize(model, dataset)
             
             onnx.save(quantized_model, str(int8_path))
-            print(f"NNCF INT8 saved: {int8_path.name}")
             
             # Explicit cleanup
             del model
             del quantized_model
             import gc
             gc.collect()
-        except Exception as exc:
-            print(f"Failed to NNCF-quantize {fp32_path.name} -> {int8_path.name}: {exc}")
+        except Exception:
             import gc
             gc.collect()
 
@@ -665,8 +815,16 @@ def main():
 
         # Optional modern baselines (best-effort)
         if not args.skip_optional_baselines:
-            export_efficientnet_b0_fp32(models_dir / "efficientnet-b0_fp32.onnx")
-            export_vit_tiny_fp32(models_dir / "vit-tiny_fp32.onnx")
+            effnet_fp32 = models_dir / "efficientnet-b0_fp32.onnx"
+            vit_fp32 = models_dir / "vit-tiny_fp32.onnx"
+            export_efficientnet_b0_fp32(effnet_fp32)
+            export_vit_tiny_fp32(vit_fp32)
+            
+            # Quantize them
+            if effnet_fp32.exists():
+                quantize_model(effnet_fp32, models_dir / "efficientnet-b0_int8.onnx")
+            if vit_fp32.exists():
+                quantize_model(vit_fp32, models_dir / "vit-tiny_int8.onnx")
 
     print("\nAcademic Model Preparation Complete.")
     if args.only_gnn:

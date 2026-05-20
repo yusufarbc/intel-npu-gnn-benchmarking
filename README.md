@@ -1,25 +1,29 @@
-# Evaluating Operator Fusion and the Memory Wall for GNNs on Edge NPUs
+# BENCHMARKING GNN INFERENCE BOTTLENECKS ON INTEL CORE ULTRA NPUS
 
-This project provides a comprehensive framework for analyzing the performance of **Graph Neural Networks (GNNs)** on the **Intel Core Ultra (Meteor Lake)** architecture. It enables cross-architectural benchmarking (CPU vs iGPU vs NPU) and introduces formal metrics to quantify the efficiency of graph-based hardware acceleration.
+A comprehensive benchmarking framework for evaluating graph neural network (gnn) inference on intel core ultra (meteor lake) npus, comparing against cpu and integrated gpu (igpu) backends under openvino.
 
-## Key Features
+## KEY FEATURES
 
-- **10-Model Taxonomy:** Evaluation across spectral, inductive, and attention-based GNNs (GCN, GAT, GraphSAGE, etc.) alongside CV (ResNet) and NLP (BERT) baselines.
-- **Advanced Metrics:** Introduction of **Fusion Gain Ratio (FGR)** and **Compilation Efficiency Index (CEI)** to diagnose compiler efficacy beyond raw latency.
-- **Dataset Integration:** Standardized support for the **Cora** citation network topology (2708 nodes, 5429 edges).
-- **Academic Quality Visualizations:** Automatic generation of 300 DPI PNG and vector SVG plots (Roofline, Pareto Frontier, Latency Breakdown).
-- **IEEE-Compliant Manuscript:** Integrated LaTeX pipeline (`paper/paper.tex`) ready for academic submission.
+- **14 Models:** 9 gnns (gcn, gat, gatv2, gin, graphsage, sgc, appnp, graphtransformer, mpnn) + 5 dense baselines (resnet50, mobilenetv2, efficientnet-b0, vit-tiny, bert-tiny)
+- **3 Hardware Backends:** Cpu, integrated gpu (xe-lpg), and npu (intel ai boost)
+- **3 Real-World Datasets:** Ogbn-arxiv, ogbn-proteins, ogbn-products from the Open Graph Benchmark
+- **Int8 Quantization Analysis:** Fp32 vs int8 speedup across all models and devices
+- **Operator Profiling:** Per-operator cpu fallback detection and onnx operator composition analysis
+- **Publication-Ready Figures:** 7 ieee-format figures (png + svg, 300 dpi)
+- **Accompanying Paper:** Latex source for ieee conference submission
 
-## Project Structure
+## PROJECT STRUCTURE
 
-- `analysis/`: High-level analyzers for scalability, hardware comparison, and profiling.
-- `scripts/`: Utilities for model generation (`generate_gnn_models.py`) and dataset preparation.
-- `docs/`: Technical guides for [models](docs/models_guide.md), [visualizations](docs/visualizations_guide.md), and methodology.
-- `models/`: Standardized ONNX models (FP32 & INT8).
-- `results/`: Empirical data, CSV matrices, and high-resolution research figures.
-- `paper/`: The 5-page IEEE-compliant research manuscript and bibliography.
+| Directory | Description |
+|-----------|-------------|
+| `analysis/` | Python scripts for benchmarking, profiling, and analysis |
+| `data/` | Ogb graph datasets (excluded from git) |
+| `docs/` | Technical documentation and methodology guides |
+| `models/` | Pre-exported onnx models (fp32 and int8) |
+| `paper/` | Latex paper source and compiled pdf |
+| `results/` | Benchmark outputs, csv matrices, and figures |
 
-## Installation
+## INSTALLATION
 
 ```bash
 python -m venv .venv
@@ -27,28 +31,45 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-## Running the Pipeline
+## USAGE
 
-### 1. Hardware-Software Comparison (3-Way)
-To compare **CPU**, **iGPU (Intel Arc)**, and **NPU (AI Boost)** performance for a specific model:
+The main entry point is the jupyter notebook:
+
 ```bash
-python analysis/hw_comparison.py --model models/GCN_fp32.onnx --iterations 100
+jupyter notebook npu_gnn_benchmarking.ipynb
 ```
 
-### 2. Scalability and Roofline Analysis
-To evaluate model behavior across hidden dimensions and generate the Roofline Model:
+Run cells sequentially:
+1. **Stage 0:** Global setup (imports, config, helper functions)
+2. **Stage 1-A/B/C:** Dataset metadata loading, model inventory, hardware health check
+3. **Stage 2:** Unified batch benchmark (all models x datasets x devices)
+4. **Stage 3-A/B/C:** Merge results, comparison tables, summary statistics
+5. **Stage 4:** 7 publication figures
+
+Standalone script usage:
+
 ```bash
-python analysis/scalability_analyzer.py --models-dir models/ --device NPU
+python analysis/scalability_analyzer.py --model GCN --device NPU --iterations 100
+python analysis/model_prep.py
+python analysis/density_sweep.py --devices CPU,GPU,NPU
 ```
 
-### 3. Full Research Pipeline
-To execute the complete suite (Benchmarking -> Analysis -> Figure Export):
-```bash
-python run_pipeline.py --iterations 100 --repeats 3
-```
+## KEY FINDINGS
 
-## Research Findings: The "Memory Wall"
-Our analysis indicates that while the Intel Core Ultra NPU excels at dense CNN workloads (ResNet50), it is significantly bottlenecked by memory subsystems when executing sparse GNNs. We identify a **"Fusion Overhead Paradox"** where aggressive compiler optimizations can lead to performance regression in shallow graph structures.
+- The npu delivers strong fp32 performance for dense vision models (mobilenetv2: 1.97ms, resnet50: 3.92ms)
+- Gnn workloads show limited npu advantage (within 15% of cpu latency)
+- Int8 quantization degrades npu latency for most models (sgc int8 is 2x slower than fp32)
+- Attention-based gnns (gat, gatv2) fail int8 compilation entirely
+- Graph density shows no correlation with npu latency (static-shape compilation)
+
+## REPRODUCIBILITY
+
+All benchmark artifacts (scalability matrices, latency summaries, profiling traces, figures) are generated automatically by the notebook. The paper's results can be reproduced by running all cells in sequence.
+
+## LICENSE
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
+
 *Developed by Yusuf Talha ARABACI (Karabük University)*

@@ -139,10 +139,14 @@ def shorten_label(name: str, max_len: int = 14) -> str:
         "GraphTransformer": "G-Trans",
         "mobilenetv2":      "MBNetV2",
         "resnet50":         "ResNet50",
+        "efficientnet":     "EffNet-B0",
+        "vit tiny":         "ViT-T",
         "bert tiny":        "BERT-T",
         "GCN":              "GCN",
         "GAT":              "GAT",
         "GIN":              "GIN",
+        "SGC":              "SGC",
+        "APPNP":            "APPNP",
         "Graph":            "G",
     }
     for src, dst in replacements.items():
@@ -152,6 +156,27 @@ def shorten_label(name: str, max_len: int = 14) -> str:
     if len(name) > max_len:
         name = name[:max_len - 2] + ".."
     return name.strip()
+
+
+def get_model_category(name: str) -> str:
+    """Categorize models for academic reporting."""
+    name_low = name.lower()
+    
+    if any(x in name_low for x in ["gcn", "gat", "gin", "sage", "sgc", "appnp", "mpnn"]):
+        if "transformer" in name_low:
+            return "Partially Supported (Hybrid)"
+        return "GNN (Irregular)"
+    
+    if "transformer" in name_low or "bert" in name_low or "vit" in name_low:
+        return "Transformer (Global Attn)"
+        
+    if "resnet" in name_low or "mobilenet" in name_low or "efficientnet" in name_low:
+        return "CNN (Regular)"
+        
+    return "Other"
+
+
+PARTIALLY_SUPPORTED_MODELS = {"GraphTransformer"}
 
 
 def auto_rotate_xlabels(ax: mpl.axes.Axes, labels: Sequence[str]) -> None:

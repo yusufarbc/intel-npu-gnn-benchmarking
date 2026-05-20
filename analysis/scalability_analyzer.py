@@ -2,6 +2,7 @@ from __future__ import annotations
 import os
 import sys
 import argparse
+import traceback
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
@@ -39,8 +40,30 @@ from analysis.plot_config import (
 )
 apply_ieee_style()
 
-from analysis.benchmark_runner import BenchmarkConfig, BenchmarkMode, BenchmarkRunner
+from analysis.benchmark_runner import BenchmarkConfig, BenchmarkMode, BenchmarkRunner, ONNXModelValidator
 from analysis.ort_profile_utils import load_events, summarize_trace
+
+
+def _parse_csv_list(value: str | None) -> List[str]:
+    if not value:
+        return []
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def _normalize_model_base(stem: str) -> str:
+    lowered = stem.lower()
+    if lowered.endswith("_fp32") or lowered.endswith("_int8"):
+        return lowered.rsplit("_", 1)[0]
+    return lowered
+
+
+def _precision_from_stem(stem: str) -> str | None:
+    lowered = stem.lower()
+    if lowered.endswith("_fp32"):
+        return "fp32"
+    if lowered.endswith("_int8"):
+        return "int8"
+    return None
 
 
 @dataclass
@@ -54,7 +77,7 @@ class ScalabilityConfig:
     peak_compute_gflops: float = 1000.0
     peak_bandwidth_gbps: float = 30.0
     enable_profiling: bool = False
-    input_source: str = "auto"
+    input_source: str = "ogbn-arxiv"
     dataset_root: Path | None = None
 
 
@@ -316,36 +339,37 @@ class ScalabilityVisualizer:
         ax.set_ylabel("NPU Speedup (×)")
         ax.set_xlabel("Model Architecture")
         ax.set_title("NPU vs. CPU Inference Speedup")
-        
 
+        savefig_ieee(fig, results_dir / "speedup_comparison")
+        plt.close(fig)
+
+    @staticmethod
+    def _save_pareto_frontier(ordered: pd.DataFrame, results_dir: Path) -> None:
+        if not all(c in ordered.columns for c in ["params_mil", "o_mean_ms", "model"]):
+            return
+
+        df = ordered.copy()
+        xs = df["params_mil"].values
+        ys = df["o_mean_ms"].values
+
+        fig, ax = plt.subplots(figsize=SINGLE_COL)
         ax.scatter(xs, ys, s=35, c=IEEE_COLORS[0], edgecolors="k", linewidths=0.5, zorder=3)
 
-        # Place initial text slightly above-right of each point so
-        # adjust_text has room to move labels away from the cluster
         texts = []
         for x, y, row in zip(xs, ys, df.itertuples()):
             label = shorten_label(str(row.model))
-            t = ax.text(
-                x, y, label,
-                fontsize=5.5,
-                ha="left", va="bottom",
-            )
+            t = ax.text(x, y, label, fontsize=5.5, ha="left", va="bottom")
             texts.append(t)
 
         if adjust_text and texts:
             adjust_text(
-                texts,
-                x=xs, y=ys,
-                ax=ax,
-                expand_text=(1.8, 2.2),      # Significantly increased padding
-                expand_points=(1.6, 1.8),
-                force_text=(0.8, 1.2),       # Stronger push to avoid overlap
-                force_points=(0.6, 1.0),
-                lim=1000,                    # More iterations for stability
+                texts, x=xs, y=ys, ax=ax,
+                expand_text=(1.8, 2.2), expand_points=(1.6, 1.8),
+                force_text=(0.8, 1.2), force_points=(0.6, 1.0),
+                lim=1000,
                 arrowprops=dict(arrowstyle="-", color="gray", lw=0.4, alpha=0.6),
             )
         elif texts:
-            # Fallback: simple fixed offset with alternating directions
             for i, (t, x, y) in enumerate(zip(texts, xs, ys)):
                 dx = 0.05 * (xs.max() - xs.min()) * (1 if i % 2 == 0 else -1)
                 dy = 0.04 * (ys.max() - ys.min()) * (1 + i % 3) * 0.5
@@ -354,9 +378,10 @@ class ScalabilityVisualizer:
         ax.set_xlabel("Model Size (M parameters)")
         ax.set_ylabel("Latency (ms)")
         ax.set_title("Pareto Frontier: Model Size vs. Latency")
-        ax.margins(0.15)  # extra whitespace so edge labels aren't clipped
+        ax.margins(0.15)
 
         savefig_ieee(fig, results_dir / "pareto_frontier")
+        plt.close(fig)
 
 
 class MultiModelPipeline:
@@ -368,22 +393,40 @@ class MultiModelPipeline:
         matrix_path = self.config.results_dir / "scalability_matrix.csv"
         
         # Load existing results to skip
-        existing_models = set()
+        existing_models: set[Tuple[str, str, str]] = set()
         if matrix_path.exists():
             try:
                 edf = pd.read_csv(matrix_path)
-                existing_models = {str(m).lower() for m in edf["model"].dropna()}
+                if "dataset" not in edf.columns and "input_source" in edf.columns:
+                    edf["dataset"] = edf["input_source"]
+                for _, row in edf.iterrows():
+                    key = (
+                        str(row.get("model", "")).lower(),
+                        str(row.get("device", "")).lower(),
+                        str(row.get("dataset", "")).lower(),
+                    )
+                    if any(key):
+                        existing_models.add(key)
             except: pass
 
         import datetime
         import gc
         for model in self.config.models:
-            if model.stem.lower() in existing_models:
+            key = (
+                model.stem.lower(),
+                str(self.config.device).lower(),
+                str(self.config.input_source).lower(),
+            )
+            if key in existing_models:
                 print(f"Skipping {model.name} (already done)")
                 continue
-            
-            
-                
+
+            try:
+                ONNXModelValidator.validate(model)
+            except Exception as exc:
+                print(f"  ❌ Skipping invalid ONNX model {model.name}: {exc}")
+                continue
+
             print(f"Processing: {model.name}")
             try:
                 row = self._benchmark_model(model)
@@ -394,7 +437,12 @@ class MultiModelPipeline:
                     if matrix_path.exists():
                         try:
                             df_tmp = pd.read_csv(matrix_path)
-                            df_tmp = pd.concat([df_tmp, new_row_df], ignore_index=True).drop_duplicates(subset=['model'], keep='last')
+                            if "dataset" not in df_tmp.columns and "input_source" in df_tmp.columns:
+                                df_tmp["dataset"] = df_tmp["input_source"]
+                            dedupe_cols = [c for c in ["model", "device", "dataset"] if c in df_tmp.columns]
+                            if not dedupe_cols:
+                                dedupe_cols = ["model"]
+                            df_tmp = pd.concat([df_tmp, new_row_df], ignore_index=True).drop_duplicates(subset=dedupe_cols, keep='last')
                             df_tmp.to_csv(matrix_path, index=False)
                         except Exception as e_file:
                             print(f"  ⚠️ Could not update CSV: {e_file}. Saving to backup.")
@@ -404,12 +452,20 @@ class MultiModelPipeline:
                     data.append(row)
             except Exception as e:
                 print(f"  ❌ Error benchmarking {model.name}: {e}")
+                try:
+                    traceback.print_exc()
+                    log_path = self.config.results_dir / "scalability_errors.log"
+                    with log_path.open("a", encoding="utf-8") as handle:
+                        handle.write(traceback.format_exc() + "\n")
+                except Exception:
+                    pass
             finally:
                 gc.collect() 
-        print(f"\n[OK] Scalability Analysis Complete. Results saved to {matrix_path}")
-
         if not matrix_path.exists():
+            print(f"\n[WARNING] Scalability Analysis finished but no results were saved: {matrix_path}")
             return pd.DataFrame()
+
+        print(f"\n[OK] Scalability Analysis Complete. Results saved to {matrix_path}")
             
         df = pd.read_csv(matrix_path)
         
@@ -433,6 +489,10 @@ class MultiModelPipeline:
 
     def _benchmark_model(self, model_path: Path) -> Dict[str, Any]:
         baseline_lats, optimized_lats = [], []
+        baseline_fallbacks: List[bool] = []
+        optimized_fallbacks: List[bool] = []
+        baseline_providers: List[str] = []
+        optimized_providers: List[str] = []
         last_opt_trace: Path | None = None
         for r in range(self.config.repeats):
             run_dir = self.config.results_dir / model_path.stem / f"run_{r:02d}"
@@ -447,12 +507,28 @@ class MultiModelPipeline:
             res = runner.run()
             baseline_lats.append(res.loc[res["mode"]=="baseline", "avg_latency_ms"].iloc[0])
             optimized_lats.append(res.loc[res["mode"]=="optimized", "avg_latency_ms"].iloc[0])
+            if "fallback_to_cpu" in res.columns:
+                baseline_fallbacks.append(bool(res.loc[res["mode"]=="baseline", "fallback_to_cpu"].iloc[0]))
+                optimized_fallbacks.append(bool(res.loc[res["mode"]=="optimized", "fallback_to_cpu"].iloc[0]))
+            if "providers" in res.columns:
+                baseline_providers.append(str(res.loc[res["mode"]=="baseline", "providers"].iloc[0]))
+                optimized_providers.append(str(res.loc[res["mode"]=="optimized", "providers"].iloc[0]))
 
             opt_trace = run_dir / "optimized_profiling.json"
             if opt_trace.exists():
                 last_opt_trace = opt_trace
 
+        # Comprehensive statistical analysis
         b_mean, o_mean = np.mean(baseline_lats), np.mean(optimized_lats)
+        b_std, o_std = np.std(baseline_lats, ddof=1), np.std(optimized_lats, ddof=1)
+        b_min, o_min = np.min(baseline_lats), np.min(optimized_lats)
+        b_max, o_max = np.max(baseline_lats), np.max(optimized_lats)
+
+        # Confidence intervals (95%)
+        from scipy import stats as scipy_stats
+        b_ci = scipy_stats.t.interval(0.95, len(baseline_lats)-1, loc=b_mean, scale=scipy_stats.sem(baseline_lats)) if len(baseline_lats) > 1 else (b_mean, b_mean)
+        o_ci = scipy_stats.t.interval(0.95, len(optimized_lats)-1, loc=o_mean, scale=scipy_stats.sem(optimized_lats)) if len(optimized_lats) > 1 else (o_mean, o_mean)
+
         params = ONNXGraphMetrics.count_parameters(model_path)
         ai, flops, bytes_io = ONNXGraphMetrics.estimate_arithmetic_intensity(model_path)
 
@@ -470,20 +546,58 @@ class MultiModelPipeline:
                 }
             except Exception:
                 breakdown = {}
-        
+
+        precision = _precision_from_stem(model_path.stem)
+
         return {
-            "model": model_path.stem, "params": params, "params_mil": params / 1e6,
-            "b_mean_ms": b_mean, "o_mean_ms": o_mean,
-            "speedup": b_mean / o_mean if o_mean > 0 else 1.0,
-            "ai": ai, "flops": flops, "bytes": bytes_io,
+            "model": model_path.stem,
+            "dataset": self.config.input_source,
+            "input_source": self.config.input_source,
+            "precision": precision,
+            "params": params,
+            "params_mil": params / 1e6,
+            # Baseline statistics
+            "b_mean_ms": round(b_mean, 4),
+            "b_std_ms": round(b_std, 4),
+            "b_min_ms": round(b_min, 4),
+            "b_max_ms": round(b_max, 4),
+            "b_ci_lower_ms": round(b_ci[0], 4) if b_ci else b_mean,
+            "b_ci_upper_ms": round(b_ci[1], 4) if b_ci else b_mean,
+            # Optimized statistics
+            "o_mean_ms": round(o_mean, 4),
+            "o_std_ms": round(o_std, 4),
+            "o_min_ms": round(o_min, 4),
+            "o_max_ms": round(o_max, 4),
+            "o_ci_lower_ms": round(o_ci[0], 4) if o_ci else o_mean,
+            "o_ci_upper_ms": round(o_ci[1], 4) if o_ci else o_mean,
+            # Performance metrics
+            "speedup": round(b_mean / o_mean, 4) if o_mean > 0 else 1.0,
+            "speedup_std": round(np.std([b/o for b, o in zip(baseline_lats, optimized_lats)]), 4),
+            # Model characteristics
+            "ai": round(ai, 4),
+            "flops": int(flops),
+            "bytes_io": int(bytes_io),
+            "throughput_gflops": round((flops / 1e9) / (o_mean / 1000), 4) if o_mean > 0 else 0,
+            # Experimental metadata
+            "iterations": self.config.iterations,
+            "warmup_iterations": self.config.warmup_iterations,
+            "repeats": self.config.repeats,
+            "device": self.config.device,
+            "input_source": self.config.input_source,
+            "b_fallback_to_cpu": any(baseline_fallbacks) if baseline_fallbacks else False,
+            "o_fallback_to_cpu": any(optimized_fallbacks) if optimized_fallbacks else False,
+            "b_providers": " | ".join(sorted({p for p in baseline_providers if p})),
+            "o_providers": " | ".join(sorted({p for p in optimized_providers if p})),
             **breakdown,
         }
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--model", default=None, help="Model base name or .onnx path to filter.")
     parser.add_argument("--models-dir", default="models")
     parser.add_argument("--device", default="NPU")
+    parser.add_argument("--devices", default=None, help="Comma-separated devices (CPU,GPU,NPU).")
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--iterations", type=int, default=100)
     parser.add_argument("--warmup", type=int, default=5)
@@ -491,8 +605,18 @@ def main() -> None:
     parser.add_argument("--profile", action="store_true")
     parser.add_argument(
         "--input-source",
-        default="auto",
-        help="Input source: auto|synthetic|cora|reddit|ogbn-arxiv|ogbn-products (auto uses Cora for GNNs).",
+        default="ogbn-arxiv",
+        help="Input source: ogbn-arxiv|synthetic|cora|reddit|ogbn-products (default: ogbn-arxiv).",
+    )
+    parser.add_argument(
+        "--datasets",
+        default=None,
+        help="Comma-separated datasets (ogbn-arxiv,ogbn-proteins,ogbn-products,cora,reddit,synthetic,auto).",
+    )
+    parser.add_argument(
+        "--precision",
+        default=None,
+        help="Comma-separated precision filters (fp32,int8).",
     )
     parser.add_argument(
         "--dataset-root",
@@ -500,17 +624,46 @@ def main() -> None:
         help="Root folder for dataset downloads/caches (default: ./data).",
     )
     args = parser.parse_args()
-    
+
     models = sorted([m for m in Path(args.models_dir).glob("*.onnx")])
-    config = ScalabilityConfig(
-        models=models, results_dir=Path(args.results_dir).resolve(),
-        device=args.device, repeats=args.repeats, iterations=args.iterations,
-        warmup_iterations=args.warmup,
-        enable_profiling=args.profile,
-        input_source=str(args.input_source),
-        dataset_root=Path(args.dataset_root).resolve() if args.dataset_root else None,
-    )
-    MultiModelPipeline(config).run()
+    if args.model:
+        requested = str(args.model).strip()
+        requested_lower = requested.lower()
+        if requested_lower.endswith(".onnx"):
+            model_path = Path(requested)
+            if model_path.exists():
+                models = [model_path]
+            else:
+                print(f"[ERROR] Requested model not found: {requested}")
+                return
+        else:
+            models = [m for m in models if _normalize_model_base(m.stem) == requested_lower]
+
+    precision_filters = {p.lower() for p in _parse_csv_list(args.precision)}
+    if precision_filters:
+        def _matches_precision(path: Path) -> bool:
+            precision = _precision_from_stem(path.stem)
+            return precision in precision_filters
+        models = [m for m in models if _matches_precision(m)]
+
+    if not models:
+        print("[ERROR] No models selected. Check --models-dir/--model/--precision filters.")
+        return
+
+    devices = _parse_csv_list(args.devices) or [str(args.device)]
+    datasets = _parse_csv_list(args.datasets) or [str(args.input_source)]
+
+    for device in devices:
+        for dataset in datasets:
+            config = ScalabilityConfig(
+                models=models, results_dir=Path(args.results_dir).resolve(),
+                device=device, repeats=args.repeats, iterations=args.iterations,
+                warmup_iterations=args.warmup,
+                enable_profiling=args.profile,
+                input_source=str(dataset),
+                dataset_root=Path(args.dataset_root).resolve() if args.dataset_root else None,
+            )
+            MultiModelPipeline(config).run()
 
 if __name__ == "__main__":
     main()
