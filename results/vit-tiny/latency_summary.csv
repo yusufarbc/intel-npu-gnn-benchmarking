@@ -1,0 +1,10 @@
+model,dataset,device,precision,mean_ms,std_ms,p95_ms
+vit-tiny_fp32,ogbn-arxiv,CPU,fp32,131.6266,10.4039,
+vit-tiny_fp32,ogbn-arxiv,GPU,fp32,6.3349,0.1024,
+vit-tiny_fp32,ogbn-arxiv,NPU,fp32,9.1785,0.0827,
+vit-tiny_fp32,ogbn-products,CPU,fp32,103.4569,0.7297,
+vit-tiny_fp32,ogbn-products,GPU,fp32,6.4133,0.2009,
+vit-tiny_fp32,ogbn-products,NPU,fp32,9.1339,0.0468,
+vit-tiny_fp32,ogbn-proteins,CPU,fp32,128.0224,10.4812,
+vit-tiny_fp32,ogbn-proteins,GPU,fp32,6.5059,0.2741,
+vit-tiny_fp32,ogbn-proteins,NPU,fp32,9.1395,0.0186,

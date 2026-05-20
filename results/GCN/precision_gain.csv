@@ -1,0 +1,4 @@
+dataset,device,fp32_ms,int8_ms,speedup
+ogbn-arxiv,NPU,8.2192,8.5553,0.9607144109499375
+ogbn-products,NPU,8.5903,8.3038,1.0345022760663791
+ogbn-proteins,NPU,8.1676,8.3804,0.9746074173070498

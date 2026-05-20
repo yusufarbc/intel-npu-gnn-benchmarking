@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,5.364597000061622,0.9277073743589314,1251.83984375,8.1,100,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\resnet50_int8\run_01\baseline_profiling.json
-optimized,5.16199300007429,0.9916397610147354,1251.83984375,8.6,100,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\resnet50_int8\run_01\optimized_profiling.json

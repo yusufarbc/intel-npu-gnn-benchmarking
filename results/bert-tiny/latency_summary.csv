@@ -1,0 +1,13 @@
+model,dataset,device,precision,mean_ms,std_ms,p95_ms
+bert-tiny_fp32,ogbn-arxiv,CPU,fp32,6.4292,0.1678,
+bert-tiny_fp32,ogbn-arxiv,NPU,fp32,5.8483,0.2884,
+bert-tiny_fp32,ogbn-products,CPU,fp32,6.8579,0.1937,
+bert-tiny_fp32,ogbn-products,NPU,fp32,6.8076,0.3177,
+bert-tiny_fp32,ogbn-proteins,CPU,fp32,6.7619,0.0865,
+bert-tiny_fp32,ogbn-proteins,NPU,fp32,6.4881,0.1945,
+bert-tiny_int8,ogbn-arxiv,CPU,int8,9.4311,0.7178,
+bert-tiny_int8,ogbn-arxiv,NPU,int8,9.2882,0.6845,
+bert-tiny_int8,ogbn-products,CPU,int8,9.8365,0.2988,
+bert-tiny_int8,ogbn-products,NPU,int8,9.0814,0.4306,
+bert-tiny_int8,ogbn-proteins,CPU,int8,9.6888,0.3365,
+bert-tiny_int8,ogbn-proteins,NPU,int8,9.4715,0.4928,

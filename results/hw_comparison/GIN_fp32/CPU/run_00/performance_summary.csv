@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,39.836600000002896,2.9487759205135973,320.578125,677.9,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GIN_fp32\CPU\run_00\baseline_profiling.json
-optimized,40.15779000000445,2.41261124888417,323.59375,678.0,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GIN_fp32\CPU\run_00\optimized_profiling.json

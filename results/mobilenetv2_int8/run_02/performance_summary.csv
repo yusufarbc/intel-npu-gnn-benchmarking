@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,7.43484400003581,1.7207774477604787,598.671875,644.2,100,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2_int8\run_02\baseline_profiling.json
-optimized,6.826642000069114,1.288631486617384,598.671875,692.0,100,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2_int8\run_02\optimized_profiling.json

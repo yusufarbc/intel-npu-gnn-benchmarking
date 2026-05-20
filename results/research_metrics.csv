@@ -1,3 +1,0 @@
-mode,total_ms,compute_ms,dma_ms,dispatch_ms,compilation_ms
-baseline,59.12977142857143,18730.335,0.0,0,70.928
-optimized,59.18020000000001,18737.031,0.0,0,72.353

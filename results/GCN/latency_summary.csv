@@ -1,0 +1,8 @@
+model,dataset,device,precision,mean_ms,std_ms,p95_ms
+GCN_fp32,ogbn-arxiv,GPU,fp32,7.4088,0.0605,
+GCN_fp32,ogbn-arxiv,NPU,fp32,8.2192,0.1575,
+GCN_fp32,ogbn-products,NPU,fp32,8.5903,0.5192,
+GCN_fp32,ogbn-proteins,NPU,fp32,8.1676,0.3562,
+GCN_int8,ogbn-arxiv,NPU,int8,8.5553,0.054,
+GCN_int8,ogbn-products,NPU,int8,8.3038,0.093,
+GCN_int8,ogbn-proteins,NPU,int8,8.3804,0.182,

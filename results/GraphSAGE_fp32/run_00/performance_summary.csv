@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,39.55921300002956,2.493590744246162,596.60546875,688.9,100,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GraphSAGE_fp32\run_00\baseline_profiling.json
-optimized,42.663560999972105,5.664476068048606,596.60546875,679.3,100,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GraphSAGE_fp32\run_00\optimized_profiling.json

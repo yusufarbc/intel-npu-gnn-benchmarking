@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,10.552064999828872,1.723458456053127,389.48046875,688.4,100,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\APPNP_fp32\run_00\baseline_profiling.json
-optimized,9.977136000088649,1.6554488147620405,395.0078125,715.3,100,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\APPNP_fp32\run_00\optimized_profiling.json

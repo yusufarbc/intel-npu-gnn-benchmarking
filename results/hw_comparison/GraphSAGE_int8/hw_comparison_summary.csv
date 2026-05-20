@@ -1,4 +1,0 @@
-device,avg_latency_ms,std_ms,throughput_ips,peak_memory_mb,cpu_util_pct,status,latency_ms,reason
-CPU,38.18242666666455,0.0,26.190058812397524,332.84765625,700.4,ok,,
-GPU,,,0.0,,,skipped,,Intel Graphics Compiler (IGC) fatally crashes on INT8 GNN models; GPU skipped.
-NPU,37.730586666665054,0.0,26.503696028757997,466.30078125,750.0,ok,,

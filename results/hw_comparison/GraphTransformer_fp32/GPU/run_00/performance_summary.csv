@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,profiling_json
-baseline,5.34776000000079,1.0020975616503638,512.953125,100.2,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GraphTransformer_fp32\GPU\run_00\baseline_profiling.json
-optimized,5.5590433333331175,0.7178027638523992,533.76953125,100.2,30,,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\hw_comparison\GraphTransformer_fp32\GPU\run_00\optimized_profiling.json

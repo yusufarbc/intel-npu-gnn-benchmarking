@@ -1,0 +1,62 @@
+{
+  "NPU_fp32": {
+    "device": "NPU",
+    "precision": "fp32",
+    "duration_s": 10.295347200000833,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null
+  },
+  "NPU_int8": {
+    "device": "NPU",
+    "precision": "int8",
+    "duration_s": 8.019914799999242,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null
+  },
+  "GPU_fp32": {
+    "device": "GPU",
+    "precision": "fp32",
+    "duration_s": 7.949664399999165,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null
+  },
+  "GPU_int8": {
+    "device": "GPU",
+    "precision": "int8",
+    "duration_s": 7.924995199999103,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null
+  },
+  "CPU_fp32": {
+    "device": "CPU",
+    "precision": "fp32",
+    "duration_s": 7.937747299998591,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null
+  },
+  "CPU_int8": {
+    "device": "CPU",
+    "precision": "int8",
+    "duration_s": 7.878081399998337,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null
+  }
+}
