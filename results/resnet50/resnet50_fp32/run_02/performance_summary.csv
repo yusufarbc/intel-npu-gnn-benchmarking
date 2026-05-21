@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,33.4138609999718,3.691006905092994,1571.21875,738.7,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\resnet50\resnet50_fp32\run_02\baseline_profiling.json
-optimized,33.10107400011475,2.7461878479442485,1571.21875,714.9,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\resnet50\resnet50_fp32\run_02\optimized_profiling.json

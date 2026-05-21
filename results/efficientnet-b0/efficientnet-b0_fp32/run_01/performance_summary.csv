@@ -1,3 +1,3 @@
 mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,15.8321189999333,1.4409053069734694,1066.86328125,723.5,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\efficientnet-b0\efficientnet-b0_fp32\run_01\baseline_profiling.json
-optimized,16.151245000291965,1.2528838551546595,1066.86328125,698.2,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\efficientnet-b0\efficientnet-b0_fp32\run_01\optimized_profiling.json
+baseline,13.86027400047169,1.1456381009848688,993.3359375,830.7,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\efficientnet-b0\efficientnet-b0_fp32\run_01\baseline_profiling.json
+optimized,13.81399500038242,1.1823322011574,993.3359375,864.6,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\efficientnet-b0\efficientnet-b0_fp32\run_01\optimized_profiling.json

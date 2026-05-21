@@ -1,32 +1,3 @@
 {
-  "NPU_fp32": {
-    "device": "NPU",
-    "precision": "fp32",
-    "duration_s": 10.323645799999213,
-    "package_mW": null,
-    "ia_mW": null,
-    "gt_mW": null,
-    "dram_mW": null,
-    "total_mJ": null
-  },
-  "GPU_fp32": {
-    "device": "GPU",
-    "precision": "fp32",
-    "duration_s": 7.996513900001446,
-    "package_mW": null,
-    "ia_mW": null,
-    "gt_mW": null,
-    "dram_mW": null,
-    "total_mJ": null
-  },
-  "CPU_fp32": {
-    "device": "CPU",
-    "precision": "fp32",
-    "duration_s": 8.06345429999783,
-    "package_mW": null,
-    "ia_mW": null,
-    "gt_mW": null,
-    "dram_mW": null,
-    "total_mJ": null
-  }
+  "error": "socwatch_disabled"
 }

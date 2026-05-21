@@ -1,8 +1,8 @@
 {
-  "input_source": "ogbn-products",
-  "dataset_num_nodes": 2449029,
-  "dataset_num_edges": 123718280,
-  "dataset_num_features": 100,
+  "input_source": "ogbn-arxiv",
+  "dataset_num_nodes": 169343,
+  "dataset_num_edges": 1166243,
+  "dataset_num_features": 128,
   "expected_num_nodes": 2708,
   "expected_num_edges": 10000,
   "expected_num_features": 1433,

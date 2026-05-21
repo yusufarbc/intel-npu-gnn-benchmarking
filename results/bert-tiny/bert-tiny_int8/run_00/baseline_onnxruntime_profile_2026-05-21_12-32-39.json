@@ -1,0 +1,7 @@
+[
+{"cat" : "Session","pid" :4584,"tid" :20312,"dur" :9344,"ts" :13,"ph" : "X","name" :"model_loading_uri","args" : {}},
+{"cat" : "Session","pid" :4584,"tid" :20312,"dur" :11464,"ts" :9676,"ph" : "X","name" :"session_initialization","args" : {}},
+{"cat" : "Node","pid" :4584,"tid" :20312,"dur" :137,"ts" :41131,"ph" : "X","name" :"node_embedding_1_kernel_time","args" : {"parameter_size" : "256","provider" : "CPUExecutionProvider","op_name" : "Gather","input_type_shape" : [{"uint8":[2,128]},{"int64":[1,128]}],"node_index" : "3","output_type_shape" : [{"uint8":[1,128,128]}],"activation_size" : "1024","output_size" : "16384","thread_scheduling_stats" : {"main_thread": {"thread_pool_name": "session-40-intra-op", "thread_id": "20312", "block_size": [], "core": -1, "Distribution": 0, "DistributionEnqueue": 0, "Run": 0, "Wait": 0, "WaitRevoke": 0}, "sub_threads": {"27944": {"num_run": 0, "core": -1},"6904": {"num_run": 0, "core": -1},"12640": {"num_run": 0, "core": -1},"27024": {"num_run": 0, "core": -1},"5376": {"num_run": 0, "core": -1},"18284": {"num_run": 0, "core": -1},"26176": {"num_run": 0, "core": -1},"21200": {"num_run": 0, "core": -1},"9124": {"num_run": 0, "core": -1},"22036": {"num_run": 0, "core": -1},"6104": {"num_run": 0, "core": -1}}}}},
+{"cat" : "Session","pid" :4584,"tid" :20312,"dur" :167,"ts" :41122,"ph" : "X","name" :"SequentialExecutor::Execute","args" : {}},
+{"cat" : "Session","pid" :4584,"tid" :20312,"dur" :398,"ts" :41038,"ph" : "X","name" :"model_run","args" : {}}
+]
