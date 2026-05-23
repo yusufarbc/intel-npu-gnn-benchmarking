@@ -1,9 +1,15 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
+
+# Fix sys.path for subprocess execution
+_project_root = Path(__file__).resolve().parent.parent
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
 
 import matplotlib.pyplot as plt
 import numpy as np

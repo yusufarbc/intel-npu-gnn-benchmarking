@@ -1,3 +1,3 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,6.465167000569636,1.7587987533363039,711.28125,641.4,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\bert-tiny\bert-tiny_fp32\run_02\baseline_profiling.json
-optimized,6.940636999934213,2.5657694351267657,711.28125,732.3,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\bert-tiny\bert-tiny_fp32\run_02\optimized_profiling.json
+mode,avg_latency_ms,std_latency_ms,p95_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
+baseline,6.278792000521207,1.814785311564212,7.259750009689014,707.48046875,787.2,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\bert-tiny\bert-tiny_fp32\run_02\baseline_profiling.json
+optimized,6.517833999532741,1.4385861605560637,7.693975008442063,707.48046875,832.4,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\bert-tiny\bert-tiny_fp32\run_02\optimized_profiling.json

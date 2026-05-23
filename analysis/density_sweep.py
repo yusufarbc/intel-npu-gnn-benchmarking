@@ -14,6 +14,14 @@ if str(project_root) not in sys.path:
 from analysis.scalability_analyzer import MultiModelPipeline, ScalabilityConfig
 
 
+# Default edges-per-node for known datasets (used for synthetic graph generation)
+DEFAULT_EDGES_PER_NODE = {
+    "ogbn-arxiv": 7,
+    "ogbn-products": 25,
+    "ogbn-proteins": 452,
+}
+
+
 
 
 @dataclass

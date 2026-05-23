@@ -1,0 +1,840 @@
+
+--------------------------------------------------------------------------
+Intel(R) SoC Watch for Windows* OS Version 2026.2.ww12-pre-release [Mar 17 2026]
+Build Ref: 8924bb08e273e7b4345df1d973daa169f1f297ac
+Driver Version 2.20.5 [Mar 12 2026]
+Post Processed using SoC Watch for Windows* OS Version 2026.2.ww12-pre-release [Mar 17 2026]
+Post Processed Build Ref: 8924bb08e273e7b4345df1d973daa169f1f297ac
+Copyright (c) 2024 Intel Corporation. All Rights Reserved.
+Platform power analysis tool for use with Intel processors/chipsets/platforms.
+*Other names and brands may be claimed as the property of others. 
+--------------------------------------------------------------------------
+
+Command line options: -f sys -t 30 -o results\MPNN\socwatch_CPU_fp32\energy -r sum 
+
+Program Started: N/A
+Data Collection Started: 2026-05-23 08:31:29 GMT 
+QPC Clock Frequency (MHz): 10 
+CPU Base Operating Frequency (MHz): 2995.2
+Collection duration (sec): 30.1655
+Collection begin timestamp: 984622384619
+Collection end timestamp: 984924035541
+
+System Name: MATEBOOK
+Operating System: Windows 11 [11.0 build 26200.8457]
+CPU: Meteor Lake
+CPU ID (family.model.stepping): 0x6.0xaa.0x4
+Platform ID: 0b111
+Integrated GPU Device ID: 0x7d55
+Intel(R) PMT: Meteor Lake SoCN (0x130670b2)
+Intel(R) PMT: Meteor Lake SoCN Fixed (0x130671b2)
+Intel(R) PMT: Meteor Lake CDie (0x1a067002)
+Intel(R) PMT: Meteor Lake CDie Fixed (0x1a067102)
+PCH: Meteor Lake SOC-M/P (MTSOC-MP)
+PCH: Meteor Lake IOE-P (MTIOE-P)
+EDRAM Present: No 
+Total # of packages: 1 
+Total # of cores: 14 
+Total # of logical processors: 18
+
+CPU native model:
+Package_0/Core_0 = RWC (P Core)
+Package_0/Core_1 = CMT (E Core)
+Package_0/Core_2 = CMT (E Core)
+Package_0/Core_3 = CMT (E Core)
+Package_0/Core_4 = CMT (E Core)
+Package_0/Core_5 = CMT (E Core)
+Package_0/Core_6 = CMT (E Core)
+Package_0/Core_7 = CMT (E Core)
+Package_0/Core_8 = CMT (E Core)
+Package_0/Core_9 = RWC (P Core)
+Package_0/Core_10 = RWC (P Core)
+Package_0/Core_11 = RWC (P Core)
+Package_0/Core_12 = CMT (LPE Core)
+Package_0/Core_13 = CMT (LPE Core)
+
+
+NOTE: Hyper-V is enabled on this system.
+NOTE: Virtual Secure Mode is enabled on this system.
+Note: Hardware Controlled Performance (HWP) States is enabled in autonomous mode.
+
+=============
+Package Power
+=============
+
+Note: Die-level power is included in package power on platforms with a multi-die CPU topology.
+
+Package Power Summary: Average Rate and Total
+Component    , Metric Type, Average Rate (mW), Total (mJ)
+---------    , -----------, -----------------, ----------
+CPU/Package_0, Power      , 9356.73          , 281960.57 
+
+Package Power Summary: Total Samples Received
+Component    , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+---------    , ------------------, ----------------------------, ----------------------------, ----------------------------
+CPU/Package_0, 316               , 59.43                       , 105.89                      , 95.29                       
+
+===============
+Package C-State
+===============
+
+Note: PC2 is non-architectural state - software cannot request to go to PC2 explicitly.  PC2 can be a transient state between PC0 and deeper pkgC states.
+Note: PC3 is non-architectural state - software cannot request to go to PC3 explicitly.
+
+
+Package C-State Summary: Residency (Percentage and Time)
+C-State, CPU/Package_0 Residency (%), CPU/Package_0 Residency (msec)
+-------, ---------------------------, ------------------------------
+PC0    , 100.00                     , 30015.00                      
+PC2    , 0.00                       , 0.00                          
+PC3    , 0.00                       , 0.00                          
+PC6    , 0.00                       , 0.00                          
+PC7    , 0.00                       , 0.00                          
+PC8    , 0.00                       , 0.00                          
+PC9    , 0.00                       , 0.00                          
+PC10   , 0.00                       , 0.00                          
+
+Package C-State Summary: Total Samples Received
+Package      , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+-------      , ------------------, ----------------------------, ----------------------------, ----------------------------
+CPU/Package_0, 1                 , 30015.00                    , 30015.00                    , 30015.00                    
+
+============
+Core C-State
+============
+
+Note: Core C0 and C1 residency is reported as a sum due to a hardware limitation on this platform with Hyper Threading enabled that does not allow accurate separation of residency in Core C0 vs. C1.
+
+
+Core C-State Summary: Residency (Percentage and Time)
+C-State, CPU/Package_0/Core_0 Residency (%), CPU/Package_0/Core_1 Residency (%), CPU/Package_0/Core_2 Residency (%), CPU/Package_0/Core_3 Residency (%), CPU/Package_0/Core_4 Residency (%), CPU/Package_0/Core_5 Residency (%), CPU/Package_0/Core_6 Residency (%), CPU/Package_0/Core_7 Residency (%), CPU/Package_0/Core_8 Residency (%), CPU/Package_0/Core_9 Residency (%), CPU/Package_0/Core_10 Residency (%), CPU/Package_0/Core_11 Residency (%), CPU/Package_0/Core_12 Residency (%), CPU/Package_0/Core_13 Residency (%), CPU/Package_0/Core_0 Residency (msec), CPU/Package_0/Core_1 Residency (msec), CPU/Package_0/Core_2 Residency (msec), CPU/Package_0/Core_3 Residency (msec), CPU/Package_0/Core_4 Residency (msec), CPU/Package_0/Core_5 Residency (msec), CPU/Package_0/Core_6 Residency (msec), CPU/Package_0/Core_7 Residency (msec), CPU/Package_0/Core_8 Residency (msec), CPU/Package_0/Core_9 Residency (msec), CPU/Package_0/Core_10 Residency (msec), CPU/Package_0/Core_11 Residency (msec), CPU/Package_0/Core_12 Residency (msec), CPU/Package_0/Core_13 Residency (msec)
+-------, ----------------------------------, ----------------------------------, ----------------------------------, ----------------------------------, ----------------------------------, ----------------------------------, ----------------------------------, ----------------------------------, ----------------------------------, ----------------------------------, -----------------------------------, -----------------------------------, -----------------------------------, -----------------------------------, -------------------------------------, -------------------------------------, -------------------------------------, -------------------------------------, -------------------------------------, -------------------------------------, -------------------------------------, -------------------------------------, -------------------------------------, -------------------------------------, --------------------------------------, --------------------------------------, --------------------------------------, --------------------------------------
+CC0+CC1, 100.00                            , 58.43                             , 67.59                             , 79.13                             , 65.05                             , 73.32                             , 60.19                             , 58.07                             , 57.46                             , 0.03                              , 0.03                               , 100.00                             , 0.05                               , 0.05                               , 30014.15                             , 17537.58                             , 20287.70                             , 23750.39                             , 19525.52                             , 22008.25                             , 18066.04                             , 17428.62                             , 17245.23                             , 8.78                                 , 9.53                                  , 30014.83                              , 15.31                                 , 15.08                                 
+CC6    , 0.00                              , 41.57                             , 32.41                             , 20.87                             , 34.95                             , 26.68                             , 39.81                             , 41.93                             , 42.54                             , 0.00                              , 0.00                               , 0.00                               , 99.95                              , 99.95                              , 0.00                                 , 12477.17                             , 9727.13                              , 6264.44                              , 10489.31                             , 8006.58                              , 11948.61                             , 12586.03                             , 12769.43                             , 0.00                                 , 0.00                                  , 0.00                                  , 29999.47                              , 29999.70                              
+CC7    , 0.00                              , 0.00                              , 0.00                              , 0.00                              , 0.00                              , 0.00                              , 0.00                              , 0.00                              , 0.00                              , 99.97                             , 99.97                              , 0.00                               , 0.00                               , 0.00                               , 0.69                                 , 0.00                                 , 0.00                                 , 0.00                                 , 0.00                                 , 0.00                                 , 0.00                                 , 0.00                                 , 0.00                                 , 30005.94                             , 30005.23                              , 0.00                                  , 0.00                                  , 0.00                                  
+
+Core C-State Summary: Total Samples Received
+Core                 , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+----                 , ------------------, ----------------------------, ----------------------------, ----------------------------
+CPU/Package_0/Core_0 , 1                 , 30014.83                    , 30014.83                    , 30014.83                    
+CPU/Package_0/Core_1 , 1                 , 30014.76                    , 30014.76                    , 30014.76                    
+CPU/Package_0/Core_2 , 1                 , 30014.83                    , 30014.83                    , 30014.83                    
+CPU/Package_0/Core_3 , 1                 , 30014.83                    , 30014.83                    , 30014.83                    
+CPU/Package_0/Core_4 , 1                 , 30014.83                    , 30014.83                    , 30014.83                    
+CPU/Package_0/Core_5 , 1                 , 30014.83                    , 30014.83                    , 30014.83                    
+CPU/Package_0/Core_6 , 1                 , 30014.65                    , 30014.65                    , 30014.65                    
+CPU/Package_0/Core_7 , 1                 , 30014.65                    , 30014.65                    , 30014.65                    
+CPU/Package_0/Core_8 , 1                 , 30014.65                    , 30014.65                    , 30014.65                    
+CPU/Package_0/Core_9 , 1                 , 30014.72                    , 30014.72                    , 30014.72                    
+CPU/Package_0/Core_10, 1                 , 30014.76                    , 30014.76                    , 30014.76                    
+CPU/Package_0/Core_11, 1                 , 30014.83                    , 30014.83                    , 30014.83                    
+CPU/Package_0/Core_12, 1                 , 30014.78                    , 30014.78                    , 30014.78                    
+CPU/Package_0/Core_13, 1                 , 30014.78                    , 30014.78                    , 30014.78                    
+
+====================
+CPU-iGPU Concurrency
+====================
+
+CPU-iGPU Concurrency Summary: Residency (Percentage and Time)
+Concurrency, CPU/Package_0 Residency (%), CPU/Package_0 Residency (msec)
+-----------, ---------------------------, ------------------------------
+Both       , 4.32                       , 1298.13                       
+CPU Only   , 95.67                      , 28716.41                      
+iGPU Only  , 0.00                       , 0.01                          
+Neither    , 0.00                       , 0.28                          
+
+CPU-iGPU Concurrency Summary: Total Samples Received
+Package ID   , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+----------   , ------------------, ----------------------------, ----------------------------, ----------------------------
+CPU/Package_0, 327               , 53.72                       , 102.55                      , 91.79                       
+
+======================
+CPU Throttling Reasons
+======================
+
+CPU Throttling Reasons Summary - Sampled: Counts
+                 , Not Reason, Reason
+                 , ----------, ------
+PROCHOT          , 328       , 0     
+THERMAL          , 328       , 0     
+RSR-LIMIT        , 328       , 0     
+RATL             , 328       , 0     
+VR-THERMAL-ALERT , 328       , 0     
+VR-TDC           , 328       , 0     
+OTHER            , 328       , 0     
+PBM-PL1          , 328       , 0     
+PBM-PL2          , 328       , 0     
+MAX-TURBO-LIMIT  , 328       , 0     
+TURBO-ATTENUATION, 328       , 0     
+
+CPU Throttling Reasons Summary - Sampled: Total Samples Received
+                 , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+                 , ------------------, ----------------------------, ----------------------------, ----------------------------
+PROCHOT          , 328               , 53.72                       , 102.55                      , 91.79                       
+THERMAL          , 328               , 53.72                       , 102.55                      , 91.79                       
+RSR-LIMIT        , 328               , 53.72                       , 102.55                      , 91.79                       
+RATL             , 328               , 53.72                       , 102.55                      , 91.79                       
+VR-THERMAL-ALERT , 328               , 53.72                       , 102.55                      , 91.79                       
+VR-TDC           , 328               , 53.72                       , 102.55                      , 91.79                       
+OTHER            , 328               , 53.72                       , 102.55                      , 91.79                       
+PBM-PL1          , 328               , 53.72                       , 102.55                      , 91.79                       
+PBM-PL2          , 328               , 53.72                       , 102.55                      , 91.79                       
+MAX-TURBO-LIMIT  , 328               , 53.72                       , 102.55                      , 91.79                       
+TURBO-ATTENUATION, 328               , 53.72                       , 102.55                      , 91.79                       
+
+=====================
+CPU P-State/Frequency
+=====================
+
+CPU P-State Average Frequency (excluding CPU idle time)
+CPU ID                         , Average (MHz)
+------                         , -------------
+CPU/Package_0/Core_0/Thread_0  , 2275         
+CPU/Package_0/Core_0/Thread_1  , 2277         
+CPU/Package_0/Core_1/Thread_2  , 1442         
+CPU/Package_0/Core_2/Thread_3  , 1445         
+CPU/Package_0/Core_3/Thread_4  , 1454         
+CPU/Package_0/Core_4/Thread_5  , 1447         
+CPU/Package_0/Core_5/Thread_6  , 1464         
+CPU/Package_0/Core_6/Thread_7  , 1454         
+CPU/Package_0/Core_7/Thread_8  , 1453         
+CPU/Package_0/Core_8/Thread_9  , 1453         
+CPU/Package_0/Core_9/Thread_10 , 1977         
+CPU/Package_0/Core_9/Thread_11 , 1978         
+CPU/Package_0/Core_10/Thread_12, 1977         
+CPU/Package_0/Core_10/Thread_13, 1977         
+CPU/Package_0/Core_11/Thread_14, 2159         
+CPU/Package_0/Core_11/Thread_15, 2137         
+CPU/Package_0/Core_12/Thread_16, 1098         
+CPU/Package_0/Core_13/Thread_17, 1098         
+
+CPU P-State/Frequency Summary: Residency (Percentage and Time)
+P-State , Frequency (MHz), CPU/Package_0/Core_0/Thread_0 Residency (%), CPU/Package_0/Core_0/Thread_1 Residency (%), CPU/Package_0/Core_1/Thread_2 Residency (%), CPU/Package_0/Core_2/Thread_3 Residency (%), CPU/Package_0/Core_3/Thread_4 Residency (%), CPU/Package_0/Core_4/Thread_5 Residency (%), CPU/Package_0/Core_5/Thread_6 Residency (%), CPU/Package_0/Core_6/Thread_7 Residency (%), CPU/Package_0/Core_7/Thread_8 Residency (%), CPU/Package_0/Core_8/Thread_9 Residency (%), CPU/Package_0/Core_9/Thread_10 Residency (%), CPU/Package_0/Core_9/Thread_11 Residency (%), CPU/Package_0/Core_10/Thread_12 Residency (%), CPU/Package_0/Core_10/Thread_13 Residency (%), CPU/Package_0/Core_11/Thread_14 Residency (%), CPU/Package_0/Core_11/Thread_15 Residency (%), CPU/Package_0/Core_12/Thread_16 Residency (%), CPU/Package_0/Core_13/Thread_17 Residency (%), CPU/Package_0/Core_0/Thread_0 Residency (msec), CPU/Package_0/Core_0/Thread_1 Residency (msec), CPU/Package_0/Core_1/Thread_2 Residency (msec), CPU/Package_0/Core_2/Thread_3 Residency (msec), CPU/Package_0/Core_3/Thread_4 Residency (msec), CPU/Package_0/Core_4/Thread_5 Residency (msec), CPU/Package_0/Core_5/Thread_6 Residency (msec), CPU/Package_0/Core_6/Thread_7 Residency (msec), CPU/Package_0/Core_7/Thread_8 Residency (msec), CPU/Package_0/Core_8/Thread_9 Residency (msec), CPU/Package_0/Core_9/Thread_10 Residency (msec), CPU/Package_0/Core_9/Thread_11 Residency (msec), CPU/Package_0/Core_10/Thread_12 Residency (msec), CPU/Package_0/Core_10/Thread_13 Residency (msec), CPU/Package_0/Core_11/Thread_14 Residency (msec), CPU/Package_0/Core_11/Thread_15 Residency (msec), CPU/Package_0/Core_12/Thread_16 Residency (msec), CPU/Package_0/Core_13/Thread_17 Residency (msec)
+------- , ---------------, -------------------------------------------, -------------------------------------------, -------------------------------------------, -------------------------------------------, -------------------------------------------, -------------------------------------------, -------------------------------------------, -------------------------------------------, -------------------------------------------, -------------------------------------------, --------------------------------------------, --------------------------------------------, ---------------------------------------------, ---------------------------------------------, ---------------------------------------------, ---------------------------------------------, ---------------------------------------------, ---------------------------------------------, ----------------------------------------------, ----------------------------------------------, ----------------------------------------------, ----------------------------------------------, ----------------------------------------------, ----------------------------------------------, ----------------------------------------------, ----------------------------------------------, ----------------------------------------------, ----------------------------------------------, -----------------------------------------------, -----------------------------------------------, ------------------------------------------------, ------------------------------------------------, ------------------------------------------------, ------------------------------------------------, ------------------------------------------------, ------------------------------------------------
+P0      , 4401 -- 4500   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 4301 -- 4400   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 4201 -- 4300   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 4101 -- 4200   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 4001 -- 4100   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3901 -- 4000   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3801 -- 3900   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3701 -- 3800   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3601 -- 3700   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3501 -- 3600   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3401 -- 3500   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3301 -- 3400   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3201 -- 3300   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3101 -- 3200   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 3001 -- 3100   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P0      , 2901 -- 3000   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P1      , 2801 -- 2900   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P2      , 2701 -- 2800   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.57                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P3      , 2601 -- 2700   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.60                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P4      , 2501 -- 2600   , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.65                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P5      , 2401 -- 2500   , 58.15                                      , 36.47                                      , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.08                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 33.68                                        , 17.65                                        , 0.00                                         , 0.00                                         , 17454.83                                      , 10945.02                                      , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 23.16                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 10109.14                                        , 5299.01                                         , 0.00                                            , 0.00                                            
+P6      , 2301 -- 2400   , 8.96                                       , 7.27                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 10.96                                        , 9.07                                         , 0.00                                         , 0.00                                         , 2688.32                                       , 2182.45                                       , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 3290.68                                         , 2723.14                                         , 0.00                                            , 0.00                                            
+P7      , 2201 -- 2300   , 2.45                                       , 1.82                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 14.48                                        , 13.45                                        , 0.00                                         , 0.00                                         , 734.96                                        , 545.30                                        , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 4347.47                                         , 4035.90                                         , 0.00                                            , 0.00                                            
+P8      , 2101 -- 2200   , 1.72                                       , 1.46                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 3.41                                         , 1.94                                         , 0.00                                         , 0.00                                         , 516.44                                        , 438.18                                        , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 1022.24                                         , 582.46                                          , 0.00                                            , 0.00                                            
+P9      , 2001 -- 2100   , 0.69                                       , 0.30                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 2.55                                         , 2.10                                         , 0.00                                         , 0.00                                         , 205.93                                        , 90.88                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 766.75                                          , 631.48                                          , 0.00                                            , 0.00                                            
+P10     , 1901 -- 2000   , 1.41                                       , 0.70                                       , 0.09                                       , 0.14                                       , 0.00                                       , 0.15                                       , 0.00                                       , 0.23                                       , 0.00                                       , 0.21                                       , 0.02                                        , 0.03                                        , 0.03                                         , 0.02                                         , 3.03                                         , 0.36                                         , 0.00                                         , 0.00                                         , 423.29                                        , 209.96                                        , 27.94                                         , 41.40                                         , 0.00                                          , 45.43                                         , 0.00                                          , 68.33                                         , 0.00                                          , 64.40                                         , 7.30                                           , 7.83                                           , 8.51                                            , 7.21                                            , 909.87                                          , 109.40                                          , 0.00                                            , 0.00                                            
+P11     , 1801 -- 1900   , 1.02                                       , 0.66                                       , 0.72                                       , 0.56                                       , 1.17                                       , 0.84                                       , 0.82                                       , 1.07                                       , 1.54                                       , 0.51                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 1.73                                         , 0.91                                         , 0.00                                         , 0.00                                         , 307.00                                        , 198.32                                        , 216.85                                        , 167.87                                        , 352.52                                        , 252.71                                        , 246.13                                        , 321.75                                        , 463.63                                        , 151.98                                        , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 520.60                                          , 271.75                                          , 0.00                                            , 0.00                                            
+P12     , 1701 -- 1800   , 1.66                                       , 0.64                                       , 1.26                                       , 1.36                                       , 1.69                                       , 1.83                                       , 2.74                                       , 1.51                                       , 0.62                                       , 0.65                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.64                                         , 0.96                                         , 0.00                                         , 0.00                                         , 496.95                                        , 190.79                                        , 379.10                                        , 408.65                                        , 507.94                                        , 549.49                                        , 821.19                                        , 453.26                                        , 185.50                                        , 194.32                                        , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 192.69                                          , 289.52                                          , 0.00                                            , 0.00                                            
+P13     , 1601 -- 1700   , 1.09                                       , 0.91                                       , 0.37                                       , 1.74                                       , 2.74                                       , 1.71                                       , 2.63                                       , 0.40                                       , 0.66                                       , 1.66                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.72                                         , 0.66                                         , 0.00                                         , 0.00                                         , 327.85                                        , 273.11                                        , 110.32                                        , 522.53                                        , 823.77                                        , 513.21                                        , 789.11                                        , 121.01                                        , 199.57                                        , 499.40                                        , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 217.61                                          , 199.48                                          , 0.00                                            , 0.00                                            
+P14     , 1501 -- 1600   , 2.35                                       , 0.63                                       , 31.16                                      , 31.93                                      , 35.49                                      , 32.63                                      , 33.62                                      , 31.90                                      , 30.65                                      , 31.52                                      , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 1.17                                         , 0.34                                         , 0.00                                         , 0.00                                         , 706.72                                        , 189.42                                        , 9351.28                                       , 9583.81                                       , 10651.79                                      , 9795.38                                       , 10090.21                                      , 9575.26                                       , 9198.10                                       , 9461.04                                       , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 350.66                                          , 102.34                                          , 0.00                                            , 0.00                                            
+P15     , 1401 -- 1500   , 2.11                                       , 1.28                                       , 10.14                                      , 10.46                                      , 10.40                                      , 7.98                                       , 9.54                                       , 8.60                                       , 9.74                                       , 8.67                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 1.52                                         , 0.86                                         , 0.00                                         , 0.00                                         , 634.71                                        , 382.90                                        , 3043.50                                       , 3138.22                                       , 3121.28                                       , 2395.79                                       , 2862.79                                       , 2580.55                                       , 2922.90                                       , 2603.56                                       , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 455.66                                          , 258.46                                          , 0.00                                            , 0.00                                            
+P16     , 1301 -- 1400   , 3.77                                       , 2.28                                       , 5.43                                       , 5.56                                       , 5.50                                       , 5.33                                       , 6.78                                       , 7.32                                       , 7.28                                       , 6.92                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 1.46                                         , 1.42                                         , 0.00                                         , 0.00                                         , 1132.04                                       , 683.53                                        , 1629.73                                       , 1669.41                                       , 1651.88                                       , 1600.53                                       , 2035.24                                       , 2197.72                                       , 2184.51                                       , 2077.57                                       , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 437.92                                          , 426.71                                          , 0.00                                            , 0.00                                            
+P17     , 1201 -- 1300   , 1.91                                       , 1.97                                       , 0.34                                       , 0.35                                       , 1.64                                       , 1.69                                       , 1.20                                       , 0.64                                       , 0.71                                       , 1.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 6.77                                         , 5.19                                         , 0.00                                         , 0.00                                         , 573.57                                        , 590.12                                        , 102.67                                        , 106.39                                        , 493.66                                        , 508.35                                        , 360.54                                        , 192.48                                        , 211.63                                        , 301.39                                        , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 2032.14                                         , 1557.66                                         , 0.00                                            , 0.00                                            
+P18     , 1101 -- 1200   , 0.00                                       , 0.18                                       , 1.87                                       , 1.33                                       , 1.34                                       , 0.98                                       , 1.66                                       , 1.20                                       , 0.97                                       , 0.69                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 1.68                                         , 1.29                                         , 0.00                                         , 0.00                                         , 0.00                                          , 54.49                                         , 561.04                                        , 397.94                                        , 401.09                                        , 293.99                                        , 498.66                                        , 361.34                                        , 290.46                                        , 207.83                                        , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 503.68                                          , 388.10                                          , 0.00                                            , 0.00                                            
+P19     , 1001 -- 1100   , 0.30                                       , 0.01                                       , 1.74                                       , 2.27                                       , 2.00                                       , 2.14                                       , 1.87                                       , 0.87                                       , 0.87                                       , 1.44                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.33                                         , 0.00                                         , 0.04                                         , 0.04                                         , 89.24                                         , 1.68                                          , 521.58                                        , 681.25                                        , 600.50                                        , 643.18                                        , 562.04                                        , 261.08                                        , 262.32                                        , 432.59                                        , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 98.96                                           , 0.00                                            , 11.80                                           , 11.40                                           
+P20     , 901 -- 1000    , 0.00                                       , 0.00                                       , 2.74                                       , 2.62                                       , 3.72                                       , 3.41                                       , 2.91                                       , 3.60                                       , 3.59                                       , 2.89                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.16                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 821.48                                        , 786.90                                        , 1117.39                                       , 1022.21                                       , 872.04                                        , 1080.32                                       , 1079.02                                       , 866.15                                        , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 48.45                                           , 0.00                                            , 0.00                                            , 0.00                                            
+P21     , 801 -- 900     , 0.00                                       , 0.00                                       , 1.34                                       , 1.16                                       , 0.60                                       , 1.03                                       , 0.33                                       , 0.34                                       , 0.33                                       , 0.41                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 400.91                                        , 347.42                                        , 180.03                                        , 308.16                                        , 98.65                                         , 101.35                                        , 100.54                                        , 122.38                                        , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P22     , 701 -- 800     , 0.00                                       , 0.00                                       , 0.00                                       , 0.11                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.60                                          , 33.59                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P23     , 601 -- 700     , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P24     , 501 -- 600     , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.62                                          , 0.00                                          , 0.83                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P25     , 401 -- 500     , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+P26     , <= 400         , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                       , 0.00                                        , 0.00                                        , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                         , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                          , 0.00                                           , 0.00                                           , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            , 0.00                                            
+CPU Idle, 0              , 12.40                                      , 43.44                                      , 42.80                                      , 40.41                                      , 33.69                                      , 40.27                                      , 35.83                                      , 42.31                                      , 43.03                                      , 43.42                                      , 99.98                                       , 99.97                                       , 99.97                                        , 99.98                                        , 15.69                                        , 43.78                                        , 99.96                                        , 99.96                                        , 3723.12                                       , 13038.84                                      , 12847.31                                      , 12129.63                                      , 10112.31                                      , 12086.56                                      , 10755.23                                      , 12699.73                                      , 12916.06                                      , 13031.59                                      , 30007.48                                       , 30006.95                                       , 30006.27                                        , 30007.57                                        , 4710.47                                         , 13139.53                                        , 30002.98                                        , 30003.38                                        
+
+CPU P-State/Frequency Summary: Total Samples Received
+CPU ID                         , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+------                         , ------------------, ----------------------------, ----------------------------, ----------------------------
+CPU/Package_0/Core_0/Thread_0  , 316               , 0.14                        , 105.89                      , 95.00                       
+CPU/Package_0/Core_0/Thread_1  , 191               , 0.17                        , 2958.15                     , 148.06                      
+CPU/Package_0/Core_1/Thread_2  , 237               , 0.17                        , 1270.09                     , 126.59                      
+CPU/Package_0/Core_2/Thread_3  , 251               , 0.17                        , 1391.00                     , 119.70                      
+CPU/Package_0/Core_3/Thread_4  , 280               , 0.17                        , 570.09                      , 107.25                      
+CPU/Package_0/Core_4/Thread_5  , 241               , 0.17                        , 1037.92                     , 124.54                      
+CPU/Package_0/Core_5/Thread_6  , 252               , 0.16                        , 967.53                      , 119.16                      
+CPU/Package_0/Core_6/Thread_7  , 218               , 0.16                        , 1755.44                     , 137.67                      
+CPU/Package_0/Core_7/Thread_8  , 199               , 0.16                        , 1754.08                     , 150.55                      
+CPU/Package_0/Core_8/Thread_9  , 184               , 0.16                        , 2858.23                     , 162.89                      
+CPU/Package_0/Core_9/Thread_10 , 4                 , 0.06                        , 25158.68                    , 9376.55                     
+CPU/Package_0/Core_9/Thread_11 , 4                 , 0.06                        , 25158.55                    , 9376.52                     
+CPU/Package_0/Core_10/Thread_12, 4                 , 0.02                        , 25158.41                    , 9376.47                     
+CPU/Package_0/Core_10/Thread_13, 4                 , 0.02                        , 25158.28                    , 9376.43                     
+CPU/Package_0/Core_11/Thread_14, 298               , 0.15                        , 291.26                      , 100.75                      
+CPU/Package_0/Core_11/Thread_15, 167               , 0.15                        , 2935.55                     , 179.56                      
+CPU/Package_0/Core_12/Thread_16, 4                 , 0.00                        , 25157.91                    , 9376.31                     
+CPU/Package_0/Core_13/Thread_17, 3                 , 2971.05                     , 25157.65                    , 14064.35                    
+
+=========================================
+HWP Capabilities - Guaranteed-Performance
+=========================================
+
+HWP Capabilities - Guaranteed-Performance Summary - Sampled: Min/Max/Avg
+Thread                         , Min , Max , Avg    , Time-weighted Avg
+------                         , --- , --- , ---    , -----------------
+CPU/Package_0/Core_0/Thread_0  , 1500, 1500, 1500.00, 1500.00          
+CPU/Package_0/Core_0/Thread_1  , 1500, 1500, 1500.00, 1500.00          
+CPU/Package_0/Core_1/Thread_2  , 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_2/Thread_3  , 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_3/Thread_4  , 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_4/Thread_5  , 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_5/Thread_6  , 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_6/Thread_7  , 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_7/Thread_8  , 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_8/Thread_9  , 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_9/Thread_10 , 1500, 1500, 1500.00, 1500.00          
+CPU/Package_0/Core_9/Thread_11 , 1500, 1500, 1500.00, 1500.00          
+CPU/Package_0/Core_10/Thread_12, 1500, 1500, 1500.00, 1500.00          
+CPU/Package_0/Core_10/Thread_13, 1500, 1500, 1500.00, 1500.00          
+CPU/Package_0/Core_11/Thread_14, 1500, 1500, 1500.00, 1500.00          
+CPU/Package_0/Core_11/Thread_15, 1500, 1500, 1500.00, 1500.00          
+CPU/Package_0/Core_12/Thread_16, 700 , 700 , 700.00 , 700.00           
+CPU/Package_0/Core_13/Thread_17, 700 , 700 , 700.00 , 700.00           
+
+======================================
+HWP Capabilities - Highest-Performance
+======================================
+
+HWP Capabilities - Highest-Performance Summary - Sampled: Min/Max/Avg
+Thread                         , Min , Max , Avg    , Time-weighted Avg
+------                         , --- , --- , ---    , -----------------
+CPU/Package_0/Core_0/Thread_0  , 5700, 5700, 5700.00, 5700.00          
+CPU/Package_0/Core_0/Thread_1  , 5700, 5700, 5700.00, 5700.00          
+CPU/Package_0/Core_1/Thread_2  , 3600, 3600, 3600.00, 3600.00          
+CPU/Package_0/Core_2/Thread_3  , 3600, 3600, 3600.00, 3600.00          
+CPU/Package_0/Core_3/Thread_4  , 3600, 3600, 3600.00, 3600.00          
+CPU/Package_0/Core_4/Thread_5  , 3600, 3600, 3600.00, 3600.00          
+CPU/Package_0/Core_5/Thread_6  , 3600, 3600, 3600.00, 3600.00          
+CPU/Package_0/Core_6/Thread_7  , 3600, 3600, 3600.00, 3600.00          
+CPU/Package_0/Core_7/Thread_8  , 3600, 3600, 3600.00, 3600.00          
+CPU/Package_0/Core_8/Thread_9  , 3600, 3600, 3600.00, 3600.00          
+CPU/Package_0/Core_9/Thread_10 , 5700, 5700, 5700.00, 5700.00          
+CPU/Package_0/Core_9/Thread_11 , 5700, 5700, 5700.00, 5700.00          
+CPU/Package_0/Core_10/Thread_12, 5700, 5700, 5700.00, 5700.00          
+CPU/Package_0/Core_10/Thread_13, 5700, 5700, 5700.00, 5700.00          
+CPU/Package_0/Core_11/Thread_14, 5700, 5700, 5700.00, 5700.00          
+CPU/Package_0/Core_11/Thread_15, 5700, 5700, 5700.00, 5700.00          
+CPU/Package_0/Core_12/Thread_16, 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_13/Thread_17, 2500, 2500, 2500.00, 2500.00          
+
+=====================================
+HWP Capabilities - Lowest-Performance
+=====================================
+
+HWP Capabilities - Lowest-Performance Summary - Sampled: Min/Max/Avg
+Thread                         , Min, Max, Avg   , Time-weighted Avg
+------                         , ---, ---, ---   , -----------------
+CPU/Package_0/Core_0/Thread_0  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_0/Thread_1  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_1/Thread_2  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_2/Thread_3  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_3/Thread_4  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_4/Thread_5  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_5/Thread_6  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_6/Thread_7  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_7/Thread_8  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_8/Thread_9  , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_9/Thread_10 , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_9/Thread_11 , 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_10/Thread_12, 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_10/Thread_13, 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_11/Thread_14, 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_11/Thread_15, 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_12/Thread_16, 100, 100, 100.00, 100.00           
+CPU/Package_0/Core_13/Thread_17, 100, 100, 100.00, 100.00           
+
+=============================================
+HWP Capabilities - Most-Efficient-Performance
+=============================================
+
+HWP Capabilities - Most-Efficient-Performance Summary - Sampled: Min/Max/Avg
+Thread                         , Min , Max , Avg    , Time-weighted Avg
+------                         , --- , --- , ---    , -----------------
+CPU/Package_0/Core_0/Thread_0  , 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_0/Thread_1  , 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_1/Thread_2  , 1000, 1000, 1000.00, 1000.00          
+CPU/Package_0/Core_2/Thread_3  , 1000, 1000, 1000.00, 1000.00          
+CPU/Package_0/Core_3/Thread_4  , 1000, 1000, 1000.00, 1000.00          
+CPU/Package_0/Core_4/Thread_5  , 1000, 1000, 1000.00, 1000.00          
+CPU/Package_0/Core_5/Thread_6  , 1000, 1000, 1000.00, 1000.00          
+CPU/Package_0/Core_6/Thread_7  , 1000, 1000, 1000.00, 1000.00          
+CPU/Package_0/Core_7/Thread_8  , 1000, 1000, 1000.00, 1000.00          
+CPU/Package_0/Core_8/Thread_9  , 1000, 1000, 1000.00, 1000.00          
+CPU/Package_0/Core_9/Thread_10 , 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_9/Thread_11 , 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_10/Thread_12, 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_10/Thread_13, 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_11/Thread_14, 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_11/Thread_15, 2500, 2500, 2500.00, 2500.00          
+CPU/Package_0/Core_12/Thread_16, 1100, 1100, 1100.00, 1100.00          
+CPU/Package_0/Core_13/Thread_17, 1100, 1100, 1100.00, 1100.00          
+
+============================
+Integrated Graphics C-State 
+============================
+
+Integrated Graphics C-State  Summary: Residency (Percentage and Time)
+C-State, iGPU/Graphics Residency (%), iGPU/Graphics Residency (msec)
+-------, ---------------------------, ------------------------------
+RC0    , 7.41                       , 2224.43                       
+RC6    , 92.59                      , 27790.41                      
+
+Integrated Graphics C-State  Summary: Total Samples Received
+Integrated Graphics IP blocks, Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+-----------------------------, ------------------, ----------------------------, ----------------------------, ----------------------------
+iGPU/Graphics                , 327               , 53.72                       , 102.55                      , 91.79                       
+
+======================================
+Integrated Graphics Slice Concurrency 
+======================================
+
+Note: 0 slice active time includes both time when GT is powered off (RC6 or not yet booted) and GT is in RC0 but no slices are active.
+
+Integrated Graphics Slice Concurrency  Summary: Residency (Percentage and Time)
+# Active Slices, iGPU/Graphics Residency (%), iGPU/Graphics Residency (msec)
+---------------, ---------------------------, ------------------------------
+0              , 100.00                     , 30014.83                      
+
+Integrated Graphics Slice Concurrency  Summary: Total Samples Received
+Integrated Graphics IP blocks, Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+-----------------------------, ------------------, ----------------------------, ----------------------------, ----------------------------
+iGPU/Graphics                , 327               , 53.72                       , 102.55                      , 91.79                       
+
+=================================
+Integrated GPU Throttling Reasons
+=================================
+
+Integrated GPU Throttling Reasons Summary - Sampled: Counts
+                     , Not Reason, Reason
+                     , ----------, ------
+PROCHOT              , 328       , 0     
+THERMAL              , 328       , 0     
+RATL                 , 328       , 0     
+VR-THERMAL-ALERT     , 328       , 0     
+VR-TDC               , 328       , 0     
+OTHER                , 316       , 12    
+PBM-PL1              , 328       , 0     
+PBM-PL2              , 328       , 0     
+INEFFICIENT-OPERATION, 328       , 0     
+
+Integrated GPU Throttling Reasons Summary - Sampled: Total Samples Received
+                     , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+                     , ------------------, ----------------------------, ----------------------------, ----------------------------
+PROCHOT              , 328               , 53.72                       , 102.55                      , 91.79                       
+THERMAL              , 328               , 53.72                       , 102.55                      , 91.79                       
+RATL                 , 328               , 53.72                       , 102.55                      , 91.79                       
+VR-THERMAL-ALERT     , 328               , 53.72                       , 102.55                      , 91.79                       
+VR-TDC               , 328               , 53.72                       , 102.55                      , 91.79                       
+OTHER                , 328               , 53.72                       , 102.55                      , 91.79                       
+PBM-PL1              , 328               , 53.72                       , 102.55                      , 91.79                       
+PBM-PL2              , 328               , 53.72                       , 102.55                      , 91.79                       
+INEFFICIENT-OPERATION, 328               , 53.72                       , 102.55                      , 91.79                       
+
+==========================================
+Filtered Integrated GPU Throttling Reasons
+==========================================
+
+Filtered Integrated GPU Throttling Reasons Summary - Sampled: Total Samples Received
+     , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+     , ------------------, ----------------------------, ----------------------------, ----------------------------
+OTHER, 12                , 917.22                      , 3581.80                     , 2068.06                     
+
+=====================================
+Integrated Graphics P-State/Frequency
+=====================================
+
+Note: Average calculation is based on all samples rather than all active samples (i.e. it includes GPU idle freq = 0). Time-weighted average adjusts the average based on length of time spent at a frequency.
+
+Integrated Graphics P-State/Frequency Summary - Sampled: Min/Max/Avg
+    , Min (MHz), Max (MHz), Avg (MHz), Time-weighted Avg (MHz)
+    , ---------, ---------, ---------, -----------------------
+iGPU, 0        , 1650     , 40.70    , 40.03                  
+
+Integrated Graphics P-State/Frequency Summary - Sampled: Counts
+Frequency (MHz), iGPU
+---------------, ----
+0              , 307 
+250            , 8   
+300            , 2   
+800            , 5   
+850            , 1   
+900            , 1   
+1050           , 1   
+1150           , 2   
+1650           , 1   
+
+Integrated Graphics P-State/Frequency Summary - Sampled: Approximated Residency (Percentage)
+Frequency (MHz), iGPU (%)
+---------------, --------
+0              , 93.71   
+250            , 2.39    
+300            , 0.60    
+800            , 1.50    
+850            , 0.30    
+900            , 0.30    
+1050           , 0.30    
+1150           , 0.60    
+1650           , 0.30    
+
+Integrated Graphics P-State/Frequency Summary - Sampled: Total Samples Received
+    , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+    , ------------------, ----------------------------, ----------------------------, ----------------------------
+iGPU, 328               , 53.72                       , 102.55                      , 91.79                       
+
+===================
+Temperature Metrics
+===================
+
+Temperature Metrics Summary - Sampled: Min/Max/Avg
+                     , Min (oC), Max (oC), Avg (oC), Time-weighted Avg (oC)
+                     , --------, --------, --------, ----------------------
+CPU/Package_0/Core_0 , 42      , 48      , 44.58   , 44.56                 
+CPU/Package_0/Core_1 , 43      , 48      , 45.33   , 44.96                 
+CPU/Package_0/Core_2 , 43      , 48      , 45.17   , 44.91                 
+CPU/Package_0/Core_3 , 43      , 48      , 44.88   , 44.91                 
+CPU/Package_0/Core_4 , 43      , 48      , 45.17   , 44.99                 
+CPU/Package_0/Core_5 , 42      , 47      , 44.32   , 44.14                 
+CPU/Package_0/Core_6 , 42      , 47      , 44.82   , 44.26                 
+CPU/Package_0/Core_7 , 43      , 47      , 44.92   , 44.26                 
+CPU/Package_0/Core_8 , 43      , 47      , 44.98   , 44.32                 
+CPU/Package_0/Core_9 , 41      , 43      , 42.00   , 42.74                 
+CPU/Package_0/Core_10, 40      , 42      , 41.00   , 41.68                 
+CPU/Package_0/Core_11, 41      , 49      , 43.92   , 43.92                 
+CPU/Package_0/Core_12, 46      , 48      , 47.00   , 47.74                 
+CPU/Package_0/Core_13, 47      , 48      , 47.25   , 47.83                 
+
+Temperature Metrics Summary - Sampled: Counts
+Temperature (oC), CPU/Package_0/Core_0, CPU/Package_0/Core_1, CPU/Package_0/Core_2, CPU/Package_0/Core_3, CPU/Package_0/Core_4, CPU/Package_0/Core_5, CPU/Package_0/Core_6, CPU/Package_0/Core_7, CPU/Package_0/Core_8, CPU/Package_0/Core_9, CPU/Package_0/Core_10, CPU/Package_0/Core_11, CPU/Package_0/Core_12, CPU/Package_0/Core_13
+----------------, --------------------, --------------------, --------------------, --------------------, --------------------, --------------------, --------------------, --------------------, --------------------, --------------------, ---------------------, ---------------------, ---------------------, ---------------------
+40              , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 2                    , 0                    , 0                    , 0                    
+41              , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 1                   , 0                    , 7                    , 0                    , 0                    
+42              , 32                  , 0                   , 0                   , 0                   , 0                   , 12                  , 4                   , 0                   , 0                   , 2                   , 2                    , 68                   , 0                    , 0                    
+43              , 51                  , 9                   , 14                  , 30                  , 12                  , 73                  , 37                  , 30                  , 24                  , 1                   , 0                    , 50                   , 0                    , 0                    
+44              , 47                  , 70                  , 80                  , 111                 , 80                  , 53                  , 45                  , 44                  , 36                  , 0                   , 0                    , 62                   , 0                    , 0                    
+45              , 102                 , 43                  , 50                  , 40                  , 44                  , 58                  , 54                  , 50                  , 57                  , 0                   , 0                    , 78                   , 0                    , 0                    
+46              , 64                  , 69                  , 69                  , 64                  , 69                  , 49                  , 65                  , 62                  , 54                  , 0                   , 0                    , 32                   , 1                    , 0                    
+47              , 20                  , 40                  , 32                  , 33                  , 33                  , 7                   , 13                  , 13                  , 13                  , 0                   , 0                    , 10                   , 2                    , 3                    
+48              , 2                   , 6                   , 6                   , 2                   , 3                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                    , 1                    , 1                    , 1                    
+49              , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                   , 0                    , 1                    , 0                    , 0                    
+
+Temperature Metrics Summary - Sampled: Approximated Residency (Percentage)
+Temperature (oC), CPU/Package_0/Core_0 (%), CPU/Package_0/Core_1 (%), CPU/Package_0/Core_2 (%), CPU/Package_0/Core_3 (%), CPU/Package_0/Core_4 (%), CPU/Package_0/Core_5 (%), CPU/Package_0/Core_6 (%), CPU/Package_0/Core_7 (%), CPU/Package_0/Core_8 (%), CPU/Package_0/Core_9 (%), CPU/Package_0/Core_10 (%), CPU/Package_0/Core_11 (%), CPU/Package_0/Core_12 (%), CPU/Package_0/Core_13 (%)
+----------------, ------------------------, ------------------------, ------------------------, ------------------------, ------------------------, ------------------------, ------------------------, ------------------------, ------------------------, ------------------------, -------------------------, -------------------------, -------------------------, -------------------------
+40              , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 16.12                    , 0.00                     , 0.00                     , 0.00                     
+41              , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 9.86                    , 0.00                     , 2.31                     , 0.00                     , 0.00                     
+42              , 10.34                   , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 7.90                    , 4.95                    , 0.00                    , 0.00                    , 6.65                    , 83.88                    , 21.89                    , 0.00                     , 0.00                     
+43              , 16.19                   , 8.51                    , 10.91                   , 10.09                   , 5.96                    , 32.69                   , 35.08                   , 42.87                   , 39.53                   , 83.49                   , 0.00                     , 15.68                    , 0.00                     , 0.00                     
+44              , 14.65                   , 39.03                   , 36.34                   , 39.55                   , 40.05                   , 18.41                   , 17.73                   , 16.52                   , 16.89                   , 0.00                    , 0.00                     , 20.72                    , 0.00                     , 0.00                     
+45              , 32.00                   , 16.41                   , 17.59                   , 13.77                   , 15.78                   , 21.59                   , 17.30                   , 16.16                   , 20.32                   , 0.00                    , 0.00                     , 25.51                    , 0.00                     , 0.00                     
+46              , 20.14                   , 21.75                   , 22.79                   , 23.04                   , 26.06                   , 17.06                   , 20.72                   , 20.29                   , 18.53                   , 0.00                    , 0.00                     , 10.08                    , 9.86                     , 0.00                     
+47              , 6.07                    , 12.46                   , 10.45                   , 12.47                   , 11.51                   , 2.36                    , 4.23                    , 4.15                    , 4.73                    , 0.00                    , 0.00                     , 3.10                     , 6.66                     , 16.52                    
+48              , 0.61                    , 1.83                    , 1.92                    , 1.08                    , 0.65                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                     , 0.31                     , 83.48                    , 83.48                    
+49              , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                    , 0.00                     , 0.40                     , 0.00                     , 0.00                     
+
+Temperature Metrics Summary - Sampled: Total Samples Received
+                     , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+                     , ------------------, ----------------------------, ----------------------------, ----------------------------
+CPU/Package_0/Core_0 , 318               , 59.43                       , 105.89                      , 94.68                       
+CPU/Package_0/Core_1 , 237               , 76.32                       , 1270.09                     , 127.18                      
+CPU/Package_0/Core_2 , 251               , 39.08                       , 1391.00                     , 120.06                      
+CPU/Package_0/Core_3 , 280               , 90.00                       , 570.09                      , 107.58                      
+CPU/Package_0/Core_4 , 241               , 3.28                        , 1037.92                     , 125.06                      
+CPU/Package_0/Core_5 , 252               , 23.27                       , 967.53                      , 119.58                      
+CPU/Package_0/Core_6 , 218               , 90.00                       , 1755.44                     , 138.32                      
+CPU/Package_0/Core_7 , 199               , 59.21                       , 1754.08                     , 151.59                      
+CPU/Package_0/Core_8 , 184               , 90.00                       , 2858.23                     , 164.01                      
+CPU/Package_0/Core_9 , 4                 , 1885.14                     , 25158.68                    , 10004.91                    
+CPU/Package_0/Core_10, 4                 , 1885.38                     , 25158.41                    , 10004.92                    
+CPU/Package_0/Core_11, 309               , 32.40                       , 218.63                      , 97.45                       
+CPU/Package_0/Core_12, 4                 , 1885.84                     , 25157.91                    , 10004.93                    
+CPU/Package_0/Core_13, 4                 , 1886.08                     , 25157.65                    , 10004.93                    
+
+=======================
+Ring Throttling Reasons
+=======================
+
+Ring Throttling Reasons Summary - Sampled: Counts
+                , Not Reason, Reason
+                , ----------, ------
+PROCHOT         , 328       , 0     
+THERMAL         , 328       , 0     
+RATL            , 328       , 0     
+VR-THERMAL-ALERT, 328       , 0     
+VR-TDC          , 328       , 0     
+OTHER           , 328       , 0     
+PBM-PL1         , 328       , 0     
+PBM-PL2         , 328       , 0     
+
+Ring Throttling Reasons Summary - Sampled: Total Samples Received
+                , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+                , ------------------, ----------------------------, ----------------------------, ----------------------------
+PROCHOT         , 328               , 53.72                       , 102.55                      , 91.79                       
+THERMAL         , 328               , 53.72                       , 102.55                      , 91.79                       
+RATL            , 328               , 53.72                       , 102.55                      , 91.79                       
+VR-THERMAL-ALERT, 328               , 53.72                       , 102.55                      , 91.79                       
+VR-TDC          , 328               , 53.72                       , 102.55                      , 91.79                       
+OTHER           , 328               , 53.72                       , 102.55                      , 91.79                       
+PBM-PL1         , 328               , 53.72                       , 102.55                      , 91.79                       
+PBM-PL2         , 328               , 53.72                       , 102.55                      , 91.79                       
+
+=================
+ACPI D-State (OS)
+=================
+
+Note: Incorrect PEP constraints may prevent devices from entering D3. Use Intel PEP Checker to review constraint issues if device is not entering D3 as expected.
+
+Note: D3Unknown time occurs when a device has entered D3 prior to starting a SoC Watch collection. This occurs because the collection does not capture the event needed to distinguish D3Cold from D3Hot so this time is labeled D3Unknown instead.
+
+Note: Some devices may display D3Hot instead of D3Cold or vice versa. To be certain check the PCIe LPM Summary table (-f pcie-lpm) if link is in L2/L3/Down state then device is in D3Cold and if link is in L1.1/L1.2 state then the device is in D3Hot.
+
+ACPI D-State Summary: Residency (Percentage and Time)
+Device ID , Device Class      , Friendly Name      , Instance Name                                                                                              , D0 (%), D1 (%), D2 (%), D3Hot (%), D3Cold (%), D3Unknown (%), D0 (msec), D1 (msec), D2 (msec), D3Hot (msec), D3Cold (msec), D3Unknown (msec)
+--------- , ------------      , -------------      , -------------                                                                                              , ------, ------, ------, ---------, ----------, -------------, ---------, ---------, ---------, ------------, -------------, ----------------
+0x22bb2ba0, SYSTEM            ,                    , PCI\VEN_8086&DEV_7D14&SUBSYS_3E7119E5&REV_04\3&11583659&1&00                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x27732b30, MONITOR           , monitor            , DISPLAY\EDO0142\4&2B61CA9&0&UID8388688                                                                     , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bb3ba0, DISPLAY           , igfxn              , PCI\VEN_8086&DEV_7D55&SUBSYS_3E7119E5&REV_08\3&11583659&1&10                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bb5ba0, SYSTEM            , ipf_cpu            , PCI\VEN_8086&DEV_7D03&SUBSYS_3E7119E5&REV_04\3&11583659&1&20                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c0dc40, DISKDRIVE         , disk               , SCSI\DISK&VEN_NVME&PROD_WD_PC_SN740_SDDP\5&E87D987&0&000000                                                , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bcfba0, SCSIADAPTER       , stornvme           , PCI\VEN_15B7&DEV_5017&SUBSYS_501715B7&REV_01\4&215265D7&0&0030                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbaba0, SYSTEM            , pci                , PCI\VEN_8086&DEV_7ECA&SUBSYS_3E7119E5&REV_10\3&11583659&1&30                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbbba0, SYSTEM            , IntcPMT            , PCI\VEN_8086&DEV_7D0D&SUBSYS_3E7119E5&REV_01\3&11583659&1&50                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bc4ba0, COMPUTEACCELERATOR, npu                , PCI\VEN_8086&DEV_7D1D&SUBSYS_3E7119E5&REV_04\3&11583659&1&58                                               , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x2a919b70, USB               , USBHUB3            , USB\ROOT_HUB30\4&1326F459&0&0                                                                              , 0.00  , 0.00  , 100.00, 0.00     , 0.00      , 0.00         , 0.00     , 0.00     , 30165.09 , 0.00        , 0.00         , 0.00            
+0x22bc5ba0, USB               , USBXHCI            , PCI\VEN_8086&DEV_7EC0&SUBSYS_3E7119E5&REV_10\3&11583659&1&68                                               , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x2b5064a0, HIDCLASS          , HidUsb             , USB\VID_046D&PID_C542\5&309C2069&0&4                                                                       , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x2b8acc30, HIDCLASS          , HidUsb             , USB\VID_3151&PID_8888&MI_00\6&189BE7F3&0&0000                                                              , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x2bb218a0, HIDCLASS          , HidUsb             , USB\VID_3151&PID_8888&MI_01\6&189BE7F3&0&0001                                                              , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x2b506850, USB               , usbccgp            , USB\VID_3151&PID_8888\5&309C2069&0&3                                                                       , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x286b4b20, CAMERA            , usbvideo           , USB\VID_3277&PID_00A0&MI_00\6&DB4B6C3&1&0000                                                               , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x2b8cb050, USB               , usbccgp            , USB\VID_3277&PID_00A0\0001                                                                                 , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x3034b010, MEDIA             , BthA2dp            , BTHENUM\{0000110B-0000-1000-8000-00805F9B34FB}_VID&000102B0_PID&0000\7&157D53C3&0&C8BC9CAFB31A_C00000000   , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x2b8cb400, BLUETOOTH         , BTHUSB             , USB\VID_8087&PID_0026\5&309C2069&0&10                                                                      , 56.07 , 0.00  , 43.93 , 0.00     , 0.00      , 0.00         , 16914.73 , 0.00     , 13250.37 , 0.00        , 0.00         , 0.00            
+0x2a6d8c00, USB               , USBHUB3            , USB\ROOT_HUB30\4&1D5A29BC&0&0                                                                              , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bc6ba0, USB               , USBXHCI            , PCI\VEN_8086&DEV_7E7D&SUBSYS_3E7119E5&REV_20\3&11583659&1&A0                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bb0050, NET               , Netwtw14           , PCI\VEN_8086&DEV_7E40&SUBSYS_00748086&REV_20\3&11583659&1&A3                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bb0400, SYSTEM            , iaLPSS2_I2C_MTL    , PCI\VEN_8086&DEV_7E78&SUBSYS_3E7119E5&REV_20\3&11583659&1&A8                                               , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x2853f9a0, SOFTWARECOMPONENT , DisplayEngine      , ACPI\CV000701\1                                                                                            , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bc1050, SYSTEM            , iaLPSS2_I2C_MTL    , PCI\VEN_8086&DEV_7E79&SUBSYS_3E7119E5&REV_20\3&11583659&1&A9                                               , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x22bc1400, SYSTEM            , MEIx64             , PCI\VEN_8086&DEV_7E70&SUBSYS_3E7119E5&REV_20\3&11583659&1&B0                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b53050, SYSTEM            , iaLPSS2_UART2_MTL  , PCI\VEN_8086&DEV_7E25&SUBSYS_3E7119E5&REV_20\3&11583659&1&F0                                               , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x284dd9a0, HIDCLASS          , thp_driver         , ACPI\HUAWEI_THP_DRIVER\4&B98E3C3&0                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b53400, SYSTEM            , iaLPSS2_SPI_MTL    , PCI\VEN_8086&DEV_7E27&SUBSYS_3E7119E5&REV_20\3&11583659&1&F2                                               , 86.21 , 0.00  , 0.00  , 13.79    , 0.00      , 0.00         , 26005.05 , 0.00     , 0.00     , 4160.05     , 0.00         , 0.00            
+0x22c36010, SYSTEM            ,                    , ACPI\PNP0B00\4&2E2A76AC&0                                                                                  , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bcc3c0, KEYBOARD          , i8042prt           , ACPI\MSFT0001\4&2E2A76AC&0                                                                                 , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bccb20, SYSTEM            ,                    , ACPI\PNP0C0D\5&15D725F4&1                                                                                  , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bd0aa0, SYSTEM            ,                    , ACPI\PNP0C0C\5&15D725F4&1                                                                                  , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bce9a0, BATTERY           , CmBatt             , ACPI\PNP0C0A\0                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b549a0, SENSOR            , SensorsAlsDriver   , ACPI\ACPI0008\5&15D725F4&1                                                                                 , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b55010, SYSTEM            , ipf_acpi           , ACPI\INTC1048\TFN1                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bcc770, SYSTEM            ,                    , ACPI\PNP0C09\1                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c62010, SYSTEM            , msisadrv           , PCI\VEN_8086&DEV_7E02&SUBSYS_3E7119E5&REV_20\3&11583659&1&F8                                               , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x285ae010, MEDIA             , IntcAzAudAddService, INTELAUDIO\FUNC_01&VEN_10EC&DEV_0256&SUBSYS_19E532B0&REV_1000\5&8D25CDA&0&0001                             , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x2b453890, MEDIA             , IntcUSB            , INTELAUDIO\CTLR_DEV_7E28&LINKTYPE_06&DEVTYPE_06&VEN_8086&DEV_AE50&SUBSYS_3E7119E5&REV_0001\0604            , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x2b453c40, MEDIA             , IntcBTAu           , INTELAUDIO\CTLR_DEV_7E28&LINKTYPE_03&DEVTYPE_00&VEN_8086&DEV_AE30&SUBSYS_3E7119E5&REV_0001\5&8D25CDA&0&0000, 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x2b030820, MEDIA             , IntcDMic           , INTELAUDIO\CTLR_DEV_7E28&LINKTYPE_02&DEVTYPE_00&VEN_8086&DEV_AE20&SUBSYS_3E7119E5&REV_0001\5&8D25CDA&0&0000, 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x22c623c0, SYSTEM            , IntcAudioBus       , PCI\VEN_8086&DEV_7E28&SUBSYS_3E7119E5&REV_20\3&11583659&1&FB                                               , 0.00  , 0.00  , 0.00  , 0.00     , 0.00      , 100.00       , 0.00     , 0.00     , 0.00     , 0.00        , 0.00         , 30165.09        
+0x22bbe3c0, HIDCLASS          , hidi2c             , ACPI\BLTP785\3&11583659&1                                                                                  , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c65010, HIDCLASS          , hidi2c             , ACPI\FTSC1000\3&11583659&1                                                                                 , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c653c0, HIDCLASS          , SpbNfcDriver       , ACPI\NTAG0001\3&11583659&1                                                                                 , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x229ce010, SYSTEM            , pci                , ACPI\PNP0A08\0                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b538e0, SYSTEM            , iaLPSS2_GPIO2_MTL  , ACPI\INTC1083\2&DABA3FF&1                                                                                  , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c638a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\0                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c628a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\1                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c648a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\2                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c658a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\3                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbe8a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\4                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c368a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\5                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbc8a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\6                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c668a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\7                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c66c50, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\8                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbf8a0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\9                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbfc50, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\A                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x226f8010, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\B                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x226f83c0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\C                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x226f7010, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\D                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x226f73c0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\E                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x229e2010, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\F                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x229e23c0, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\10                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b9a050, PROCESSOR         , intelppm           , ACPI\GENUINEINTEL_-_INTEL64_FAMILY_6_MODEL_170_-_INTEL(R)_CORE(TM)_ULTRA_5_125H\11                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b9a400, SYSTEM            , acpipagr           , ACPI\ACPI000C\2&DABA3FF&1                                                                                  , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b9a7b0, SYSTEM            , WmiAcpi            , ACPI\PNP0C14\DSARDEV                                                                                       , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22b9ab60, SYSTEM            , WmiAcpi            , ACPI\PNP0C14\TESTDEV                                                                                       , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c35050, SYSTEM            , intelpep           , ACPI\INT33A1\1                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c35400, BIOMETRIC         , WUDFRd             , ACPI\SIL6250\1                                                                                             , 0.00  , 0.00  , 100.00, 0.00     , 0.00      , 0.00         , 0.00     , 0.00     , 30165.09 , 0.00        , 0.00         , 0.00            
+0x22c357b0, BATTERY           , CmBatt             , ACPI\ACPI0003\2&DABA3FF&1                                                                                  , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c35b60, SYSTEM            , WDTDrv             , ACPI\WDT0001\0                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c57050, SYSTEM            ,                    , ACPI\PNP0A05\6                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c57400, SECURITYDEVICES   , TPM                , ACPI\INTC7001\2&DABA3FF&1                                                                                  , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x2856c9e0, SYSTEM            , ipf_acpi           , ACPI\INTC1063\TFN1                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x288ab9e0, SYSTEM            , ipf_acpi           , ACPI\INTC1062\CHRG                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c577b0, SYSTEM            , ipf_acpi           , ACPI\INTC1042\IETM                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c57b60, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN0                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbd010, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN1                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbd3c0, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN2                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbd770, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN3                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22bbdb20, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN4                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c58010, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN5                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c583c0, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN6                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c58770, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN8                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c58b20, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEN9                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c59010, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SEND                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c593c0, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENE                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c59770, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENF                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c59b20, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENG                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5a010, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENH                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5a3c0, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENI                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5a770, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENJ                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5ab20, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENK                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5b010, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENL                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5b3c0, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENM                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5b770, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENN                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5bb20, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENO                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5c010, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENP                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5c3c0, SYSTEM            , ipf_acpi           , ACPI\INTC10A1\SENQ                                                                                         , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5c770, SYSTEM            , WmiAcpi            , ACPI\PNP0C14\HWMI                                                                                          , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5d010, SYSTEM            ,                    , ACPI\PNP0C0B\0                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5d3c0, SYSTEM            ,                    , ACPI\PNP0C0B\1                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5d770, SYSTEM            ,                    , ACPI\PNP0C0B\2                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5db20, SYSTEM            ,                    , ACPI\PNP0C0B\3                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5e010, SYSTEM            ,                    , ACPI\PNP0C0B\4                                                                                             , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x22c5e3c0, SYSTEM            ,                    , ACPI\THERMALZONE\TZ00                                                                                      , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+0x32911aa0, MEDIA             , MSKSSRV            , SW\{96E080C7-143C-11D1-B40F-00A0C9223196}\{3C0D501A-140B-11D1-B40F-00A0C9223196}                           , 100.00, 0.00  , 0.00  , 0.00     , 0.00      , 0.00         , 30165.09 , 0.00     , 0.00     , 0.00        , 0.00         , 0.00            
+
+=================
+ACPI F-state (OS)
+=================
+
+ACPI F-State Summary: Residency (Percentage and Time)
+Component Name(Device ID), F0 (%), F1 (%), F0 (msec), F1 (msec)
+-------------------------, ------, ------, ---------, ---------
+Component0 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component1 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component2 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component3 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component4 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component5 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component6 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component7 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component8 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component9 (0x22b538e0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component10 (0x22b538e0) , 100.00, 0.00  , 30165.09 , 0.00     
+Component11 (0x22b538e0) , 100.00, 0.00  , 30165.09 , 0.00     
+Component12 (0x22b538e0) , 100.00, 0.00  , 30165.09 , 0.00     
+Component13 (0x22b538e0) , 100.00, 0.00  , 30165.09 , 0.00     
+Component14 (0x22b538e0) , 100.00, 0.00  , 30165.09 , 0.00     
+Component0 (0x22bb3ba0)  , 100.00, 0.00  , 30165.09 , 0.00     
+Component1 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component2 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component3 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component4 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component5 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component6 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component7 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component8 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component9 (0x22bb3ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component10 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component11 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component12 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component13 (0x22bb3ba0) , 100.00, 0.00  , 30165.09 , 0.00     
+Component14 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component15 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component16 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component17 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component18 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component19 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component20 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component21 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component22 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component23 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component24 (0x22bb3ba0) , 0.00  , 100.00, 0.00     , 30165.09 
+Component0 (0x22bc4ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component1 (0x22bc4ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component2 (0x22bc4ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+Component3 (0x22bc4ba0)  , 0.00  , 100.00, 0.00     , 30165.09 
+
+===================================
+DDR Bandwidth Requests by Component
+===================================
+
+Note: A partial request increments the request count. However partial requests occurring on the same cache line are combined into a single transfer.
+Therefore the bandwidth shown (#Requests * (scaleFactor) / time) may be higher than actual bandwidth (#Requests includes every read & write request).
+
+DDR Bandwidth Requests by Component Summary: Average Rate and Total
+Device, Event                , Average Rate (MB/s), Total (bytes)  
+------, -----                , -------------------, -------------  
+DDR   , MC0-CH0-SUBCH0-READS , 953.06             , 28720010816.00 
+DDR   , MC0-CH0-SUBCH0-WRITES, 450.93             , 13588692928.00 
+DDR   , MC0-CH0-SUBCH1-READS , 952.85             , 28713590944.00 
+DDR   , MC0-CH0-SUBCH1-WRITES, 450.74             , 13582722880.00 
+DDR   , MC0-CH1-SUBCH0-READS , 953.39             , 28730022080.00 
+DDR   , MC0-CH1-SUBCH0-WRITES, 450.75             , 13583152096.00 
+DDR   , MC0-CH1-SUBCH1-READS , 967.81             , 29164608480.00 
+DDR   , MC0-CH1-SUBCH1-WRITES, 450.70             , 13581509312.00 
+DDR   , MC1-CH0-SUBCH0-READS , 952.58             , 28705580736.00 
+DDR   , MC1-CH0-SUBCH0-WRITES, 450.81             , 13584879616.00 
+DDR   , MC1-CH0-SUBCH1-READS , 954.13             , 28752251648.00 
+DDR   , MC1-CH0-SUBCH1-WRITES, 450.77             , 13583838208.00 
+DDR   , MC1-CH1-SUBCH0-READS , 953.10             , 28721364352.00 
+DDR   , MC1-CH1-SUBCH0-WRITES, 450.83             , 13585631296.00 
+DDR   , MC1-CH1-SUBCH1-READS , 953.56             , 28735187584.00 
+DDR   , MC1-CH1-SUBCH1-WRITES, 450.81             , 13584881152.00 
+Total ,                      , 11246.83           , 338917924128.00
+
+DDR Bandwidth Requests by Component Summary: Total Samples Received
+Device, Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+------, ------------------, ----------------------------, ----------------------------, ----------------------------
+DDR   , 327               , 53.72                       , 102.55                      , 91.79                       
+
+=============================================================
+Platform Monitoring Technology CPU Package C-States Residency
+=============================================================
+
+Platform Monitoring Technology CPU Package C-States Residency Summary: Residency (Percentage and Time)
+C-State, CDIE-0/Package Residency (%), CDIE-0/Package Residency (msec)
+-------, ----------------------------, -------------------------------
+PC0    , 100.00                      , 30014.78                       
+PC2    , 0.00                        , 0.00                           
+PC2R   , 0.00                        , 0.00                           
+PC3    , 0.00                        , 0.00                           
+PC6    , 0.00                        , 0.00                           
+PC7    , 0.00                        , 0.00                           
+PC8    , 0.00                        , 0.00                           
+PC9    , 0.00                        , 0.00                           
+PC10   , 0.00                        , 0.00                           
+
+Platform Monitoring Technology CPU Package C-States Residency Summary: Total Samples Received
+Package       , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+-------       , ------------------, ----------------------------, ----------------------------, ----------------------------
+CDIE-0/Package, 1                 , 30014.78                    , 30014.78                    , 30014.78                    
+
+====================================
+Compute Die (CDie) C-State Residency
+====================================
+
+Compute Die (CDie) C-State Residency Summary: Residency (Percentage and Time)
+State, CDIE-0 Residency (%), CDIE-0 Residency (msec)
+-----, --------------------, -----------------------
+DC0  , 100.00              , 30014.77               
+DC2.1, 0.00                , 0.00                   
+DC2.2, 0.00                , 0.00                   
+DC3.1, 0.00                , 0.00                   
+DC3.2, 0.00                , 0.00                   
+DC6  , 0.00                , 0.00                   
+
+Compute Die (CDie) C-State Residency Summary: Total Samples Received
+      , Total # of samples, Min sampling interval (msec), Max sampling interval (msec), Avg sampling interval (msec)
+      , ------------------, ----------------------------, ----------------------------, ----------------------------
+CDIE-0, 1                 , 30014.77                    , 30014.77                    , 30014.77                    
+

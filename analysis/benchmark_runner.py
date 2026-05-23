@@ -535,7 +535,7 @@ class BenchmarkRunner:
             
         return output_path
 
-    def _run_mode(self, mode: BenchmarkMode) -> Tuple[float, float, float, float, Path, List[str], bool]:
+    def _run_mode(self, mode: BenchmarkMode) -> Tuple[float, float, float, float, float, Path, List[str], bool]:
         import gc
         self._log_progress(
             f"start mode={mode.slug} model={self.config.model_path.name} device={self.config.device} "
@@ -584,26 +584,28 @@ class BenchmarkRunner:
 
         mean_latency = float(np.mean(latencies_ms))
         std_latency = float(np.std(latencies_ms))
+        p95_latency = float(np.percentile(latencies_ms, 95))
         self._log_progress(
-            f"mode complete mode={mode.slug} mean_ms={mean_latency:.3f} std_ms={std_latency:.3f}"
+            f"mode complete mode={mode.slug} mean_ms={mean_latency:.3f} std_ms={std_latency:.3f} p95_ms={p95_latency:.3f}"
         )
         
         # Explicitly destroy the session to free NPU/RAM resources
         del session
         gc.collect()
         
-        return mean_latency, std_latency, cpu_end, peak_mem_mb, profiling_path, active_providers, fallback_to_cpu
+        return mean_latency, std_latency, p95_latency, cpu_end, peak_mem_mb, profiling_path, active_providers, fallback_to_cpu
 
     def run(self) -> pd.DataFrame:
         records = []
 
         for mode in [BenchmarkMode.BASELINE, BenchmarkMode.OPTIMIZED]:
-            mean_latency, std_latency, cpu_percent, peak_mem_mb, profile_path, active_providers, fallback_to_cpu = self._run_mode(mode)
+            mean_latency, std_latency, p95_latency, cpu_percent, peak_mem_mb, profile_path, active_providers, fallback_to_cpu = self._run_mode(mode)
             records.append(
                 {
                     "mode": mode.slug,
                     "avg_latency_ms": mean_latency,
                     "std_latency_ms": std_latency,
+                    "p95_latency_ms": p95_latency,
                     "peak_memory_mb": peak_mem_mb,
                     "cpu_utilization_pct": cpu_percent,
                     "iterations": self.config.iterations,

@@ -1,3 +1,3 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,99.25989300012589,9.971535943204534,1172.50390625,334.5,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\vit-tiny\vit-tiny_fp32\run_01\baseline_profiling.json
-optimized,108.50936300004832,10.689545993512239,1172.50390625,308.8,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\vit-tiny\vit-tiny_fp32\run_01\optimized_profiling.json
+mode,avg_latency_ms,std_latency_ms,p95_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
+baseline,102.39641199979815,9.666785623125724,117.86904499385852,1207.296875,316.5,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\vit-tiny\vit-tiny_fp32\run_01\baseline_profiling.json
+optimized,100.99471099951188,8.7715551460496,115.85978499570045,1207.296875,292.9,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\vit-tiny\vit-tiny_fp32\run_01\optimized_profiling.json

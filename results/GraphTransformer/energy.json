@@ -1,3 +1,68 @@
 {
-  "error": "socwatch_disabled"
+  "NPU_fp32": {
+    "device": "NPU",
+    "precision": "fp32",
+    "duration_s": 8.4886370000022,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null,
+    "error": "hw_access_blocked (Hyper-V/VBS/HVCI enabled?)"
+  },
+  "NPU_int8": {
+    "device": "NPU",
+    "precision": "int8",
+    "duration_s": 7.307441799988737,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null,
+    "error": "hw_access_blocked (Hyper-V/VBS/HVCI enabled?)"
+  },
+  "GPU_fp32": {
+    "device": "GPU",
+    "precision": "fp32",
+    "duration_s": 7.136445399999502,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null,
+    "error": "hw_access_blocked (Hyper-V/VBS/HVCI enabled?)"
+  },
+  "GPU_int8": {
+    "device": "GPU",
+    "precision": "int8",
+    "duration_s": 7.1080369999981485,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null,
+    "error": "hw_access_blocked (Hyper-V/VBS/HVCI enabled?)"
+  },
+  "CPU_fp32": {
+    "device": "CPU",
+    "precision": "fp32",
+    "duration_s": 7.153654199995799,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null,
+    "error": "hw_access_blocked (Hyper-V/VBS/HVCI enabled?)"
+  },
+  "CPU_int8": {
+    "device": "CPU",
+    "precision": "int8",
+    "duration_s": 7.256209699989995,
+    "package_mW": null,
+    "ia_mW": null,
+    "gt_mW": null,
+    "dram_mW": null,
+    "total_mJ": null,
+    "error": "hw_access_blocked (Hyper-V/VBS/HVCI enabled?)"
+  }
 }

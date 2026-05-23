@@ -1,4 +1,4 @@
 dataset,num_nodes,num_edges,num_features,num_classes,edges_per_node,error
-ogbn-arxiv,,,,,,maximum recursion depth exceeded while calling a Python object
-ogbn-proteins,,,,,,maximum recursion depth exceeded while calling a Python object
-ogbn-products,,,,,,maximum recursion depth exceeded while calling a Python object
+ogbn-arxiv,169343,1166243,128,40,6.886868663009395,
+ogbn-proteins,87577,39561252,8,112,451.7310709432842,
+ogbn-products,2449029,61859140,100,47,25.258639240286662,

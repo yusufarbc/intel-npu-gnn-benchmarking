@@ -1,3 +1,3 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,40.59424700040836,3.2051716480058277,8637.83203125,723.8,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GraphSAGE\GraphSAGE_int8\run_02\baseline_profiling.json
-optimized,40.33294399865554,3.456468280558188,8637.83203125,740.1,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GraphSAGE\GraphSAGE_int8\run_02\optimized_profiling.json
+mode,avg_latency_ms,std_latency_ms,p95_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
+baseline,39.792125000676606,2.2790824853939657,44.58828999340767,8634.6796875,714.1,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GraphSAGE\GraphSAGE_int8\run_02\baseline_profiling.json
+optimized,40.382837000797736,2.897837433854913,45.24688499586773,8634.6796875,720.7,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GraphSAGE\GraphSAGE_int8\run_02\optimized_profiling.json

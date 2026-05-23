@@ -1,0 +1,3 @@
+mode,avg_latency_ms,std_latency_ms,p95_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
+baseline,22.642754000698915,8.206881853402523,41.64132000951212,8136.8046875,1110.9,100,CPUExecutionProvider,True,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\MPNN\MPNN_fp32\run_01\baseline_profiling.json
+optimized,16.90528299935977,2.3357542609979474,22.298759995464934,8137.0078125,1135.9,100,CPUExecutionProvider,True,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\MPNN\MPNN_fp32\run_01\optimized_profiling.json

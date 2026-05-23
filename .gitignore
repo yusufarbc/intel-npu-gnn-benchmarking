@@ -208,6 +208,9 @@ __marimo__/
 
 # Large model files (too big for GitHub)
 data/ogbn_arxiv/
+
+# SoCWatch energy trace logs (ETW - very large)
+*.etl
 data/ogbn_products/
 data/ogbn_proteins/
 *.onnx

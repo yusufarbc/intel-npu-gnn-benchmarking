@@ -1,8 +1,8 @@
 model,dataset,device,precision,mean_ms,std_ms,p95_ms
-GCN,ogbn-arxiv,GPU,fp32,7.3015,0.1355,
-GCN,ogbn-arxiv,NPU,fp32,7.7625,0.178,
-GCN,ogbn-arxiv,NPU,int8,7.1925,0.1614,
-GCN,ogbn-products,NPU,fp32,7.8523,0.7661,
-GCN,ogbn-products,NPU,int8,7.1075,0.2413,
-GCN,ogbn-proteins,NPU,fp32,8.0537,0.2375,
-GCN,ogbn-proteins,NPU,int8,7.4019,0.3558,
+GCN,ogbn-arxiv,GPU,fp32,7.5184,0.123,8.524
+GCN,ogbn-arxiv,NPU,fp32,7.6546,0.1698,11.6483
+GCN,ogbn-arxiv,NPU,int8,7.4511,0.0928,10.2791
+GCN,ogbn-products,NPU,fp32,8.0198,0.8448,11.2494
+GCN,ogbn-products,NPU,int8,7.7361,0.4291,11.0243
+GCN,ogbn-proteins,NPU,fp32,8.0593,0.1816,11.0891
+GCN,ogbn-proteins,NPU,int8,7.5595,0.3437,9.6845

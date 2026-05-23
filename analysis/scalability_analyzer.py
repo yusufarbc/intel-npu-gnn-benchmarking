@@ -489,6 +489,7 @@ class MultiModelPipeline:
 
     def _benchmark_model(self, model_path: Path) -> Dict[str, Any]:
         baseline_lats, optimized_lats = [], []
+        baseline_p95s, optimized_p95s = [], []
         baseline_fallbacks: List[bool] = []
         optimized_fallbacks: List[bool] = []
         baseline_providers: List[str] = []
@@ -507,6 +508,10 @@ class MultiModelPipeline:
             res = runner.run()
             baseline_lats.append(res.loc[res["mode"]=="baseline", "avg_latency_ms"].iloc[0])
             optimized_lats.append(res.loc[res["mode"]=="optimized", "avg_latency_ms"].iloc[0])
+            # Read p95 if available in benchmark runner output
+            if "p95_latency_ms" in res.columns:
+                baseline_p95s.append(res.loc[res["mode"]=="baseline", "p95_latency_ms"].iloc[0])
+                optimized_p95s.append(res.loc[res["mode"]=="optimized", "p95_latency_ms"].iloc[0])
             if "fallback_to_cpu" in res.columns:
                 baseline_fallbacks.append(bool(res.loc[res["mode"]=="baseline", "fallback_to_cpu"].iloc[0]))
                 optimized_fallbacks.append(bool(res.loc[res["mode"]=="optimized", "fallback_to_cpu"].iloc[0]))
@@ -521,6 +526,8 @@ class MultiModelPipeline:
         # Comprehensive statistical analysis
         b_mean, o_mean = np.mean(baseline_lats), np.mean(optimized_lats)
         b_std, o_std = np.std(baseline_lats, ddof=1), np.std(optimized_lats, ddof=1)
+        b_p95 = np.mean(baseline_p95s) if baseline_p95s else o_mean
+        o_p95 = np.mean(optimized_p95s) if optimized_p95s else o_mean
         b_min, o_min = np.min(baseline_lats), np.min(optimized_lats)
         b_max, o_max = np.max(baseline_lats), np.max(optimized_lats)
 
@@ -568,6 +575,7 @@ class MultiModelPipeline:
             "o_std_ms": round(o_std, 4),
             "o_min_ms": round(o_min, 4),
             "o_max_ms": round(o_max, 4),
+            "o_p95_ms": round(o_p95, 4),
             "o_ci_lower_ms": round(o_ci[0], 4) if o_ci else o_mean,
             "o_ci_upper_ms": round(o_ci[1], 4) if o_ci else o_mean,
             # Performance metrics

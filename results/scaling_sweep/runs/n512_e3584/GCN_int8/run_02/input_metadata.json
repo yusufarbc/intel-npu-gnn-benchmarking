@@ -1,0 +1,13 @@
+{
+  "input_source": "ogbn-arxiv",
+  "dataset_num_nodes": 169343,
+  "dataset_num_edges": 1166243,
+  "dataset_num_features": 128,
+  "expected_num_nodes": 512,
+  "expected_num_edges": 3584,
+  "expected_num_features": 1433,
+  "used_num_nodes": 512,
+  "used_num_edges": 3584,
+  "used_num_features": 1433,
+  "note": "sampled_or_padded_to_match_onnx_shapes"
+}

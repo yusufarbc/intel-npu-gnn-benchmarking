@@ -1,56 +1,56 @@
 {
   "cpu_fallback_ratio": 0.0,
   "cpu_us": 0.0,
-  "total_us": 78893689.0,
+  "total_us": 79156765.0,
   "per_operator": {
     "model_loading_uri": {
       "cpu_us": 0.0,
-      "total_us": 16666.0,
+      "total_us": 15653.0,
       "cpu_ratio": 0.0
     },
     "session_initialization": {
       "cpu_us": 0.0,
-      "total_us": 1613367.0,
+      "total_us": 1794438.0,
       "cpu_ratio": 0.0
     },
     "OpenVINO-EP-subgraph_98": {
       "cpu_us": 0.0,
-      "total_us": 4263341.0,
+      "total_us": 4234435.0,
       "cpu_ratio": 0.0
     },
     "Execute": {
       "cpu_us": 0.0,
-      "total_us": 25746749.0,
+      "total_us": 25776077.0,
       "cpu_ratio": 0.0
     },
     "model_run": {
       "cpu_us": 0.0,
-      "total_us": 25788521.0,
+      "total_us": 25811665.0,
       "cpu_ratio": 0.0
     },
     "OpenVINO-EP-subgraph_100": {
       "cpu_us": 0.0,
-      "total_us": 4213439.0,
+      "total_us": 4448553.0,
       "cpu_ratio": 0.0
     },
     "OpenVINO-EP-subgraph_102": {
       "cpu_us": 0.0,
-      "total_us": 4548972.0,
+      "total_us": 4462646.0,
       "cpu_ratio": 0.0
     },
     "OpenVINO-EP-subgraph_104": {
       "cpu_us": 0.0,
-      "total_us": 4316826.0,
+      "total_us": 4186348.0,
       "cpu_ratio": 0.0
     },
     "OpenVINO-EP-subgraph_106": {
       "cpu_us": 0.0,
-      "total_us": 4113091.0,
+      "total_us": 4109036.0,
       "cpu_ratio": 0.0
     },
     "OpenVINO-EP-subgraph_108": {
       "cpu_us": 0.0,
-      "total_us": 4272717.0,
+      "total_us": 4317914.0,
       "cpu_ratio": 0.0
     }
   }

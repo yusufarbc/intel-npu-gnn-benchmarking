@@ -1,3 +1,3 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,7.287806000967976,0.7399058580732938,8236.8125,234.9,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GCN\GCN_fp32\run_00\baseline_profiling.json
-optimized,7.145380998845212,0.6588629627789683,8262.578125,266.7,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GCN\GCN_fp32\run_00\optimized_profiling.json
+mode,avg_latency_ms,std_latency_ms,p95_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
+baseline,7.762766000669217,2.4262553730700893,12.466690001747336,7961.6171875,640.2,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GCN\GCN_fp32\run_00\baseline_profiling.json
+optimized,8.042610000411514,2.002419545387902,13.596989992220186,7976.87109375,684.2,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GCN\GCN_fp32\run_00\optimized_profiling.json

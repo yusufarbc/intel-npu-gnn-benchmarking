@@ -1,3 +1,3 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,13.9216750007472,1.818338498302934,8556.6796875,627.9,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GATv2\GATv2_fp32\run_02\baseline_profiling.json
-optimized,12.962453999789432,1.0106556630741146,8556.6796875,767.1,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GATv2\GATv2_fp32\run_02\optimized_profiling.json
+mode,avg_latency_ms,std_latency_ms,p95_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
+baseline,13.840663000446511,1.1476133440595966,15.665370010538027,8644.6953125,615.7,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GATv2\GATv2_fp32\run_02\baseline_profiling.json
+optimized,12.756502999400254,2.2066384197777547,14.60929000240867,8644.6953125,728.8,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\GATv2\GATv2_fp32\run_02\optimized_profiling.json

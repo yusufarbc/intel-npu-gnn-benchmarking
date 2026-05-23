@@ -1,3 +1,3 @@
-mode,avg_latency_ms,std_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,8.29303400038043,1.2207199874453476,944.65234375,800.0,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2\mobilenetv2_fp32\run_00\baseline_profiling.json
-optimized,8.122192000446375,1.0911266793538776,944.65234375,797.9,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2\mobilenetv2_fp32\run_00\optimized_profiling.json
+mode,avg_latency_ms,std_latency_ms,p95_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
+baseline,8.65251699986402,1.0035075422309512,10.037789997295475,923.5546875,730.3,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2\mobilenetv2_fp32\run_00\baseline_profiling.json
+optimized,8.250651999551337,0.8140528866340019,9.603389997209888,923.5546875,767.6,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\mobilenetv2\mobilenetv2_fp32\run_00\optimized_profiling.json
