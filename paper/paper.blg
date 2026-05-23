@@ -10,49 +10,115 @@ Reallocating 'singl_function' (item size: 4) to 100 items.
 Reallocating 'wiz_functions' (item size: 4) to 6000 items.
 Reallocating 'singl_function' (item size: 4) to 100 items.
 Database file #1: references.bib
+Repeated entry---line 1633 of file references.bib
+ : @misc{bi2026rooflinebenchbenchmarkingframeworkondevice
+ :                                                       ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1831 of file references.bib
+ : @misc{mlperf_inference
+ :                       ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1945 of file references.bib
+ : @misc{intel_core_ultra_npu
+ :                           ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1975 of file references.bib
+ : @misc{intel_meteorlake_hotchips_2023
+ :                                     ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1991 of file references.bib
+ : @misc{lam2024_meteorlake_npu
+ :                             ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2009 of file references.bib
+ : @misc{openvino_npu_docs
+ :                        ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2067 of file references.bib
+ : @inproceedings{kipf2017gcn
+ :                           ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2157 of file references.bib
+ : @inproceedings{gasteiger2019appnp
+ :                                  ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2193 of file references.bib
+ : @inproceedings{he2016resnet
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2213 of file references.bib
+ : @inproceedings{sandler2018mobilenetv2
+ :                                      ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2233 of file references.bib
+ : @article{turc2019berttiny
+ :                          ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2247 of file references.bib
+ : @inproceedings{shi2020masked
+ :                             ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2263 of file references.bib
+ : @inproceedings{tan2019efficientnet
+ :                                   ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2279 of file references.bib
+ : @inproceedings{dosovitskiy2020vit
+ :                                  ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2295 of file references.bib
+ : @inproceedings{hu2020open
+ :                          ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 2311 of file references.bib
+ : @article{Bayraktar2026
+ :                       ,
+I'm skipping whatever remains of this entry
 -- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
 -- http://www.michaelshell.org/tex/ieeetran/bibtex/
 -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+Warning--empty journal in he2016resnet
 
 Done.
-You've used 27 entries,
+You've used 28 entries,
             4087 wiz_defined-function locations,
-            980 strings with 13637 characters,
-and the built_in function-call counts, 19374 in all, are:
-= -- 1486
-> -- 551
-< -- 84
-+ -- 282
-- -- 116
-* -- 953
-:= -- 2956
-add.period$ -- 58
-call.type$ -- 27
-change.case$ -- 35
-chr.to.int$ -- 192
-cite$ -- 27
-duplicate$ -- 1435
-empty$ -- 1695
+            981 strings with 13408 characters,
+and the built_in function-call counts, 20986 in all, are:
+= -- 1633
+> -- 574
+< -- 117
++ -- 308
+- -- 120
+* -- 1015
+:= -- 3127
+add.period$ -- 60
+call.type$ -- 28
+change.case$ -- 37
+chr.to.int$ -- 288
+cite$ -- 29
+duplicate$ -- 1535
+empty$ -- 1792
 format.name$ -- 139
-if$ -- 4505
+if$ -- 4900
 int.to.chr$ -- 0
-int.to.str$ -- 27
+int.to.str$ -- 28
 missing$ -- 303
-newline$ -- 140
-num.names$ -- 31
-pop$ -- 784
+newline$ -- 129
+num.names$ -- 32
+pop$ -- 766
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 1502
+skip$ -- 1622
 stack$ -- 0
-substring$ -- 529
-swap$ -- 1057
-text.length$ -- 20
+substring$ -- 766
+swap$ -- 1168
+text.length$ -- 21
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 27
-warning$ -- 0
-while$ -- 60
-width$ -- 29
-write$ -- 316
+type$ -- 28
+warning$ -- 1
+while$ -- 72
+width$ -- 30
+write$ -- 310
+(There were 16 error messages)

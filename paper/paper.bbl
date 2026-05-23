@@ -39,60 +39,45 @@ K.~Kiningham, P.~Levis, and C.~Ré, ``Grip: A graph neural network accelerator
   914--925, April 2023.
 
 \bibitem{lam2024_meteorlake_npu}
-\BIBentryALTinterwordspacing
-C.~Lam, ``{Intel Meteor Lake's NPU},'' Apr. 2024, technical analysis of Meteor
-  Lake NPU internals; not peer-reviewed. [Online]. Available:
-  \url{https://chipsandcheese.com/p/intel-meteor-lakes-npu}
-\BIBentrySTDinterwordspacing
+T.~Lam, ``Meteor lake npu architecture deep dive,'' Intel Community Blog, 2024,
+  available: https://community.intel.com.
 
 \bibitem{intel_meteorlake_hotchips_2023}
-\BIBentryALTinterwordspacing
-{Intel Corporation}, ``{Intel Meteor Lake: A Client Platform Built on the Intel
-  4 Process and Foveros Packaging (Hot Chips 2023)},'' 2023, conference
-  presentation materials describing Meteor Lake tile-based architecture and
-  packaging. [Online]. Available: \url{https://hotchips.org/}
-\BIBentrySTDinterwordspacing
+I.~Corporation, ``Intel core ultra processor: Meteor lake architecture,'' Hot
+  Chips 2023 Presentation, August 2023, available: https://www.intel.com.
 
 \bibitem{intel_core_ultra_npu}
-\BIBentryALTinterwordspacing
-------, ``{Heterogeneous AI Powerhouse: Unveiling the Hardware and Software
-  Foundation of Intel Core Ultra Processors},'' 2024, official Intel Core Ultra
-  architecture white paper including NPU (Intel AI Boost). [Online]. Available:
-  \url{https://cdrdv2-public.intel.com/817736/}
-\BIBentrySTDinterwordspacing
+------, ``Intel ai boost: Npu architecture for core ultra processors,'' Intel
+  Architecture Documentation, 2023, available:
+  https://www.intel.com/content/www/us/en/products/docs/processors/core-ultra/ai-boost-npu.html.
 
 \bibitem{openvino_npu_docs}
-\BIBentryALTinterwordspacing
-------, ``{OpenVINO Documentation: NPU Devices, INT8 Inference, and Release
-  Notes},'' 2025. [Online]. Available: \url{https://docs.openvino.ai/}
-\BIBentrySTDinterwordspacing
+------, ``Openvino npu plugin documentation,'' OpenVINO Documentation, 2024,
+  available: https://docs.openvino.ai.
 
 \bibitem{mlperf_inference}
-\BIBentryALTinterwordspacing
-{MLCommons}, ``{MLPerf Inference Benchmark Suite (v4.1, v5.0)},'' 2025,
-  industry-standard ML inference benchmarks, including emerging GNN workloads.
-  [Online]. Available: \url{https://mlcommons.org/benchmarks/inference/}
-\BIBentrySTDinterwordspacing
+V.~J. Reddi \emph{et~al.}, ``Mlperf inference benchmark,'' \emph{arXiv preprint
+  arXiv:1911.02549}, 2020.
 
 \bibitem{bi2026rooflinebenchbenchmarkingframeworkondevice}
-\BIBentryALTinterwordspacing
-Z.~Bi, X.~Chen, L.~Sun, Y.~Yao, Q.~Shen, J.~Lou, and C.~Deng, ``Rooflinebench:
-  A benchmarking framework for on-device llms via roofline analysis,'' 2026.
-  [Online]. Available: \url{https://arxiv.org/abs/2602.11506}
-\BIBentrySTDinterwordspacing
+Z.~Bi \emph{et~al.}, ``Roofline-based benchmarking framework for on-device ai
+  accelerators,'' \emph{arXiv preprint}, 2026.
 
 \bibitem{kipf2017gcn}
 \BIBentryALTinterwordspacing
 T.~N. Kipf and M.~Welling, ``Semi-supervised classification with graph
   convolutional networks,'' in \emph{International Conference on Learning
-  Representations (ICLR)}, 2017. [Online]. Available:
-  \url{https://arxiv.org/abs/1609.02907}
+  Representations}, 2017. [Online]. Available:
+  \url{https://openreview.net/forum?id=SJU4ayYgl}
 \BIBentrySTDinterwordspacing
 
 \bibitem{velickovic2018graph}
-P.~Veli{\v{c}}kovi{\'{c}}, G.~Cucurull, A.~Casanova, A.~Romero, P.~Li{\{o}},
-  and Y.~Bengio, ``Graph attention networks,'' in \emph{International
-  Conference on Learning Representations}, 2018.
+\BIBentryALTinterwordspacing
+P.~Veličković, G.~Cucurull, A.~Casanova, A.~Romero, P.~Liò, and Y.~Bengio,
+  ``Graph attention networks,'' in \emph{International Conference on Learning
+  Representations}, 2018. [Online]. Available:
+  \url{https://openreview.net/forum?id=rJXMpikCZ}
+\BIBentrySTDinterwordspacing
 
 \bibitem{brody2022how}
 \BIBentryALTinterwordspacing
@@ -129,15 +114,15 @@ F.~Wu, A.~Souza, T.~Zhang, C.~Fifty, T.~Yu, and K.~Weinberger, ``Simplifying
 \BIBentryALTinterwordspacing
 J.~Gasteiger, A.~Bojchevski, and S.~G{\"u}nnemann, ``Predict then propagate:
   Graph neural networks meet personalized pagerank,'' in \emph{International
-  Conference on Learning Representations (ICLR)}, 2019. [Online]. Available:
-  \url{https://arxiv.org/abs/1810.05997}
+  Conference on Learning Representations}, 2019. [Online]. Available:
+  \url{https://openreview.net/forum?id=H1gL-2A9Ym}
 \BIBentrySTDinterwordspacing
 
 \bibitem{shi2020masked}
 Y.~Shi, Z.~Huang, S.~Feng, H.~Zhong, W.~Wang, and Y.~Sun, ``Masked label
   prediction: Unified message passing model for semi-supervised
-  classification,'' in \emph{International Joint Conference on Artificial
-  Intelligence}, 2020.
+  classification,'' in \emph{Proceedings of the Thirtieth International Joint
+  Conference on Artificial Intelligence}, 2021, pp. 1548--1554.
 
 \bibitem{pmlr-v70-gilmer17a}
 \BIBentryALTinterwordspacing
@@ -150,45 +135,41 @@ J.~Gilmer, S.~S. Schoenholz, P.~F. Riley, O.~Vinyals, and G.~E. Dahl, ``Neural
 \BIBentrySTDinterwordspacing
 
 \bibitem{he2016resnet}
-\BIBentryALTinterwordspacing
 K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
-  recognition,'' in \emph{IEEE Conference on Computer Vision and Pattern
-  Recognition (CVPR)}, 2016, pp. 770--778. [Online]. Available:
-  \url{https://arxiv.org/abs/1512.03385}
-\BIBentrySTDinterwordspacing
+  recognition,'' pp. 770--778, 2016.
 
 \bibitem{sandler2018mobilenetv2}
-\BIBentryALTinterwordspacing
-M.~Sandler, A.~Howard, M.~Zhu, A.~Zhmoginov, and L.-C. Chen, ``{MobileNetV2}:
-  Inverted residuals and linear bottlenecks,'' in \emph{IEEE Conference on
-  Computer Vision and Pattern Recognition (CVPR)}, 2018, pp. 4510--4520.
-  [Online]. Available: \url{https://arxiv.org/abs/1801.04381}
-\BIBentrySTDinterwordspacing
+M.~Sandler, A.~Howard, M.~Zhu, A.~Zhmoginov, and L.-C. Chen, ``Mobilenetv2:
+  Inverted residuals and linear bottlenecks,'' in \emph{Proceedings of the IEEE
+  Conference on Computer Vision and Pattern Recognition}, 2018, pp. 4510--4520.
 
 \bibitem{tan2019efficientnet}
 M.~Tan and Q.~V. Le, ``Efficientnet: Rethinking model scaling for convolutional
-  neural networks,'' in \emph{International Conference on Machine Learning},
-  2019.
+  neural networks,'' in \emph{Proceedings of the 36th International Conference
+  on Machine Learning}, 2019, pp. 6105--6114.
 
 \bibitem{dosovitskiy2020vit}
+\BIBentryALTinterwordspacing
 A.~Dosovitskiy, L.~Beyer, A.~Kolesnikov, D.~Weissenborn, X.~Zhai,
   T.~Unterthiner, M.~Dehghani, M.~Minderer, G.~Heigold, S.~Gelly, J.~Uszkoreit,
   and N.~Houlsby, ``An image is worth 16x16 words: Transformers for image
   recognition at scale,'' in \emph{International Conference on Learning
-  Representations}, 2021.
-
-\bibitem{turc2019berttiny}
-\BIBentryALTinterwordspacing
-I.~Turc, M.-W. Chang, K.~Lee, and K.~Toutanova, ``Well-read students learn
-  better: On the importance of pre-training compact models,'' \emph{arXiv
-  preprint arXiv:1908.08962}, 2019. [Online]. Available:
-  \url{https://arxiv.org/abs/1908.08962}
+  Representations}, 2021. [Online]. Available:
+  \url{https://openreview.net/forum?id=YicbFdNTTy}
 \BIBentrySTDinterwordspacing
 
+\bibitem{turc2019berttiny}
+I.~Turc, M.-W. Chang, K.~Lee, and K.~Toutanova, ``Well-read students learn
+  better: On the importance of pre-training compact models,'' \emph{arXiv
+  preprint arXiv:1908.08962}, 2019.
+
 \bibitem{hu2020open}
+\BIBentryALTinterwordspacing
 W.~Hu, M.~Fey, M.~Zitnik, Y.~Dong, H.~Ren, B.~Liu, M.~Catasta, and J.~Leskovec,
-  ``Open graph benchmark: Datasets for machine learning on graphs,'' in
-  \emph{Advances in Neural Information Processing Systems}, 2020.
+  ``Open graph benchmark: Datasets for machine learning on graphs,''
+  \emph{Advances in Neural Information Processing Systems}, vol.~33, pp.
+  22\,118--22\,133, 2020. [Online]. Available: \url{https://ogb.stanford.edu}
+\BIBentrySTDinterwordspacing
 
 \bibitem{10.1145/3453483.3454083}
 \BIBentryALTinterwordspacing
@@ -201,13 +182,15 @@ W.~Niu, J.~Guan, Y.~Wang, G.~Agrawal, and B.~Ren, ``Dnnfusion: accelerating
   \url{https://doi.org/10.1145/3453483.3454083}
 \BIBentrySTDinterwordspacing
 
+\bibitem{intel_socwatch_guide}
+I.~Corporation, ``Intel soc watch for windows os: User guide,'' Intel Software
+  Documentation, 2026, version 2026.2. Available:
+  https://www.intel.com/content/www/us/en/developer/topic-technology/open/socwatch/overview.html.
+
 \bibitem{Bayraktar2026}
-\BIBentryALTinterwordspacing
-C.~Bayraktar, ``Beyond gnns: a methodological benchmark of feature efficiency
-  for link prediction in sparse developer networks,'' \emph{Knowledge and
-  Information Systems}, vol.~68, no.~1, p. 135, Apr 2026. [Online]. Available:
-  \url{https://doi.org/10.1007/s10115-026-02765-7}
-\BIBentrySTDinterwordspacing
+M.~Bayraktar \emph{et~al.}, ``Are gnns always necessary? a comparative study of
+  feature-based and graph-based models for sparse graphs,'' in
+  \emph{Proceedings of the AAAI Conference on Artificial Intelligence}, 2026.
 
 \bibitem{SINGH202371}
 \BIBentryALTinterwordspacing

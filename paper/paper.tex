@@ -43,7 +43,7 @@ farukacar@karabuk.edu.tr}
 \maketitle
 
 \begin{abstract}
-Neural Processing Units (NPUs) in consumer processors such as Intel Core Ultra (Meteor Lake) promise energy-efficient inference at the edge. This paper measures 14 models---Graph Neural Networks (GNNs), convolutional networks, and vision transformers---on the CPU, integrated GPU (iGPU), and NPU of a Core Ultra 5 125H platform running OpenVINO. Three Open Graph Benchmark datasets (ogbn-arxiv, ogbn-proteins, ogbn-products) are used, with 100 timed iterations per configuration, 5-iteration warm-up, and three independent repeats. The NPU delivers strong FP32 performance for dense vision models (MobileNetV2: 1.97\,ms, ResNet50: 3.92\,ms) but offers limited advantage for GNN workloads: memory-bound sparse aggregation keeps NPU latency within 5--15\% of the CPU. INT8 quantization degrades NPU latency for most models---GCN INT8 (8.41\,ms) is marginally slower than FP32 (8.33\,ms), SGC INT8 (175.86\,ms) is 2$\times$ slower than FP32 (88.32\,ms), and several vision models show evidence of silent CPU fallback under INT8. Attention-based GNNs (GAT, GATv2) fail INT8 compilation entirely due to unsupported scatter/gather operators. While the Meteor Lake NPU is a capable accelerator for dense vision inference, the current OpenVINO toolchain and hardware architecture are not yet mature for sparse graph workloads---particularly under quantization. The benchmarking suite and processed artifacts are released for reproducibility.
+Neural Processing Units (NPUs) in consumer processors such as Intel Core Ultra (Meteor Lake) promise energy-efficient inference at the edge. This paper measures 14 models---Graph Neural Networks (GNNs), convolutional networks, and vision transformers---on the CPU, integrated GPU (iGPU), and NPU of a Core Ultra 5 125H platform running OpenVINO. Three Open Graph Benchmark datasets (ogbn-arxiv, ogbn-proteins, ogbn-products) are used, with 100 timed iterations per configuration, 5-iteration warm-up, and three independent repeats. The NPU delivers strong FP32 performance for dense vision models (MobileNetV2: 1.90\,ms, ResNet50: 3.94\,ms, ViT-Tiny: 9.10\,ms) but offers limited to negative returns for GNN workloads. For most GNNs, NPU latency remains within 6\% of CPU; however, SGC INT8 exhibits a 2.2$\times$ regression over FP32 (173.90\,ms vs.\ 78.59\,ms), MPNN falls back entirely to CPU regardless of the designated backend, and three architectures (GAT, GATv2, EfficientNet-B0) fail INT8 compilation altogether. Package-level power measurements via Intel SoCWatch PMT confirm that CPU and GPU backends operate at comparable power envelopes (9.1--12.5\,W) for sparse GNN workloads, with INT8 providing at best 14\% energy reduction. These findings indicate that while the Meteor Lake NPU is a capable accelerator for dense vision inference, the current OpenVINO toolchain and hardware architecture are not yet mature for sparse graph workloads---particularly under quantization. The benchmarking suite and processed artifacts are released for reproducibility.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -112,7 +112,7 @@ MPNN \cite{pmlr-v70-gilmer17a} & Message-Passing & 0.20M & \checkmark \\
 \rowcolor{gray!10} \multicolumn{4}{l}{\textit{Dense Baselines}} \\
 ResNet50 \cite{he2016resnet} & CNN & 25.5M & \checkmark \\
 MobileNetV2 \cite{sandler2018mobilenetv2} & CNN & 3.5M & \checkmark \\
-EfficientNet-B0 \cite{tan2019efficientnet} & CNN & 5.3M & \checkmark \\
+EfficientNet-B0 \cite{tan2019efficientnet} & CNN & 5.3M & $\times$ \\
 ViT-Tiny \cite{dosovitskiy2020vit} & Vision Trans. & 5.7M & $\times$ \\
 BERT-Tiny \cite{turc2019berttiny} & NLP Trans. & 4.4M & \checkmark \\
 \bottomrule
@@ -120,7 +120,7 @@ BERT-Tiny \cite{turc2019berttiny} & NLP Trans. & 4.4M & \checkmark \\
 }
 \label{tab:models}
 \end{center}
-\footnotesize{$\times$ = INT8 quantization failed at compilation time (scatter/gather unsupported in NPU plugin). \checkmark\ = INT8 variant available and benchmarked.}
+\footnotesize{$\times$ = INT8 quantization failed at compilation time (scatter/gather unsupported in NPU plugin or per-channel quantization incompatibility). \checkmark\ = INT8 variant available and benchmarked.}
 \end{table}
 
 \subsection{Datasets}
@@ -135,7 +135,7 @@ Three datasets from the Open Graph Benchmark (OGB) \cite{hu2020open} are used fo
 \midrule
 ogbn-arxiv    & 169K & 1.16M & 128 & 6.9 \\
 ogbn-products & 2.45M & 61.9M & 100 & 25.3 \\
-ogbn-proteins & 132K & 39.6M & 8 & 298.5 \\
+ogbn-proteins & 87.6K & 39.6M & 8 & 451.7 \\
 \bottomrule
 \end{tabular}
 \label{tab:datasets}
@@ -146,7 +146,7 @@ ogbn-proteins & 132K & 39.6M & 8 & 298.5 \\
 For each (model, dataset, device, precision) configuration, a 5-iteration warm-up phase is followed by 100 timed inference iterations. This procedure is repeated across three independent runs to quantify run-to-run variability. The mean latency across runs and the per-iteration standard deviation are reported. All measurements use ONNX Runtime graph optimizations enabled (ORT\_ENABLE\_EXTENDED). NPU benchmarks use the OpenVINO execution provider; GPU benchmarks use the same provider targeting the Xe-LPG iGPU; CPU benchmarks use the CPU execution provider.
 
 \subsection{Artifacts Collected}
-For each model, the pipeline produces: (i) a scalability matrix CSV with per-configuration latency statistics; (ii) a latency summary grouped by dataset, device, and precision; (iii) a precision-gain table computing INT8/FP32 speedup ratios; (iv) a CPU-fallback JSON capturing the fraction of execution time spent on CPU-resident operators; (v) ONNX Runtime profiling traces with per-operator timing breakdowns. When Intel SoC Watch is available (administrator privileges required), package-level power traces are additionally recorded for energy efficiency analysis.
+For each model, the pipeline produces: (i) a scalability matrix CSV with per-configuration latency statistics; (ii) a latency summary grouped by dataset, device, and precision; (iii) a precision-gain table computing INT8/FP32 speedup ratios; (iv) a CPU-fallback JSON capturing the fraction of execution time spent on CPU-resident operators; (v) ONNX Runtime profiling traces with per-operator timing breakdowns. Package-level power traces are collected via Intel SoC Watch using the Intel Platform Monitoring Technology (PMT) interface, which provides access to hardware energy counters through the SoC Watch CLI (\texttt{-f sys -t 30 -r sum}) even on systems with Hyper-V and Virtualization-Based Security enabled. Power data were successfully recorded for GCN and MPNN across CPU and GPU backends; NPU-specific power isolation was not available through this interface.
 
 \subsection{Evaluation Metrics}
 Raw latency (milliseconds, mean over 100 iterations $\times$ 3 repeats), precision-gain ratio ($T_{\text{FP32}} / T_{\text{INT8}}$ on the same device), CPU-fallback ratio (fraction of total profiling time attributed to CPU-executed operators), and optimization speedup ($T_{\text{baseline}} / T_{\text{optimized}}$ where baseline disables graph-level optimizations) are reported. Arithmetic intensity is computed via ONNX shape inference and reported in FLOP/byte.
@@ -154,9 +154,9 @@ Raw latency (milliseconds, mean over 100 iterations $\times$ 3 repeats), precisi
 \section{Results}
 
 \subsection{Cross-Architectural Latency Comparison}
-Fig.~\ref{fig:fig1} presents the FP32 latency comparison across all three backends, averaged over the three OGB datasets. The iGPU achieves the lowest latency for most GNNs: GCN (7.41\,ms on GPU vs.\ 8.33\,ms on NPU vs.\ 8.09\,ms on CPU), GraphTransformer (6.47\,ms GPU vs.\ 11.47\,ms NPU), and APPNP (8.09\,ms GPU vs.\ 11.93\,ms NPU). The NPU provides marginal improvement over CPU for sparse models but is consistently outperformed by the iGPU.
+Fig.~\ref{fig:fig1} presents the FP32 latency comparison across all three backends, averaged over the three OGB datasets. The iGPU achieves the lowest latency for most GNNs: GraphTransformer (6.03\,ms on GPU vs.\ 10.72\,ms on NPU vs.\ 10.69\,ms on CPU), APPNP (7.88\,ms GPU vs.\ 11.75\,ms NPU vs.\ 11.82\,ms CPU), and GCN (7.52\,ms GPU vs.\ 7.91\,ms NPU). The NPU provides near-parity with CPU for sparse models---typically within 6\%---but is consistently outperformed by the iGPU.
 
-Dense vision models show the opposite pattern. MobileNetV2 reaches 1.97\,ms on NPU versus 10.01\,ms on CPU (5.1$\times$ speedup). ResNet50 runs at 3.92\,ms on NPU versus 33.32\,ms on CPU (8.5$\times$ speedup). The NPU's systolic array engines are well-utilized by structured, compute-dense convolutions but provide little advantage for SpMM-dominated GNN operations. This gap stems from two factors: the NPU's memory subsystem is optimized for streaming, regular data access rather than the sparse gather-scatter patterns of GNNs, and the OpenVINO compiler applies fewer fusion optimizations to SpMM subgraphs because their irregular index dependencies limit the scope of static analysis and kernel fusion \cite{10.1145/3453483.3454083}.
+Dense vision models show the opposite pattern. MobileNetV2 reaches 1.90\,ms on NPU versus 8.60\,ms on CPU (4.5$\times$ speedup). ResNet50 runs at 3.94\,ms on NPU versus 31.47\,ms on CPU (8.0$\times$ speedup). ViT-Tiny achieves its best NPU acceleration at 9.10\,ms versus 104.13\,ms on CPU (11.4$\times$ speedup), confirming that the NPU's hardware attention mechanisms are well-suited to structured attention patterns. The NPU's systolic array engines are well-utilized by structured, compute-dense convolutions but provide little advantage for SpMM-dominated GNN operations. This gap stems from two factors: the NPU's memory subsystem is optimized for streaming, regular data access rather than the sparse gather-scatter patterns of GNNs, and the OpenVINO compiler applies fewer fusion optimizations to SpMM subgraphs because their irregular index dependencies limit the scope of static analysis and kernel fusion \cite{10.1145/3453483.3454083}.
 
 \begin{figure}[htbp]
     \centering
@@ -175,22 +175,22 @@ Table~\ref{tab:int8} summarizes INT8 speedup ratios for models where both FP32 a
 \toprule
 \textbf{Model} & \textbf{FP32 (ms)} & \textbf{INT8 (ms)} & \textbf{Speedup} \\
 \midrule
-GraphTransformer & 11.47 & 9.38 & \textbf{1.22$\times$} \\
-GraphSAGE         & 49.90 & 48.62 & 1.03$\times$ \\
-GIN               & 42.29 & 42.68 & 0.99$\times$ \\
-GCN               & 8.33  & 8.41  & 0.99$\times$ \\
-APPNP             & 11.93 & 13.07 & 0.91$\times$ \\
-SGC               & 88.32 & 175.86 & 0.50$\times$ \\
+GraphTransformer & 10.72 & 8.90 & \textbf{1.21$\times$} \\
+GCN               & 7.91  & 7.58  & \textbf{1.04$\times$} \\
+GraphSAGE         & 45.21 & 42.95 & 1.05$\times$ \\
+GIN               & 41.68 & 40.55 & 1.03$\times$ \\
+APPNP             & 11.75 & 13.96 & 0.84$\times$ \\
+SGC               & 78.59 & 173.90 & 0.45$\times$ \\
 \bottomrule
 \end{tabular}
 \label{tab:int8}
 \end{center}
-\footnotesize{Speedup $>$ 1.0 indicates INT8 faster. GAT and GATv2 excluded (INT8 compilation failed). Vision models omitted due to evidence of NPU$\rightarrow$CPU fallback under INT8 (see text).}
+\footnotesize{Speedup $>$ 1.0 indicates INT8 faster. GAT and GATv2 excluded (INT8 compilation failed). EfficientNet-B0 also fails INT8. Vision models omitted due to evidence of NPU$\rightarrow$CPU fallback under INT8 (see text).}
 \end{table}
 
-Only GraphTransformer benefits from INT8 (1.22$\times$). GCN, GIN, and GraphSAGE show near-identical FP32 and INT8 latency, indicating that quantization does not address the dominant memory-bound bottleneck. APPNP and SGC exhibit negative speedup---INT8 is measurably slower than FP32. For SGC, the regression is severe: INT8 latency (175.86\,ms) is roughly twice the FP32 latency (88.32\,ms). Profiling traces indicate that SGC's $K$-step iterative propagation generates dispatch overhead that scales poorly with quantized tensor layouts.
+Only GraphTransformer benefits from INT8 (1.21$\times$), consistent with its dense attention kernels that benefit from reduced precision arithmetic. GCN (1.04$\times$), GIN (1.03$\times$), and GraphSAGE (1.05$\times$) show marginal INT8 gains, indicating that quantization does not address the dominant memory-bound bottleneck. APPNP and SGC exhibit negative speedup---INT8 is measurably slower than FP32. For SGC, the regression is severe: INT8 latency (173.90\,ms) is roughly 2.2$\times$ the FP32 latency (78.59\,ms). Profiling traces indicate that SGC's $K$-step iterative propagation generates dispatch overhead that scales poorly with quantized tensor layouts.
 
-The INT8 results for dense vision models require careful interpretation. MobileNetV2 INT8 reports 6.15\,ms on NPU versus 1.97\,ms FP32 (0.32$\times$). However, the INT8 CPU latency is 6.23\,ms---nearly identical to the reported NPU value---suggesting that the INT8 variant silently falls back to CPU execution. This pattern repeats for EfficientNet-B0 (12.69\,ms NPU INT8 vs.\ 13.58\,ms CPU INT8) and BERT-Tiny (9.28\,ms NPU INT8 vs.\ 9.65\,ms CPU INT8). The likely cause is NPU plugin incompatibility with the quantized operator set produced by ONNX Runtime's dynamic quantization; per-channel quantization patterns introduced during this process are not yet supported by the NPU backend.
+The INT8 results for dense vision models require careful interpretation. MobileNetV2 INT8 reports 5.38\,ms on NPU versus 1.90\,ms FP32 (0.35$\times$). However, the INT8 CPU latency is 5.46\,ms---nearly identical to the reported NPU value---suggesting that the INT8 variant silently falls back to CPU execution. This pattern repeats for ResNet50 (4.98\,ms NPU INT8 vs.\ 18.50\,ms CPU INT8, though here the disparity suggests partial NPU execution) and BERT-Tiny (8.02\,ms NPU INT8 vs.\ 8.13\,ms CPU INT8). EfficientNet-B0 INT8 compilation fails entirely (a .failed marker is produced). The likely cause is NPU plugin incompatibility with the quantized operator set produced by ONNX Runtime's dynamic quantization; per-channel quantization patterns introduced during this process are not yet supported by the NPU backend.
 
 \begin{figure}[htbp]
     \centering
@@ -199,28 +199,28 @@ The INT8 results for dense vision models require careful interpretation. MobileN
     \label{fig:fig2}
 \end{figure}
 
-\subsection{CPU Fallback and Operator Coverage}
-Fig.~\ref{fig:fig4} visualizes the per-operator CPU fallback fraction across all profiled models. Most GNN operations execute entirely on the assigned backend (0\% CPU fallback), indicating that the OpenVINO NPU plugin covers the core GNN operator set (MatMul, Conv, ReLU, Add, ReduceMean). However, two important exceptions exist.
-
-First, MPNN has zero NPU entries in the scalability matrix---all executions fall back to CPU, suggesting that MPNN's \texttt{index\_add\_} and \texttt{scatter\_mean} operations lie outside the NPU plugin's supported op set. Second, GAT and GATv2 fail INT8 compilation at the ONNX quantization stage (not at runtime), producing \texttt{.failed} markers. The error traces point to \texttt{Gather} and \texttt{Scatter} operations within the attention mechanism that cannot be quantized by the current toolchain.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\columnwidth]{fig4_cpu_fallback_heatmap.png}
-    \caption{CPU fallback fraction per operator across models. Most operators run natively on the assigned backend. MPNN and attention-based models trigger toolchain limitations.}
-    \label{fig:fig4}
-\end{figure}
-
 \subsection{Operator Composition Analysis}
 Fig.~\ref{fig:fig3} presents the per-model breakdown of ONNX operator types. GNNs are dominated by MatMul/Gemm operations (SpMM) accounting for 30--60\% of nodes, alongside significant fractions of shape-manipulation operators (Gather, Scatter, Reshape, Concat). Vision models are dominated by Conv operations (50--80\%) with minimal shape manipulation.
 
-The contrast between ViT-Tiny and GraphTransformer is instructive. ViT-Tiny applies self-attention over a regular 2D grid of image patches; its attention pattern is static and predictable, allowing the NPU plugin to compile the entire computation graph efficiently (FP32 NPU: 9.15\,ms vs.\ CPU: 121\,ms). GraphTransformer applies attention over irregular graph neighborhoods, where the variable number of neighbors per node produces dynamic index ranges that the NPU plugin cannot fully optimize. Despite both models having similar parameter counts (5.7M vs.\ 0.18M), GraphTransformer sees less relative NPU benefit---a direct consequence of irregular versus regular attention patterns.
+The contrast between ViT-Tiny and GraphTransformer is instructive. ViT-Tiny applies self-attention over a regular 2D grid of image patches; its attention pattern is static and predictable, allowing the NPU plugin to compile the entire computation graph efficiently (FP32 NPU: 9.10\,ms vs.\ CPU: 104.13\,ms, achieving 11.4$\times$ speedup). GraphTransformer applies attention over irregular graph neighborhoods, where the variable number of neighbors per node produces dynamic index ranges that the NPU plugin cannot fully optimize. Despite having far fewer parameters (0.18M vs.\ 5.7M), GraphTransformer sees almost no NPU benefit (10.72\,ms NPU vs.\ 10.69\,ms CPU)---a direct consequence of irregular versus regular attention patterns.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\columnwidth]{fig3_operator_breakdown.png}
     \caption{Operator composition of FP32 models. GNNs exhibit higher fractions of memory/shape operators (Gather, Scatter, Reshape) versus compute operators compared to vision models.}
     \label{fig:fig3}
+\end{figure}
+
+\subsection{CPU Fallback and Operator Coverage}
+Fig.~\ref{fig:fig4} visualizes the per-operator CPU fallback fraction across all profiled models. Most GNN operations execute entirely on the assigned backend (0\% CPU fallback), indicating that the OpenVINO NPU plugin covers the core GNN operator set (MatMul, Conv, ReLU, Add, ReduceMean). BERT-Tiny shows minimal CPU fallback (0.5\%), likely due to its embedding lookup operations partially executing on CPU. However, three important exceptions exist.
+
+First, MPNN has zero NPU entries in the scalability matrix---all executions fall back to CPU, suggesting that MPNN's \texttt{index\_add\_} and \texttt{scatter\_mean} operations lie outside the NPU plugin's supported op set. Second, GAT and GATv2 fail INT8 compilation at the ONNX quantization stage (not at runtime), producing \texttt{.failed} markers. The error traces point to \texttt{Gather} and \texttt{Scatter} operations within the attention mechanism that cannot be quantized by the current toolchain. Third, EfficientNet-B0 also fails INT8 compilation, producing a \texttt{.failed} marker due to unsupported quantization patterns in its Mobile Inverted Bottleneck (MBConv) blocks. Potential mitigation strategies---such as manual per-operator quantization assignments (quantizing only the supported subgraph while leaving problematic operators at FP32), selective operator fallback configuration, or custom QDQ (Quantize--Dequantize) node insertion---were considered but not pursued in this study, as the ONNX Runtime dynamic quantization API does not expose fine-grained per-operator control. Exploring these strategies remains an avenue for future work, particularly as the OpenVINO NPU plugin matures its quantized operator coverage.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\columnwidth]{fig4_cpu_fallback_heatmap.png}
+    \caption{CPU fallback fraction per operator across models. Most operators run natively on the assigned backend. MPNN and attention-based models trigger toolchain limitations.}
+    \label{fig:fig4}
 \end{figure}
 
 \subsection{Optimization Speedup and Computational Efficiency}
@@ -243,7 +243,7 @@ Fig.~\ref{fig:fig5b} presents a roofline-style analysis plotting achieved throug
 \end{figure}
 
 \subsection{Graph Density and NPU Latency}
-Fig.~\ref{fig:fig7} examines the relationship between graph density (edges per node) and NPU latency across the three OGB datasets, which span an order of magnitude in density (ogbn-arxiv: 6.9\,edges/node, ogbn-products: 25.3\,edges/node, ogbn-proteins: 298.5\,edges/node). Contrary to the expectation that denser graphs would increase NPU execution time through additional sparse-dense multiplications, no meaningful correlation is observed ($r=-0.00$, $p=0.993$). Latency is nearly constant across density levels for each model. This behavior arises because ONNX Runtime compiles the NPU model with statically-shaped tensors; the compiled execution plan processes the fixed-size graph representation at constant throughput regardless of the actual sparsity of the input adjacency structure.
+Fig.~\ref{fig:fig7} examines the relationship between graph density (edges per node) and NPU latency across the three OGB datasets, which span two orders of magnitude in density (ogbn-arxiv: 6.9\,edges/node, ogbn-products: 25.3\,edges/node, ogbn-proteins: 451.7\,edges/node). Contrary to the expectation that denser graphs would increase NPU execution time through additional sparse-dense multiplications, no meaningful correlation is observed ($r=-0.00$, $p=0.993$). Latency is nearly constant across density levels for each model. This behavior arises because ONNX Runtime compiles the NPU model with statically-shaped tensors; the compiled execution plan processes the fixed-size graph representation at constant throughput regardless of the actual sparsity of the input adjacency structure.
 
 \begin{figure}[htbp]
     \centering
@@ -252,25 +252,85 @@ Fig.~\ref{fig:fig7} examines the relationship between graph density (edges per n
     \label{fig:fig7}
 \end{figure}
 
+\subsection{Scaling Characteristics}
+Fig.~\ref{fig:fig6} shows how NPU latency scales with graph size for a subset of representative models on ogbn-arxiv. The flat latency profile across varying node/edge counts confirms the static-shape compilation behavior observed in the density analysis. Unlike CPU and GPU execution, where latency scales proportionally with graph size, the NPU's compiled execution plan processes the fixed-size ONNX graph representation at near-constant throughput. This is advantageous for latency predictability but means that the NPU does not realize any efficiency benefit for sparser subgraphs of the same model.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\columnwidth]{fig6_scaling.png}
+    \caption{Scaling characteristics across models on NPU. Latency remains nearly constant across graph sizes due to static-shape compilation.}
+    \label{fig:fig6}
+\end{figure}
+
+\subsection{Energy Consumption Analysis}
+Table~\ref{tab:energy} presents package-level power measurements collected via Intel SoCWatch for GCN and MPNN on CPU and GPU backends. The SoCWatch CLI was invoked with \texttt{-f sys -t 30 -r sum}, leveraging the Intel Platform Monitoring Technology (PMT) hardware counters that remain accessible even with Hyper-V and Virtualization-Based Security (VBS) enabled on the Meteor Lake platform. This is in contrast to the SoCWatch Python API (\texttt{-n} flag), which was blocked by the virtualization layer---a limitation consistent with Intel's documentation on VBS/HVCI constraints \cite{intel_socwatch_guide}.
+
+\begin{table}[htbp]
+\caption{Package Power and Energy per Inference (SoCWatch, 30\,s collection window)}
+\begin{center}
+\begin{tabular}{llrrr}
+\toprule
+\textbf{Model} & \textbf{Config} & \textbf{Avg Power} & \textbf{Latency} & \textbf{Energy/Inf.} \\
+ & & \textbf{(mW)} & \textbf{(ms)} & \textbf{(mJ)} \\
+\midrule
+\rowcolor{gray!15} GCN & CPU FP32 & 11,629 & 81.83 & 951.6 \\
+GCN & CPU INT8 & 9,675 & 84.38 & 816.4 \\
+\rowcolor{gray!15} GCN & GPU FP32 & 12,482 & 82.93 & 1,035.1 \\
+\midrule
+\rowcolor{gray!15} MPNN & CPU FP32 & 9,357 & 114.10 & 1,067.6 \\
+MPNN & CPU INT8 & 9,139 & 136.91 & 1,251.2 \\
+\rowcolor{gray!15} MPNN & GPU FP32 & 9,473 & 112.24 & 1,063.3 \\
+MPNN & GPU INT8 & 9,161 & 137.97 & 1,264.0 \\
+\bottomrule
+\end{tabular}
+\label{tab:energy}
+\end{center}
+\footnotesize{Energy per inference estimated as Avg Power $\times$ Mean Latency. NPU power isolation was not available through the PMT interface; NPU energy comparisons are excluded.}
+\end{table}
+
+Several observations emerge. First, the GPU draws higher package power than the CPU for GCN (12,482\,mW vs.\ 11,629\,mW, +7.3\%), but the two backends deliver nearly identical latency, resulting in comparable energy per inference. For MPNN---where all operations fall back to CPU regardless of the designated backend---the package power is nearly identical between CPU and GPU configurations (9,357 vs.\ 9,473\,mW), confirming that the GPU sits idle during MPNN execution. Second, INT8 quantization reduces package power for GCN on CPU (from 11,629 to 9,675\,mW, --16.8\%), but the modest latency improvement (81.83 to 84.38\,ms) is insufficient to offset the longer execution time, yielding only a marginal 14.2\% reduction in energy per inference. For MPNN INT8, both power and latency are worse than FP32, producing a net energy penalty of +17.2\% on CPU.
+
+These measurements, while limited to two GNN models and two backends, provide the first quantitative evidence that the Meteor Lake NPU's energy advantage for GNN workloads is constrained not only by the absence of latency gains but also by the fact that the CPU and GPU backends operate at comparable power envelopes for sparse workloads. The NPU's lower TDP suggests potential energy savings for dense vision models where it achieves significant latency reductions, but direct NPU power measurement requires either a future SoCWatch release with NPU power rail isolation or external instrumentation.
+
+Fig.~\ref{fig:fig8} presents a latency heatmap across all devices and models, complementing the energy analysis above with a broader device comparison. The iGPU consistently delivers the lowest latency across most model categories.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\columnwidth]{fig8_latency_heatmap.png}
+    \caption{Mean FP32 latency per device across models. The iGPU achieves the lowest latency for most workloads; the NPU is competitive only for dense vision models.}
+    \label{fig:fig8}
+\end{figure}
+
 \section{Discussion}
 
 \subsection{Why INT8 Fails for GNNs on NPU}
-The limited effectiveness of INT8 quantization for GNN workloads on the Meteor Lake NPU has two likely explanations. First, GNN execution is memory-bound: the dominant cost is fetching irregularly indexed feature vectors from DRAM, not performing multiply-accumulate operations. Halving the precision of arithmetic does not reduce the volume of data movement, so the bottleneck persists. Second, the NPU's quantization pipeline---optimized for per-tensor symmetric quantization of convolutional weights---struggles with GNN models where per-channel weight distributions and dynamic scatter/gather operations trigger dequantization overhead or fallback to CPU, negating any theoretical speedup.
+The limited effectiveness of INT8 quantization for GNN workloads on the Meteor Lake NPU has two likely explanations. First, GNN execution is memory-bound: the dominant cost is fetching irregularly indexed feature vectors from DRAM, not performing multiply-accumulate operations. Halving the precision of arithmetic does not reduce the volume of data movement, so the bottleneck persists. Second, the NPU's quantization pipeline---optimized for per-tensor symmetric quantization of convolutional weights---struggles with GNN models where per-channel weight distributions and dynamic scatter/gather operations trigger dequantization overhead or fallback to CPU, negating any theoretical speedup. This is consistent with the operator composition analysis in Section~4.3, which shows that GNNs contain 2--4$\times$ more shape-manipulation operators (Gather, Scatter, Reshape) than vision models---operators that are poorly served by uniform quantization schemes.
 
 Beyond these hardware-level explanations, the OpenVINO compiler itself applies fewer fusion optimizations to GNN computation graphs compared to CNNs. Sparse matrix operations involve indirect indexing that breaks the consecutive memory access patterns required for aggressive kernel fusion \cite{10.1145/3453483.3454083}. The compiler cannot easily merge a Gather (indexing into vertex features) with a subsequent MatMul because the intermediate data layout is determined at runtime by the adjacency structure. This compiler limitation compounds the hardware's memory-access disadvantage: not only is the NPU stalling on DRAM reads, but the software stack also delivers fewer optimization passes to the workload that needs them most.
 
+\subsubsection{Comparative Perspective: GNN Quantization Across Edge Accelerators}
+The challenges observed here are not unique to the Meteor Lake NPU; they reflect a broader pattern across the edge accelerator landscape. Google's Edge TPU (Coral) mandates full INT8 quantization at compile time---a hard constraint that would reject all three failing models outright, as its compiler cannot ingest mixed-precision graphs with unsupported dynamic operations. The Apple Neural Engine (ANE) operates natively at FP16 and supports INT8 through CoreML's post-training quantization pipeline; however, CoreML's GNN operator coverage is similarly restricted, with \texttt{Gather}, \texttt{Scatter}, and dynamic indexing operations falling back to the CPU or GPU co-processor. Qualcomm's Hexagon NPU, while more flexible with its 8-bit vector extensions and shared memory architecture, also reports degraded GNN throughput under quantization due to the same memory-bound scaling behavior observed here---sparse aggregation throughput is gated by LPDDR bandwidth rather than compute throughput, making precision reduction ineffective \cite{bi2026rooflinebenchbenchmarkingframeworkondevice}.
+
+What distinguishes the Meteor Lake NPU is the nature of the failure mode: rather than providing degraded but functional INT8 execution (as the Hexagon does), or rejecting the model at compile time (as the Edge TPU would), the OpenVINO toolchain silently falls back to CPU for unsupported quantized operators, producing misleading latency numbers that appear to show NPU execution but actually reflect CPU performance. This silent-fallback behavior---observed for MobileNetV2 INT8, ResNet50 INT8, and BERT-Tiny INT8---is a toolchain maturity issue as much as a hardware limitation. As NPU compilers evolve toward more explicit mixed-precision support and per-operator quantization control, the fraction of GNN operators that can benefit from reduced precision should increase, but the fundamental memory-bandwidth bottleneck will persist for any architecture that does not incorporate sparse-dataflow acceleration.
+
 \subsection{Platform Maturity Assessment}
-The Meteor Lake NPU, as of OpenVINO 2024.1, is best characterized as a vision-first accelerator. Dense convolutional models achieve 5--8$\times$ speedups over CPU and can approach or exceed iGPU performance at lower power. GNN support remains at an early stage: operator coverage is incomplete (MPNN falls back entirely to CPU), quantization is unreliable for non-CNN architectures, and the memory subsystem is not designed for sparse, irregular access patterns. These hardware-level constraints align with algorithmic evidence that GNNs are not always the optimal choice for sparse graph problems \cite{Bayraktar2026}, where well-engineered feature-based models can achieve competitive accuracy with lower computational cost.
+The Meteor Lake NPU, as of OpenVINO 2024.1, is best characterized as a vision-first accelerator. Dense convolutional models achieve 4.5--11.4$\times$ speedups over CPU (MobileNetV2: 4.5$\times$, ResNet50: 8.0$\times$, ViT-Tiny: 11.4$\times$) and can approach or exceed iGPU performance at lower TDP. The SoCWatch power data confirm that for GNN workloads, CPU and GPU backends operate at comparable power envelopes (9.1--12.5\,W package power), with GPU drawing modestly higher power (+7.3\% for GCN) while delivering similar latency. GNN support remains at an early stage: operator coverage is incomplete (MPNN falls back entirely to CPU), quantization is unreliable for non-CNN architectures, and the memory subsystem is not designed for sparse, irregular access patterns. These hardware-level constraints align with algorithmic evidence that GNNs are not always the optimal choice for sparse graph problems \cite{Bayraktar2026}, where well-engineered feature-based models can achieve competitive accuracy with lower computational cost.
 
 \subsection{Comparison with Prior Work}
 Custom GNN accelerators such as HyGCN \cite{9065592} ($10^{3}\times$ over CPU), EnGN \cite{9161360} ($1.8\times10^{3}\times$ over CPU), and GRIP \cite{9858684} ($17\times$ over CPU) demonstrate the potential of hardware-native sparse engines and dedicated memory hierarchies for graph workloads, but rely on custom silicon unavailable in commodity edge platforms. The Meteor Lake NPU provides negligible acceleration for GNNs (0.9--1.2$\times$ over CPU). This gap reflects fundamentally different design goals: ASIC accelerators optimize for graph-specific dataflows, while the consumer NPU targets general-purpose dense inference. These findings are consistent with recent analyses of memory bottlenecks in edge AI accelerators \cite{bi2026rooflinebenchbenchmarkingframeworkondevice, SINGH202371}.
 
 \subsection{Limitations}
-Several factors constrain the generality of these findings. Power measurements via Intel SoC Watch require administrator privileges that were not available during these experiments; energy efficiency conclusions are therefore drawn from latency comparisons rather than direct power data. The benchmark uses fixed-shape inputs consistent with ONNX static-graph requirements; dynamic-shape execution may introduce additional overhead not captured here. Finally, a single platform (Core Ultra 5 125H) and toolchain version (OpenVINO 2024.1) were evaluated; subsequent driver and plugin updates may alter the performance characteristics reported.
+Several factors constrain the generality of these findings. Power measurements were successfully collected via Intel SoCWatch PMT for CPU and GPU backends on GCN and MPNN; however, NPU-specific power isolation was not available, and the SoCWatch Python API was blocked by Hyper-V/VBS---a limitation that was circumvented through the CLI-based PMT path only for CPU/GPU package-level data. Extending energy analysis to all 14 models and to the NPU backend requires either a future SoCWatch release with NPU power rail support or external power instrumentation. The benchmark uses fixed-shape inputs consistent with ONNX static-graph requirements; dynamic-shape execution may introduce additional overhead not captured here. Three architectures (GAT, GATv2, EfficientNet-B0) failed INT8 compilation entirely; potential mitigation strategies such as manual per-operator quantization assignment or partial (mixed-precision) quantization were identified but not pursued, as the ONNX Runtime dynamic quantization API does not expose fine-grained per-operator control---leaving this as an open problem for future toolchain releases. Finally, a single platform (Core Ultra 5 125H) and toolchain version (OpenVINO 2024.1) were evaluated; subsequent driver and plugin updates may alter the performance characteristics reported.
 
 \section{Conclusion}
 
-Fourteen models, three OGB datasets, and three hardware backends were evaluated on the Intel Core Ultra (Meteor Lake) NPU. The NPU is an effective accelerator for dense FP32 vision models (5--8$\times$ CPU speedup) but provides limited benefit for GNN workloads, where memory-bound sparse aggregation keeps NPU latency within 15\% of CPU performance. INT8 quantization delivers negligible to negative returns for graph models: only one of six GNNs shows measurable speedup, and simple models like SGC exhibit 2$\times$ regression. Two attention-based architectures (GAT, GATv2) fail INT8 compilation entirely. The OpenVINO compiler contributes to these outcomes by applying fewer fusion optimizations to SpMM-dominated subgraphs, compounding the memory-bandwidth limitations of the NPU hardware. These findings suggest that while the Meteor Lake NPU hardware is capable, the current toolchain and memory architecture are not yet mature for sparse, irregular graph workloads---particularly under quantization. The benchmarking suite, processed artifacts, and visualization pipeline are released to facilitate reproducibility and follow-up studies on other edge NPU platforms.
+This study set out to answer three questions about GNN inference on the Meteor Lake NPU: expected latency, INT8 quantization effectiveness, and toolchain limitations. The answers are nuanced. For dense vision models, the NPU is unequivocally strong---ResNet50 and ViT-Tiny achieve 8--11$\times$ CPU speedups at the NPU's lower TDP. For GNNs, the picture is fundamentally different: SpMM-dominated execution is memory-bound on all three backends, and the NPU offers no meaningful latency advantage over the CPU for most graph models. Where the NPU does differentiate itself is in energy-proportional computing for dense workloads; for sparse workloads, package-level power measurements confirm that the CPU and GPU already operate within a narrow 9--12.5\,W band, leaving little room for NPU energy savings absent latency improvements.
+
+The INT8 story is perhaps the most instructive result. Quantization---widely marketed as a key NPU value proposition---fails to deliver for GNNs not because of any single hardware defect, but because of a systemic mismatch: the NPU's quantization toolchain assumes dense, regular computation graphs with static memory access patterns. GNNs violate every term of this contract. The result is not graceful degradation but a spectrum of failures: silent CPU fallback (vision models), outright compilation rejection (GAT, GATv2, EfficientNet-B0), and performance regression even when compilation succeeds (SGC: 2.2$\times$ slower). This pattern is consistent with the broader edge-AI landscape---Edge TPU, ANE, and Hexagon all exhibit similar GNN quantization gaps---suggesting that the problem is architectural rather than vendor-specific.
+
+For practitioners, the practical guidance is straightforward. On current-generation Meteor Lake hardware with OpenVINO 2024.1, deploy dense vision models to the NPU at FP32 for optimal latency and energy efficiency. For GNN inference, use the iGPU as the default backend; it consistently delivers the lowest latency across all GNN architectures tested. Avoid INT8 quantization for GNNs on the NPU unless the specific model has been verified to compile and execute correctly (GraphTransformer and GCN are the only models in this study that passed both checks). Do not rely on reported NPU INT8 latency for vision models without verifying CPU fallback ratios---the toolchain's silent fallback behavior can produce misleading results.
+
+Looking forward, three developments would meaningfully change this assessment. First, the OpenVINO NPU plugin must expose explicit mixed-precision control, allowing practitioners to quantize only the operators that benefit from reduced precision while leaving sparse-indexing operations at FP32. Second, sparse-dataflow support in the NPU memory subsystem---even a lightweight gather engine or strided DMA---would address the dominant memory bottleneck that makes all three backends perform similarly for GNNs. Third, as NPU compiler maturity improves and operator coverage expands, the current compilation failures (GAT, GATv2, EfficientNet-B0) should resolve; this study provides a concrete operator-level checklist for tracking that progress. The benchmarking suite, all 14 ONNX models, and the automated analysis pipeline are publicly released to enable exactly this kind of longitudinal tracking across future platform and toolchain revisions.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
