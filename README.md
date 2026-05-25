@@ -11,6 +11,7 @@ A comprehensive benchmarking framework for evaluating graph neural network (gnn)
 - **Operator Profiling:** Per-operator cpu fallback detection and onnx operator composition analysis
 - **Publication-Ready Figures:** 7 ieee-format figures (png + svg, 300 dpi)
 - **Accompanying Paper:** Latex source for ieee conference submission
+- **Interactive Presentation:** Web-based Slidev presentation with custom academic theme and interactive term notes (`showcase/`)
 
 ## PROJECT STRUCTURE
 
@@ -22,6 +23,7 @@ A comprehensive benchmarking framework for evaluating graph neural network (gnn)
 | `models/` | Pre-exported onnx models (fp32 and int8) |
 | `paper/` | Latex paper source and compiled pdf |
 | `results/` | Benchmark outputs, csv matrices, and figures |
+| `showcase/` | Interactive Slidev presentation source and assets |
 
 ## INSTALLATION
 

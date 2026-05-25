@@ -226,3 +226,8 @@ paper/*.out
 paper/paper.pdf
 paper/figures/*.png
 paper/figures/*.svg
+
+# Node / Slidev artifacts
+node_modules/
+.slidev/
+
