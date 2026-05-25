@@ -34,7 +34,7 @@ yusuftalhaarabaci@hotmail.com | emrullahdemiral@karabuk.edu.tr | farukacar@karab
 </div>
 <div class="col-span-5 flex justify-center items-center">
 <div class="p-2 bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-![](/npu_diagram.png){class="max-h-75 object-contain rounded"}
+<img src="./public/npu_diagram.png" class="max-h-75 object-contain rounded" />
 <div class="text-center text-xs text-slate-500 mt-2 font-medium">
 Figure 1: Intel Meteor Lake heterogeneous SoC
 </div>
@@ -260,7 +260,7 @@ layout: default
   </div>
   
   <div class="flex flex-col justify-center items-center">
-    ![FP32 Latency Comparison](/figures/fig1_latency_comparison.png){class="slide-img"}
+    <img src="./public/figures/fig1_latency_comparison.png" class="slide-img" />
     <span class="text-xs text-slate-500 mt-2">Figure 1: Latency comparison across compute backends (<a href="file:///c:/Users/yusuf/Github/npu-graph-opt-benchmarking/results/figures/comparison_table.csv">comparison_table.csv</a>)</span>
   </div>
 </div>
@@ -300,7 +300,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    ![INT8 Speedup Heatmap](/figures/fig2_int8_speedup_heatmap.png){class="slide-img"}
+    <img src="./public/figures/fig2_int8_speedup_heatmap.png" class="slide-img" />
     <span class="text-xs text-slate-500 mt-2">Figure 2: INT8 speedup heatmap. Red (< 1.0) represents performance degradation.</span>
   </div>
 </div>
@@ -370,7 +370,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    ![Roofline Analysis](/figures/fig5b_roofline.png){class="slide-img"}
+    <img src="./public/figures/fig5b_roofline.png" class="slide-img" />
     <span class="text-xs text-slate-500 mt-2">Figure 5: Operational throughput vs. arithmetic intensity</span>
   </div>
 </div>
@@ -488,7 +488,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    ![NPU Latency vs Graph Density](/figures/fig7_density_vs_latency.png){class="slide-img"}
+    <img src="./public/figures/fig7_density_vs_latency.png" class="slide-img" />
     <span class="text-xs text-slate-500 mt-2">Figure 3: Flat latency curves across density levels (<a href="file:///c:/Users/yusuf/Github/npu-graph-opt-benchmarking/results/figures/fig7_density_vs_latency.svg">fig7_density_vs_latency.svg</a>)</span>
   </div>
 </div>
@@ -526,7 +526,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    ![CPU Fallback Heatmap](/figures/fig4_cpu_fallback_heatmap.png){class="slide-img"}
+    <img src="./public/figures/fig4_cpu_fallback_heatmap.png" class="slide-img" />
     <span class="text-xs text-slate-500 mt-2">Figure 4: Operator-level CPU fallback fraction per model.</span>
   </div>
 </div>
