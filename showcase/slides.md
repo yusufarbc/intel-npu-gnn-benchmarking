@@ -52,28 +52,33 @@ layout: default
   <div class="glass-panel highlight-box-warning">
     <h3 class="text-rose font-semibold">2. Graph Reality (Sparse)</h3>
     <ul>
-      <li>Graph Neural Networks (GNNs) use <strong>neighborhood aggregation</strong> (SpMM/Gather-Scatter) over irregular matrices.</li>
+      <li>GNN neighborhood aggregation aggregates node features irregularly:
+        $$h_v^{(l+1)} = \text{UPDATE}^{(l)} \left( h_v^{(l)}, \text{AGGREGATE}^{(l)} \left( \{ h_u^{(l)} : u \in \mathcal{N}(v) \} \right) \right)$$
+      </li>
+      <li>Computations rely on irregular **Sparse-Dense Matrix Multiplications (SpMM)**:
+        $$Y = A \cdot X$$
+      </li>
       <li>Memory accesses are dynamic and sparse, disrupting hardware prefetchers.</li>
-      <li><strong>Result:</strong> NPUs stall waiting for DRAM transfers, leaving compute units severely underutilized.</li>
+      <li><strong>Result:</strong> NPUs stall waiting for DRAM transfers, leaving compute units underutilized.</li>
     </ul>
   </div>
 </div>
 
-<div class="mt-4">
-  ```mermaid
-  graph LR
-    subgraph CNN / Dense Dataflow
-      A[Regular 2D Grid] --> B[Spatial Locality & SRAM Reuse]
-      B --> C[Compute Bound: High MAC Utilization]
-    end
-    subgraph GNN / Sparse Dataflow
-      D[Irregular Graph] --> E[Random Pointer-Chasing/Gather]
-      E --> F[Memory Bound: DRAM Latency Wall]
-    end
-    style C fill:#dcfce7,stroke:#16a34a,stroke-width:1px
-    style F fill:#ffe4e6,stroke:#be123c,stroke-width:1px
-  ```
-</div>
+<div class="mt-4" />
+
+```mermaid {scale: 0.85}
+graph LR
+  subgraph "CNN / Dense Dataflow"
+    A[Regular 2D Grid] --> B[Spatial Locality & SRAM Reuse]
+    B --> C[Compute Bound: High MAC Utilization]
+  end
+  subgraph "GNN / Sparse Dataflow"
+    D[Irregular Graph] --> E[Random Pointer-Chasing/Gather]
+    E --> F[Memory Bound: DRAM Latency Wall]
+  end
+  style C fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px
+  style F fill:#ffe4e6,stroke:#be123c,stroke-width:1.5px
+```
 
 <Glossary :terms="['gnn', 'compute-bound', 'memory-bound', 'stalls', 'locality']" />
 
@@ -329,13 +334,51 @@ layout: default
 layout: default
 ---
 
+## Roofline Analysis & Computational Efficiency
+### Memory Bandwidth Wall vs. Compute Saturation
+
+<div class="grid-cols-2 mt-4">
+  <div>
+    <ul>
+      <li><strong>Arithmetic Intensity:</strong> Quantifies operational density per memory transfer:
+        $$\text{Intensity} = \frac{\text{FLOPs}}{\text{Bytes Transferred}}$$
+      </li>
+      <li class="mt-4"><strong>Memory-Bound GNNs:</strong>
+        <ul>
+          <li>GNN architectures cluster in the low-intensity region ($0.1 - 10 \text{ FLOP/byte}$).</li>
+          <li>Performance is limited by LPDDR5x DRAM bandwidth, explaining the lack of NPU acceleration.</li>
+        </ul>
+      </li>
+      <li class="mt-4"><strong>Compute-Bound Vision:</strong>
+        <ul>
+          <li>CNNs (ResNet50) and grid transformers (ViT) lie in higher intensity zones, fully saturating the NPU's systolic MAC arrays.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div class="flex flex-col justify-center items-center">
+    <img src="/figures/fig5b_roofline.png" class="slide-img" alt="Roofline Analysis" />
+    <span class="text-xs text-slate-500 mt-2">Figure 5: Operational throughput vs. arithmetic intensity</span>
+  </div>
+</div>
+
+<Glossary :terms="['compute-bound', 'memory-bound', 'intensity']" />
+
+---
+layout: default
+---
+
 ## Power Consumption and Throughput per Watt
 ### SoCWatch Package-Level Telemetry
 
 <div class="grid-cols-2 mt-4">
   <div>
     <ul>
-      <li><strong>Package Power Profiles:</strong>
+      <li><strong>Energy Estimation Formula:</strong>
+        $$E_{\text{inference}} = P_{\text{package}} \times t_{\text{latency}}$$
+      </li>
+      <li class="mt-4"><strong>Package Power Profiles:</strong>
         <ul>
           <li>iGPU draws slightly higher peak package power (+7.3% for GCN) but executes faster than CPU, yielding equal energy-per-inference.</li>
         </ul>
@@ -414,12 +457,15 @@ layout: default
 <div class="grid-cols-2 mt-4">
   <div>
     <ul>
-      <li><strong>OGB Dataset Sweep:</strong>
+      <li><strong>Pearson Correlation ($r$):</strong>
+        $$r = \frac{\text{Cov}(D, L)}{\sigma_D \sigma_L} \approx -0.00$$
+      </li>
+      <li class="mt-4"><strong>OGB Dataset Sweep:</strong>
         <ul>
           <li>Tests graphs spanning two orders of magnitude in average node degree: 6.9 (arxiv), 25.3 (products), 451.7 (proteins).</li>
         </ul>
       </li>
-      <li class="mt-4"><strong>Static-Shape Flatline ($r \approx 0$):</strong>
+      <li class="mt-4"><strong>Static-Shape Flatline:</strong>
         <ul>
           <li>Surprisingly, latency remains flat regardless of graph density.</li>
           <li>ONNX Runtime compiles models with static tensor dimensions.</li>
@@ -474,6 +520,76 @@ layout: default
 </div>
 
 <Glossary :terms="['memory-bound', 'operator-fusion', 'cpu-fallback', 'spmm']" />
+
+---
+layout: default
+---
+
+## Comparative Edge AI Landscape
+### Intel AI Boost vs. TPU, ANE, and Hexagon
+
+<div class="grid-cols-2 mt-4">
+  <div class="glass-panel">
+    <h3 class="font-semibold text-blue">Hardware Constraints Comparison</h3>
+    <ul>
+      <li><strong>Google Edge TPU (Coral):</strong> Strict static INT8 compiler compilation. Rejects mixed-precision dynamic index graphs.</li>
+      <li><strong>Apple ANE (CoreML):</strong> Native FP16 with restricted operator coverage. Gather/Scatter fallback to GPU/CPU co-processors.</li>
+      <li><strong>Qualcomm Hexagon:</strong> 8-bit vector extensions; GNN throughput remains gated by LPDDR bandwidth rather than MAC performance.</li>
+    </ul>
+  </div>
+
+  <div class="glass-panel highlight-box-warning">
+    <h3 class="font-semibold text-rose">OpenVINO Silent CPU Fallback</h3>
+    <ul>
+      <li><strong>Silent Dispatch:</strong> Unlike Edge TPU (which rejects compile) or Hexagon, OpenVINO silently dispatches unsupported quantized ops to CPU.</li>
+      <li><strong>Deceptive Metrics:</strong> MobileNetV2, ResNet50, and BERT-Tiny INT8 report "NPU latencies" identical to CPU execution.</li>
+      <li><strong>Quantization Limits:</strong> GAT, GATv2, and EfficientNet-B0 fail compiler lowering completely due to dynamic indexing bounds.</li>
+    </ul>
+  </div>
+</div>
+
+<Glossary :terms="['npu', 'cpu-fallback', 'int8']" />
+
+---
+layout: default
+---
+
+## Scientific Limitations & Threats to Validity
+### Experimental Constraints & Scope of Findings
+
+<div class="grid-cols-2 mt-4">
+  <div>
+    <ul>
+      <li><strong>Single-Platform Evaluation:</strong>
+        <ul>
+          <li>All results restricted to a single Core Ultra 5 125H platform. Memory subsystem variations across SKUs will affect bandwidth bounds.</li>
+        </ul>
+      </li>
+      <li class="mt-4"><strong>Power Telemetry Constraints:</strong>
+        <ul>
+          <li>SoCWatch PMT could not isolate the NPU power rail. Power analyses restricted to package-level CPU/GPU metrics.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <div>
+    <ul>
+      <li><strong>Energy Calculation Bounds:</strong>
+        <ul>
+          <li>Linear approximation ($E = P \times t$) assumes stationary package power; does not isolate background OS/system activity.</li>
+        </ul>
+      </li>
+      <li class="mt-4"><strong>Statistical Limitations:</strong>
+        <ul>
+          <li>Reports arithmetic means over $100 \times 3$ iterations. Lack of formal 95% confidence intervals or paired $t$-tests.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<Glossary :terms="['socwatch', 'warm-up']" />
 
 ---
 layout: default
