@@ -280,3 +280,14 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Hide Slidev right-side TOC/navigation sidebar and goto dialog */
+#page-root,
+.grid-cols-\[1fr_max-content\] {
+  grid-template-columns: 1fr !important;
+}
+#slidev-goto-dialog,
+#slidev-slide-nav,
+.slidev-slide-nav {
+  display: none !important;
+}
