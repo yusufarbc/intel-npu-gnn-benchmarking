@@ -2,21 +2,22 @@
 theme: default
 layout: default
 info: |
-  ## Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
+  ## Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis
   Academic presentation for Yusuf Talha Arabacı, Karabük University.
 class: text-left
 highlighter: shiki
 drawings:
   persist: false
 transition: slide-left
-title: Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
+title: Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis
 ---
 
 <div class="grid grid-cols-12 gap-8 h-full items-center">
 <div class="col-span-7 flex flex-col justify-center">
 <h1 class="text-3xl font-extrabold text-blue-800 leading-tight">
-Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
+Benchmarking GNN Inference on the Intel Core Ultra NPU
 </h1>
+<h4 class="text-slate-500 font-medium text-sm mt-1">A Latency, Quantization, and Energy Analysis</h4>
 <h3 class="text-slate-600 font-semibold mt-2 text-lg leading-relaxed">
 Heterogeneous Edge AI Analysis on Meteor Lake SoC
 </h3>

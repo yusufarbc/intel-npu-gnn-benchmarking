@@ -10,69 +10,65 @@ Reallocating 'singl_function' (item size: 4) to 100 items.
 Reallocating 'wiz_functions' (item size: 4) to 6000 items.
 Reallocating 'singl_function' (item size: 4) to 100 items.
 Database file #1: references.bib
-Repeated entry---line 1633 of file references.bib
+Repeated entry---line 1649 of file references.bib
  : @misc{bi2026rooflinebenchbenchmarkingframeworkondevice
  :                                                       ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1831 of file references.bib
+Repeated entry---line 1847 of file references.bib
  : @misc{mlperf_inference
  :                       ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1945 of file references.bib
+Repeated entry---line 1961 of file references.bib
  : @misc{intel_core_ultra_npu
  :                           ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1975 of file references.bib
+Repeated entry---line 1991 of file references.bib
  : @misc{intel_meteorlake_hotchips_2023
  :                                     ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1991 of file references.bib
+Repeated entry---line 2007 of file references.bib
  : @misc{lam2024_meteorlake_npu
  :                             ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2009 of file references.bib
+Repeated entry---line 2025 of file references.bib
  : @misc{openvino_npu_docs
  :                        ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2067 of file references.bib
+Repeated entry---line 2083 of file references.bib
  : @inproceedings{kipf2017gcn
  :                           ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2157 of file references.bib
+Repeated entry---line 2173 of file references.bib
  : @inproceedings{gasteiger2019appnp
  :                                  ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2193 of file references.bib
+Repeated entry---line 2209 of file references.bib
  : @inproceedings{he2016resnet
  :                            ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2213 of file references.bib
+Repeated entry---line 2229 of file references.bib
  : @inproceedings{sandler2018mobilenetv2
  :                                      ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2233 of file references.bib
+Repeated entry---line 2249 of file references.bib
  : @article{turc2019berttiny
  :                          ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2247 of file references.bib
+Repeated entry---line 2263 of file references.bib
  : @inproceedings{shi2020masked
  :                             ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2263 of file references.bib
+Repeated entry---line 2279 of file references.bib
  : @inproceedings{tan2019efficientnet
  :                                   ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2279 of file references.bib
+Repeated entry---line 2295 of file references.bib
  : @inproceedings{dosovitskiy2020vit
  :                                  ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2295 of file references.bib
+Repeated entry---line 2311 of file references.bib
  : @inproceedings{hu2020open
  :                          ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 2311 of file references.bib
- : @article{Bayraktar2026
- :                       ,
 I'm skipping whatever remains of this entry
 -- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
 -- http://www.michaelshell.org/tex/ieeetran/bibtex/
@@ -80,45 +76,45 @@ I'm skipping whatever remains of this entry
 Warning--empty journal in he2016resnet
 
 Done.
-You've used 28 entries,
+You've used 29 entries,
             4087 wiz_defined-function locations,
-            981 strings with 13408 characters,
-and the built_in function-call counts, 20986 in all, are:
-= -- 1633
-> -- 574
+            985 strings with 13770 characters,
+and the built_in function-call counts, 21387 in all, are:
+= -- 1669
+> -- 578
 < -- 117
-+ -- 308
-- -- 120
-* -- 1015
-:= -- 3127
-add.period$ -- 60
-call.type$ -- 28
-change.case$ -- 37
++ -- 310
+- -- 121
+* -- 1028
+:= -- 3202
+add.period$ -- 62
+call.type$ -- 29
+change.case$ -- 39
 chr.to.int$ -- 288
-cite$ -- 29
-duplicate$ -- 1535
-empty$ -- 1792
-format.name$ -- 139
-if$ -- 4900
+cite$ -- 30
+duplicate$ -- 1569
+empty$ -- 1830
+format.name$ -- 140
+if$ -- 4990
 int.to.chr$ -- 0
-int.to.str$ -- 28
-missing$ -- 303
-newline$ -- 129
-num.names$ -- 32
-pop$ -- 766
+int.to.str$ -- 29
+missing$ -- 311
+newline$ -- 132
+num.names$ -- 33
+pop$ -- 786
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 2
-skip$ -- 1622
+skip$ -- 1655
 stack$ -- 0
-substring$ -- 766
-swap$ -- 1168
+substring$ -- 769
+swap$ -- 1188
 text.length$ -- 21
 text.prefix$ -- 0
 top$ -- 5
-type$ -- 28
+type$ -- 29
 warning$ -- 1
-while$ -- 72
-width$ -- 30
-write$ -- 310
-(There were 16 error messages)
+while$ -- 73
+width$ -- 31
+write$ -- 319
+(There were 15 error messages)

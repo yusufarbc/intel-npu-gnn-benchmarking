@@ -199,4 +199,11 @@ R.~Singh and S.~S. Gill, ``Edge ai: A survey,'' \emph{Internet of Things and
   \url{https://www.sciencedirect.com/science/article/pii/S2667345223000196}
 \BIBentrySTDinterwordspacing
 
+\bibitem{intel_socwatch_config}
+I.~Corporation, ``Soc watch configuration file (socwatchconfig.txt),'' Part of
+  Intel oneAPI VTune Profiler 2026.0 installation, 2026, defines PMT counter
+  sets per platform. Meteor Lake (MTLPB) entries include NPU bandwidth
+  (VPU\_MEMORY\_BW), temperature, and D-state residency counters; no NPU power
+  rail counter is defined. File path: \texttt{configs/SOCWatchConfig.txt}.
+
 \end{thebibliography}
