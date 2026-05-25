@@ -1,6 +1,7 @@
 ---
 theme: default
-background: https://cover.sli.dev
+layout: cover
+background: /npu_diagram.png
 info: |
   ## Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
   Academic presentation for Yusuf Talha Arabacı, Karabük University.
@@ -10,9 +11,6 @@ drawings:
   persist: false
 transition: slide-left
 title: Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
----
-layout: cover
-background: /npu_diagram.png
 ---
 
 # Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
