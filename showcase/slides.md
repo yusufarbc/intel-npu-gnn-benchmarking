@@ -197,7 +197,7 @@ layout: default
   <div class="glass-panel">
     <h3 class="font-semibold text-blue">3 Real-world Graph Datasets</h3>
     <div class="text-xs mb-2">
-      Drawn from the Open Graph Benchmark (<a href="file:///c:/Users/yusuf/Github/npu-graph-opt-benchmarking/results/figures/dataset_stats.csv">dataset_stats.csv</a>):
+      Drawn from the Open Graph Benchmark (dataset_stats.csv):
     </div>
     <table>
       <thead>
@@ -262,7 +262,7 @@ layout: default
   
   <div class="flex flex-col justify-center items-center">
     <img src="./public/figures/fig1_latency_comparison.svg" class="slide-img" />
-    <span class="text-xs text-slate-500 mt-2">Figure 1: Latency comparison across compute backends (<a href="file:///c:/Users/yusuf/Github/npu-graph-opt-benchmarking/results/figures/comparison_table.csv">comparison_table.csv</a>)</span>
+    <span class="text-xs text-slate-500 mt-2">Figure 1: Latency comparison across compute backends (comparison_table.csv)</span>
   </div>
 </div>
 
@@ -490,7 +490,7 @@ layout: default
 
   <div class="flex flex-col justify-center items-center">
     <img src="./public/figures/fig7_density_vs_latency.svg" class="slide-img" />
-    <span class="text-xs text-slate-500 mt-2">Figure 3: Flat latency curves across density levels (<a href="file:///c:/Users/yusuf/Github/npu-graph-opt-benchmarking/results/figures/fig7_density_vs_latency.svg">fig7_density_vs_latency.svg</a>)</span>
+    <span class="text-xs text-slate-500 mt-2">Figure 3: Flat latency curves across density levels (fig7_density_vs_latency.svg)</span>
   </div>
 </div>
 
@@ -595,7 +595,7 @@ layout: default
       </li>
       <li class="mt-4"><strong>Statistical Limitations:</strong>
         <ul>
-          <li>Reports arithmetic means over $100 \times 3$ iterations. Lack of formal 95% confidence intervals or paired $t$-tests.</li>
+          <li>Bootstrap 95% confidence intervals are computed per configuration (available in released scalability matrices). Paired hypothesis tests across device pairs are not yet performed.</li>
         </ul>
       </li>
     </ul>
@@ -613,9 +613,9 @@ layout: default
 
 <div class="mt-6 flex flex-col gap-4">
   <div class="highlight-box highlight-box-success">
-    <div class="highlight-box-title">✔ Recommended: Dense Vision on NPU (INT8)</div>
+    <div class="highlight-box-title">✔ Recommended: Dense Vision on NPU (FP32)</div>
     <div class="text-sm">
-      Deploy traditional vision networks (ResNet50, MobileNetV2) and regular transformers to the <strong>NPU</strong> using <strong>INT8 quantization</strong>. The compile pipeline is mature and provides extreme energy efficiency.
+      Deploy traditional vision networks (ResNet50, MobileNetV2) and regular transformers to the <strong>NPU</strong> using <strong>FP32 precision</strong>. The NPU achieves 4.5–11.4× speedups over CPU at FP32. Avoid INT8 for vision models on NPU—the toolchain silently falls back to CPU, producing misleading latency numbers.
     </div>
   </div>
 
