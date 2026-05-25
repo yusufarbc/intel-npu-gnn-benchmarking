@@ -178,7 +178,7 @@ const activeTerms = computed(() => {
 .glossary-wrapper {
   position: absolute;
   bottom: 0.65rem;
-  left: 20rem; /* Positions next to the footer-text (which is at left: 2rem) */
+  right: 5.5rem; /* Position next to the page number (which is at right: 2rem) */
   z-index: 1000;
 }
 
@@ -206,7 +206,7 @@ const activeTerms = computed(() => {
 .glossary-modal {
   position: absolute;
   bottom: 1.8rem;
-  left: 0;
+  right: 0; /* Align right edge of the modal with the button */
   width: 320px;
   max-height: 280px;
   background: #ffffff;
