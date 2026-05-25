@@ -13,35 +13,33 @@ title: Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
 ---
 
 <div class="grid grid-cols-12 gap-8 h-full items-center">
-  <div class="col-span-7 flex flex-col justify-center">
-    <h1 class="text-3xl font-extrabold text-blue-800 leading-tight">
-      Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
-    </h1>
-    <h3 class="text-slate-600 font-semibold mt-2 text-lg leading-relaxed">
-      Heterogeneous Edge AI Analysis on Meteor Lake SoC
-    </h3>
-    
-    <div class="mt-8 p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
-      <div class="font-bold text-base text-slate-900">
-        Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
-      </div>
-      <div class="text-slate-700 text-xs mt-1 font-medium">
-        Department of Software Engineering, Karabük University, Karabük, Turkey
-      </div>
-      <div class="text-slate-500 text-xs mt-0.5">
-        yusuftalhaarabaci@hotmail.com | emrullahdemiral@karabuk.edu.tr | farukacar@karabuk.edu.tr
-      </div>
-    </div>
-  </div>
-
-  <div class="col-span-5 flex justify-center items-center">
-    <div class="p-2 bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-      <img src="/npu_diagram.png" class="max-h-75 object-contain rounded" alt="NPU Architecture" />
-      <div class="text-center text-xs text-slate-500 mt-2 font-medium">
-        Figure 1: Intel Meteor Lake heterogeneous SoC
-      </div>
-    </div>
-  </div>
+<div class="col-span-7 flex flex-col justify-center">
+<h1 class="text-3xl font-extrabold text-blue-800 leading-tight">
+Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
+</h1>
+<h3 class="text-slate-600 font-semibold mt-2 text-lg leading-relaxed">
+Heterogeneous Edge AI Analysis on Meteor Lake SoC
+</h3>
+<div class="mt-8 p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
+<div class="font-bold text-base text-slate-900">
+Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
+</div>
+<div class="text-slate-700 text-xs mt-1 font-medium">
+Department of Software Engineering, Karabük University, Karabük, Turkey
+</div>
+<div class="text-slate-500 text-xs mt-0.5">
+yusuftalhaarabaci@hotmail.com | emrullahdemiral@karabuk.edu.tr | farukacar@karabuk.edu.tr
+</div>
+</div>
+</div>
+<div class="col-span-5 flex justify-center items-center">
+<div class="p-2 bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+![](/npu_diagram.png){class="max-h-75 object-contain rounded"}
+<div class="text-center text-xs text-slate-500 mt-2 font-medium">
+Figure 1: Intel Meteor Lake heterogeneous SoC
+</div>
+</div>
+</div>
 </div>
 
 <Glossary :terms="['npu', 'igpu', 'meteor-lake', 'soc']" />
@@ -262,7 +260,7 @@ layout: default
   </div>
   
   <div class="flex flex-col justify-center items-center">
-    <img src="/figures/fig1_latency_comparison.png" class="slide-img" alt="FP32 Latency Comparison" />
+    ![FP32 Latency Comparison](/figures/fig1_latency_comparison.png){class="slide-img"}
     <span class="text-xs text-slate-500 mt-2">Figure 1: Latency comparison across compute backends (<a href="file:///c:/Users/yusuf/Github/npu-graph-opt-benchmarking/results/figures/comparison_table.csv">comparison_table.csv</a>)</span>
   </div>
 </div>
@@ -302,7 +300,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    <img src="/figures/fig2_int8_speedup_heatmap.png" class="slide-img" alt="INT8 Speedup Heatmap" />
+    ![INT8 Speedup Heatmap](/figures/fig2_int8_speedup_heatmap.png){class="slide-img"}
     <span class="text-xs text-slate-500 mt-2">Figure 2: INT8 speedup heatmap. Red (< 1.0) represents performance degradation.</span>
   </div>
 </div>
@@ -372,7 +370,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    <img src="/figures/fig5b_roofline.png" class="slide-img" alt="Roofline Analysis" />
+    ![Roofline Analysis](/figures/fig5b_roofline.png){class="slide-img"}
     <span class="text-xs text-slate-500 mt-2">Figure 5: Operational throughput vs. arithmetic intensity</span>
   </div>
 </div>
@@ -490,7 +488,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    <img src="/figures/fig7_density_vs_latency.png" class="slide-img" alt="NPU Latency vs Graph Density" />
+    ![NPU Latency vs Graph Density](/figures/fig7_density_vs_latency.png){class="slide-img"}
     <span class="text-xs text-slate-500 mt-2">Figure 3: Flat latency curves across density levels (<a href="file:///c:/Users/yusuf/Github/npu-graph-opt-benchmarking/results/figures/fig7_density_vs_latency.svg">fig7_density_vs_latency.svg</a>)</span>
   </div>
 </div>
@@ -528,7 +526,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    <img src="/figures/fig4_cpu_fallback_heatmap.png" class="slide-img" alt="CPU Fallback Heatmap" />
+    ![CPU Fallback Heatmap](/figures/fig4_cpu_fallback_heatmap.png){class="slide-img"}
     <span class="text-xs text-slate-500 mt-2">Figure 4: Operator-level CPU fallback fraction per model.</span>
   </div>
 </div>
