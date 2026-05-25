@@ -1,11 +1,10 @@
 ---
 theme: default
-layout: cover
-background: /npu_diagram.png
+layout: default
 info: |
   ## Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
   Academic presentation for Yusuf Talha Arabacı, Karabük University.
-class: text-center
+class: text-left
 highlighter: shiki
 drawings:
   persist: false
@@ -13,18 +12,35 @@ transition: slide-left
 title: Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
 ---
 
-# Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
-### Heterogeneous Edge AI Analysis on Meteor Lake SoC
+<div class="grid grid-cols-12 gap-8 h-full items-center">
+  <div class="col-span-7 flex flex-col justify-center">
+    <h1 class="text-3xl font-extrabold text-blue-800 leading-tight">
+      Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
+    </h1>
+    <h3 class="text-slate-600 font-semibold mt-2 text-lg leading-relaxed">
+      Heterogeneous Edge AI Analysis on Meteor Lake SoC
+    </h3>
+    
+    <div class="mt-8 p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
+      <div class="font-bold text-base text-slate-900">
+        Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
+      </div>
+      <div class="text-slate-700 text-xs mt-1 font-medium">
+        Department of Software Engineering, Karabük University, Karabük, Turkey
+      </div>
+      <div class="text-slate-500 text-xs mt-0.5">
+        yusuftalhaarabaci@hotmail.com | emrullahdemiral@karabuk.edu.tr | farukacar@karabuk.edu.tr
+      </div>
+    </div>
+  </div>
 
-<div class="mt-20 text-center bg-white/80 backdrop-blur-md p-6 rounded-lg border border-slate-200 shadow-lg max-w-2xl mx-auto">
-  <div class="font-bold text-lg text-slate-900">
-    Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
-  </div>
-  <div class="text-slate-800 text-sm mt-1 font-medium">
-    Department of Software Engineering, Karabük University, Karabük, Turkey
-  </div>
-  <div class="text-slate-600 text-xs mt-1">
-    yusuftalhaarabaci@hotmail.com | emrullahdemiral@karabuk.edu.tr | farukacar@karabuk.edu.tr
+  <div class="col-span-5 flex justify-center items-center">
+    <div class="p-2 bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+      <img src="/npu_diagram.png" class="max-h-75 object-contain rounded" alt="NPU Architecture" />
+      <div class="text-center text-xs text-slate-500 mt-2 font-medium">
+        Figure 1: Intel Meteor Lake heterogeneous SoC
+      </div>
+    </div>
   </div>
 </div>
 
