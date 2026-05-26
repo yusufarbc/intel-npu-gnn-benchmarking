@@ -33,6 +33,40 @@
     radial-gradient(at 0% 0%, rgba(29, 78, 216, 0.03) 0px, transparent 40%),
     radial-gradient(at 100% 100%, rgba(15, 118, 110, 0.03) 0px, transparent 40%);
   -webkit-font-smoothing: antialiased;
+  overflow-y: auto;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  padding: 1.5rem 2rem !important;
+}
+
+/* Compact slide helper for overflow slides */
+.compact-slide .slidev-layout {
+  padding: 0.8rem 1.5rem !important;
+}
+.compact-slide h2 {
+  font-size: 1.2rem !important;
+  margin-bottom: 0.6rem !important;
+}
+.compact-slide li {
+  font-size: 0.75rem !important;
+  margin-bottom: 0.2rem !important;
+}
+.compact-slide .glass-panel {
+  padding: 0.6rem 0.8rem !important;
+  margin-bottom: 0.4rem !important;
+}
+.compact-slide .highlight-box {
+  padding: 0.4rem 0.7rem !important;
+  margin-bottom: 0.4rem !important;
+}
+.compact-slide table {
+  font-size: 0.65rem !important;
+}
+.compact-slide td, .compact-slide th {
+  padding: 0.2rem 0.4rem !important;
+}
+.compact-slide ul {
+  margin: 0 !important;
 }
 
 /* Header Styles */
@@ -55,31 +89,32 @@
 .slidev-layout h2 {
   color: var(--color-blue);
   border-bottom: 2px solid rgba(29, 78, 216, 0.15);
-  padding-bottom: 0.3rem;
-  margin-bottom: 1.5rem;
-  font-size: 1.6rem;
+  padding-bottom: 0.2rem;
+  margin-bottom: 0.6rem;
+  font-size: 1.35rem;
 }
 
 .slidev-layout h3 {
   color: var(--color-slate-800);
-  font-size: 1.2rem;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  margin-top: 0.4rem;
+  margin-bottom: 0.3rem;
 }
 
 /* Lists and bullets */
 .slidev-layout ul {
   list-style-type: none;
   padding-left: 0;
+  margin: 0.2rem 0;
 }
 
 .slidev-layout li {
   position: relative;
-  padding-left: 1.4rem;
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
+  padding-left: 1.2rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
   color: var(--color-slate-700);
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .slidev-layout li::before {
@@ -100,11 +135,11 @@
 .glass-panel {
   background: var(--color-slate-50);
   border: 1px solid var(--color-slate-200);
-  border-radius: 8px;
-  padding: 1.1rem;
-  margin-bottom: 0.8rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.15s ease;
 }
 
 .glass-panel:hover {
@@ -121,13 +156,13 @@
 .grid-cols-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
+  gap: 0.7rem;
 }
 
 .grid-cols-3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 /* Styled Table (Clean Academic Style) */
@@ -146,16 +181,16 @@
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
   text-align: left;
-  padding: 0.5rem 0.6rem;
+  padding: 0.25rem 0.4rem;
   border-bottom: 1px solid var(--color-slate-300);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 .slidev-layout td {
-  padding: 0.4rem 0.6rem;
+  padding: 0.2rem 0.4rem;
   border-bottom: 1px solid var(--color-slate-200);
   color: var(--color-slate-700);
-  font-size: 0.75rem;
+  font-size: 0.65rem;
 }
 
 .slidev-layout tr:last-child td {
@@ -215,11 +250,11 @@
 
 /* Custom Highlight Boxes (Beamer style blocks) */
 .highlight-box {
-  border-left: 4px solid var(--color-blue);
+  border-left: 3px solid var(--color-blue);
   background: var(--color-slate-50);
-  padding: 0.8rem 1rem;
-  border-radius: 0 6px 6px 0;
-  margin-bottom: 0.8rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 0.4rem;
 }
 
 .highlight-box-warning {

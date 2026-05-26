@@ -129,7 +129,7 @@ const glossary = {
   },
   'socwatch': {
     title: 'SoCWatch',
-    desc: 'Intel\'s low-level system profiling tool that reads hardware telemetry (via PMT) to monitor package, CPU, iGPU, and NPU power usage (mW/mJ).'
+    desc: 'Intel\'s low-level system profiling tool that reads hardware telemetry (via PMT) to monitor package, CPU, and GPU power usage (mW/mJ). NPU power rail counters are not defined in Meteor Lake PMT, so NPU energy cannot be measured via this interface.'
   },
   'throughput-watt': {
     title: 'Throughput per Watt',
@@ -138,6 +138,38 @@ const glossary = {
   'warm-up': {
     title: 'Warm-up Iterations',
     desc: 'Non-timed execution runs executed at startup to load libraries and populate caches, preventing cold-start latency from skewing benchmark statistics.'
+  },
+  'onnx': {
+    title: 'ONNX (Open Neural Network Exchange)',
+    desc: 'An open standard format for representing ML models. All 14 models were exported to ONNX at FP32; INT8 variants used ONNX Runtime\'s dynamic quantization API.'
+  },
+  'lpddr5x': {
+    title: 'LPDDR5x',
+    desc: 'Low-power double data rate 5X DRAM used by Meteor Lake (~120 GB/s peak bandwidth). GNNs are memory-bound by this bandwidth rather than compute capacity.'
+  },
+  'ogb': {
+    title: 'OGB (Open Graph Benchmark)',
+    desc: 'A standardized suite of large-scale graph datasets. The paper uses ogbn-arxiv (citation), ogbn-products (co-purchase), and ogbn-proteins (protein interactions).'
+  },
+  'roofline': {
+    title: 'Roofline Model',
+    desc: 'An analytical model plotting achieved throughput against arithmetic intensity to identify whether a workload is memory-bound or compute-bound on a given architecture.'
+  },
+  'static-shape': {
+    title: 'Static-Shape Compilation',
+    desc: 'An ONNX/OpenVINO mode where input tensor dimensions are fixed at compile time. Causes NPU latency to be constant regardless of input graph sparsity (r ≈ -0.00 correlation with edges/node).'
+  },
+  'scatter-gather': {
+    title: 'Scatter / Gather',
+    desc: 'Indexed memory operations reading from or writing to non-contiguous locations. Heavily used by GNN attention/aggregation; unsupported in NPU\'s quantized operator set, causing INT8 failures.'
+  },
+  'vit': {
+    title: 'ViT (Vision Transformer)',
+    desc: 'A transformer applied to image patches on a regular 2D grid. ViT-Tiny achieves 11.4× NPU speedup over CPU because its attention patterns are static and predictable.'
+  },
+  'xe-lpg': {
+    title: 'Xe-LPG',
+    desc: 'Intel\'s integrated GPU microarchitecture in Meteor Lake (7 Xe-cores). Its larger cache and higher bandwidth vs NPU explain its consistently lower GNN latency.'
   }
 }
 

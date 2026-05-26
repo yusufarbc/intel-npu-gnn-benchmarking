@@ -1,8 +1,8 @@
 onnx
+onnxruntime
 onnxruntime-openvino
 openvino
 nncf
-onnxscript
 numpy
 pandas
 matplotlib
