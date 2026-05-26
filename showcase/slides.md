@@ -164,24 +164,33 @@ layout: default
 ## Dense vs. Sparse Dataflow
 ### Visual Comparison
 
-<div class="flex items-center justify-center h-full gap-4">
-```mermaid {scale: 0.75}
-flowchart LR
-  subgraph CNN[Dense: CNN Dataflow]
+<div class="grid grid-cols-2 gap-4 items-start mt-2">
+<div>
+
+```mermaid {scale: 0.65}
+graph TB
+  subgraph Dense[CNN Dataflow]
     direction TB
     A[Regular 2D Grid] --> B[Spatial Locality<br/>& SRAM Reuse]
     B --> C[✓ Compute Bound<br/>High MAC Utilization]
   end
-  subgraph GNN[Sparse: GNN Dataflow]
+  style C fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#166534
+  style Dense fill:#f0fdf4,stroke:#86efac,stroke-width:1px
+```
+</div>
+<div>
+
+```mermaid {scale: 0.65}
+graph TB
+  subgraph Sparse[GNN Dataflow]
     direction TB
     D[Irregular Graph] --> E[Random Pointer-<br/>Chasing / Gather]
     E --> F[✗ Memory Bound<br/>DRAM Latency Wall]
   end
-  style C fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#166534
   style F fill:#ffe4e6,stroke:#be123c,stroke-width:2px,color:#991b1b
-  style CNN fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px
-  style GNN fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px
+  style Sparse fill:#fef2f2,stroke:#fca5a5,stroke-width:1px
 ```
+</div>
 </div>
 
 <Glossary :terms="['compute-bound', 'memory-bound', 'scatter-gather']" />
