@@ -59,9 +59,6 @@ I.~Corporation, ``Intel core ultra processor: Meteor lake architecture,'' Hot
 V.~J. Reddi \emph{et~al.}, ``Mlperf inference benchmark,'' \emph{arXiv preprint
   arXiv:1911.02549}, 2020.
 
-\bibitem{bi2026rooflinebenchbenchmarkingframeworkondevice}
-Z.~Bi \emph{et~al.}, ``Roofline-based benchmarking framework for on-device ai
-  accelerators,'' \emph{arXiv preprint}, 2026.
 
 \bibitem{kipf2017gcn}
 \BIBentryALTinterwordspacing
@@ -136,7 +133,8 @@ J.~Gilmer, S.~S. Schoenholz, P.~F. Riley, O.~Vinyals, and G.~E. Dahl, ``Neural
 
 \bibitem{he2016resnet}
 K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
-  recognition,'' pp. 770--778, 2016.
+  recognition,'' in \emph{Proceedings of the IEEE Conference on Computer Vision
+  and Pattern Recognition (CVPR)}, 2016, pp. 770--778.
 
 \bibitem{sandler2018mobilenetv2}
 M.~Sandler, A.~Howard, M.~Zhu, A.~Zhmoginov, and L.-C. Chen, ``Mobilenetv2:
@@ -188,9 +186,10 @@ I.~Corporation, ``Intel soc watch for windows os: User guide,'' Intel Software
   https://www.intel.com/content/www/us/en/developer/topic-technology/open/socwatch/overview.html.
 
 \bibitem{Bayraktar2026}
-M.~Bayraktar \emph{et~al.}, ``Are gnns always necessary? a comparative study of
-  feature-based and graph-based models for sparse graphs,'' in
-  \emph{Proceedings of the AAAI Conference on Artificial Intelligence}, 2026.
+C.~Bayraktar, ``Beyond GNNs: a methodological benchmark of feature efficiency
+  for link prediction in sparse developer networks,''
+  \emph{Knowledge and Information Systems}, vol.~68, no.~1, p.~135, 2026.
+  [Online]. Available: \url{https://doi.org/10.1007/s10115-026-02765-7}
 
 \bibitem{SINGH202371}
 \BIBentryALTinterwordspacing

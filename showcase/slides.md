@@ -562,30 +562,30 @@ layout: default
 layout: default
 ---
 
-## Comparative Edge AI Landscape
-### Intel AI Boost vs. TPU, ANE, and Hexagon
+## Intel AI Boost: Failure Mode Analysis
+### Silent CPU Fallback as a Toolchain Maturity Signal
 
-<div class="grid-cols-2 mt-2">
-  <div class="glass-panel">
-    <h3 class="font-semibold text-blue">Hardware Constraints</h3>
+<div class="mt-2">
+  <div class="glass-panel highlight-box-warning">
+    <h3 class="font-semibold text-rose">Observed Failure Modes on Meteor Lake NPU</h3>
     <ul>
-      <li><strong>Google Edge TPU:</strong> Strict static INT8; rejects mixed-precision dynamic graphs.</li>
-      <li><strong>Apple ANE:</strong> Native FP16; Gather/Scatter fallback to GPU/CPU.</li>
-      <li><strong>Qualcomm Hexagon:</strong> 8-bit vector; gated by LPDDR bandwidth, not MACs.</li>
+      <li><strong>Silent CPU Fallback:</strong> OpenVINO silently dispatches unsupported quantized ops to CPU — MobileNetV2, ResNet50, BERT-Tiny INT8 report misleading "NPU" latencies identical to CPU execution.</li>
+      <li><strong>Compilation Rejection:</strong> GAT, GATv2, EfficientNet-B0 fail INT8 lowering entirely — dynamic Gather/Scatter unsupported in NPU quantized operator set.</li>
+      <li><strong>Full Backend Bypass:</strong> MPNN's <code>index_add_</code> and <code>scatter_mean</code> operators lie outside the NPU plugin — 100% CPU fallback regardless of designated backend.</li>
     </ul>
   </div>
 
-  <div class="glass-panel highlight-box-warning">
-    <h3 class="font-semibold text-rose">OpenVINO: Silent CPU Fallback</h3>
+  <div class="glass-panel mt-2">
+    <h3 class="font-semibold text-blue">Root Cause</h3>
     <ul>
-      <li>Unlike TPU/Hexagon, OpenVINO <strong>silently</strong> dispatches unsupported ops to CPU.</li>
-      <li>MobileNetV2, ResNet50, BERT-Tiny INT8 report "NPU" latencies = CPU.</li>
-      <li>GAT, GATv2, EfficientNet-B0 fail INT8 lowering entirely.</li>
+      <li>Quantization toolchain assumes dense, regular computation graphs — GNNs violate this contract at every level.</li>
+      <li>Halving arithmetic precision (FP32 → INT8) does not reduce DRAM traffic for memory-bound sparse workloads.</li>
+      <li>As NPU compilers mature toward explicit mixed-precision support, operator coverage should expand; the memory-bandwidth bottleneck will persist for any streaming-dataflow architecture without sparse acceleration.</li>
     </ul>
   </div>
 </div>
 
-<Glossary :terms="['npu', 'cpu-fallback', 'int8']" />
+<Glossary :terms="['npu', 'cpu-fallback', 'int8', 'scatter-gather']" />
 
 ---
 layout: default
