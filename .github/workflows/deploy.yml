@@ -42,7 +42,7 @@ jobs:
         working-directory: showcase
 
       - name: Build slides
-        run: npx slidev build --base /npu-graph-opt-benchmarking/
+        run: npx slidev build --base /intel-npu-gnn-benchmarking/
         working-directory: showcase
 
       - name: Disable Jekyll
