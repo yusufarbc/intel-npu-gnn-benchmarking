@@ -113,11 +113,15 @@ layout: default
     <ul>
       <li>GNN neighborhood aggregation aggregates node features irregularly:</li>
     </ul>
-$$h_v^{(l+1)} = \text{UPDATE}^{(l)} \left( h_v^{(l)}, \text{AGGREGATE}^{(l)} \left( \{ h_u^{(l)} : u \in \mathcal{N}(v) \} \right) \right)$$
+    <div class="text-center my-2 text-sm">
+      <KaTeX math="h_v^{(l+1)} = \text{UPDATE}^{(l)} \left( h_v^{(l)}, \text{AGGREGATE}^{(l)} \left( \{ h_u^{(l)} : u \in \mathcal{N}(v) \} \right) \right)" display />
+    </div>
     <ul>
       <li>Computations rely on irregular Sparse-Dense Matrix Multiplications (SpMM):</li>
     </ul>
-$$Y = A \cdot X$$
+    <div class="text-center my-2 text-sm">
+      <KaTeX math="Y = A \cdot X" display />
+    </div>
     <ul>
       <li>Memory accesses are dynamic and sparse, disrupting hardware prefetchers.</li>
       <li><strong>Result:</strong> NPUs stall waiting for DRAM transfers, leaving compute units underutilized.</li>
@@ -160,19 +164,25 @@ layout: default
 ## Dense vs. Sparse Dataflow
 ### Visual Comparison
 
-```mermaid {scale: 0.9}
-graph LR
-  subgraph "CNN / Dense Dataflow"
-    A[Regular 2D Grid] --> B[Spatial Locality & SRAM Reuse]
-    B --> C[Compute Bound: High MAC Utilization]
+<div class="flex items-center justify-center h-full gap-4">
+```mermaid {scale: 0.75}
+flowchart LR
+  subgraph CNN[Dense: CNN Dataflow]
+    direction TB
+    A[Regular 2D Grid] --> B[Spatial Locality<br/>& SRAM Reuse]
+    B --> C[✓ Compute Bound<br/>High MAC Utilization]
   end
-  subgraph "GNN / Sparse Dataflow"
-    D[Irregular Graph] --> E[Random Pointer-Chasing/Gather]
-    E --> F[Memory Bound: DRAM Latency Wall]
+  subgraph GNN[Sparse: GNN Dataflow]
+    direction TB
+    D[Irregular Graph] --> E[Random Pointer-<br/>Chasing / Gather]
+    E --> F[✗ Memory Bound<br/>DRAM Latency Wall]
   end
-  style C fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px
-  style F fill:#ffe4e6,stroke:#be123c,stroke-width:1.5px
+  style C fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#166534
+  style F fill:#ffe4e6,stroke:#be123c,stroke-width:2px,color:#991b1b
+  style CNN fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px
+  style GNN fill:#f8fafc,stroke:#cbd5e1,stroke-width:1px
 ```
+</div>
 
 <Glossary :terms="['compute-bound', 'memory-bound', 'scatter-gather']" />
 
@@ -723,27 +733,24 @@ layout: default
   <h1 class="text-3xl font-extrabold text-blue-800 text-center">Thank You!</h1>
   <h3 class="text-xl text-slate-600 font-semibold">Questions &amp; Discussion</h3>
   
-  <div class="flex items-start gap-5 p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm max-w-xl w-full mt-1">
-    <div class="flex-1">
-      <div class="font-bold text-base text-slate-900 text-center">
-        Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
-      </div>
-      <div class="text-slate-700 text-xs mt-1 text-center font-medium">
-        Department of Software Engineering, Karabük University
-      </div>
-      <div class="mt-3 text-xs text-slate-500 text-center leading-relaxed">
-        <strong>Paper &amp; Data:</strong><br />
+  <div class="p-6 bg-slate-50 border border-slate-200 rounded-lg shadow-sm max-w-sm w-full mt-1">
+    <div class="font-bold text-base text-slate-900 text-center">
+      Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
+    </div>
+    <div class="text-slate-700 text-xs mt-1 text-center font-medium">
+      Department of Software Engineering, Karabük University
+    </div>
+    <div class="mt-4 text-center">
+      <div class="text-sm font-semibold text-slate-800">Paper &amp; Data</div>
+      <img src="./public/qrcode.png" class="w-28 h-28 object-contain rounded border border-slate-200 shadow-sm mx-auto mt-2" alt="QR Code - GitHub Repository" />
+      <div class="text-xs text-slate-500 mt-2">
         <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 underline font-medium">
           github.com/yusufarbc/intel-npu-gnn-benchmarking
         </a>
       </div>
-      <div class="mt-1 text-xs text-slate-500 text-center">
-        <strong>Contact:</strong> yusuftalhaarabaci@hotmail.com
-      </div>
     </div>
-    <div class="flex-shrink-0 text-center pt-1">
-      <img src="./public/qrcode.png" class="w-28 h-28 object-contain rounded border border-slate-200 shadow-sm" alt="QR Code - GitHub Repository" />
-      <div class="text-xs text-slate-400 mt-1">Scan me</div>
+    <div class="mt-3 text-xs text-slate-500 text-center">
+      <strong>Contact:</strong> yusuftalhaarabaci@hotmail.com
     </div>
   </div>
 </div>
