@@ -1,6 +1,6 @@
 <template>
   <footer v-if="$nav.currentPage > 1" class="global-footer">
-    <div class="footer-text-left">IEEE Access | GNN Inference Bottlenecks on Intel NPUs</div>
+    <div class="footer-text-left">Benchmarking GNN Inference on Intel Core Ultra NPU &mdash; Arabacı et al.</div>
     <div class="slide-page-number">{{ $nav.currentPage }} / {{ $nav.total }}</div>
   </footer>
 </template>
