@@ -282,6 +282,20 @@
   font-size: 0.9rem;
 }
 
+/* Research questions slide sizing */
+.rq-slide .highlight-box {
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.rq-slide .highlight-box-title {
+  font-size: 1.05rem;
+}
+
+.rq-slide .highlight-box .text-sm {
+  font-size: 0.95rem;
+}
+
 /* Footer layout */
 .footer-text {
   font-size: 0.65rem;

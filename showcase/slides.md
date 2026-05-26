@@ -13,41 +13,44 @@ routerMode: hash
 title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis"
 ---
 
-<div class="grid grid-cols-12 gap-8 h-full items-center">
-<div class="col-span-7 flex flex-col justify-center">
-<h1 class="text-3xl font-extrabold text-blue-800 leading-tight">
-Benchmarking GNN Inference on the Intel Core Ultra NPU
-</h1>
-<h4 class="text-slate-500 font-medium text-sm mt-1">A Latency, Quantization, and Energy Analysis</h4>
-<h3 class="text-slate-600 font-semibold mt-2 text-lg leading-relaxed">
-Heterogeneous Edge AI Analysis on Meteor Lake SoC
-</h3>
-<div class="mt-8 p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm">
-<div class="font-bold text-base text-slate-900">
-Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
-</div>
-<div class="text-slate-700 text-xs mt-1 font-medium">
-Department of Software Engineering, Karabük University, Karabük, Turkey
-</div>
-<div class="text-slate-500 text-xs mt-0.5">
-yusuftalhaarabaci@hotmail.com | emrullahdemiral@karabuk.edu.tr | farukacar@karabuk.edu.tr
-</div>
-</div>
-</div>
-<div class="col-span-5 flex justify-center items-center">
-<div class="p-2 bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-<img src="./public/meteor-lake-architecture.jpg" class="max-h-75 object-contain rounded" />
-<div class="text-center text-xs text-slate-500 mt-2 font-medium">
-Figure 1: Intel Meteor Lake heterogeneous SoC
-</div>
-</div>
-</div>
+<div class="flex flex-col h-full gap-4">
+  <div class="grid grid-cols-12 gap-6 flex-1 items-start">
+    <div class="col-span-7 flex flex-col justify-start">
+      <h1 class="text-3xl font-extrabold text-blue-800 leading-tight">
+        Benchmarking GNN Inference on the Intel Core Ultra NPU
+      </h1>
+      <h4 class="text-slate-500 font-medium text-sm mt-1">A Latency, Quantization, and Energy Analysis</h4>
+      <h3 class="text-slate-600 font-semibold mt-2 text-lg leading-relaxed">
+        Heterogeneous Edge AI Analysis on Meteor Lake SoC
+      </h3>
+    </div>
+    <div class="col-span-5 flex justify-center items-start pt-1">
+      <div class="p-2 bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+        <img src="./public/meteor-lake-architecture.jpg" class="max-h-70 object-contain rounded" />
+        <div class="text-center text-xs text-slate-500 mt-2 font-medium">
+          Figure 1: Intel Meteor Lake heterogeneous SoC
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm w-full">
+    <div class="font-bold text-base text-slate-900 text-center">
+      Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
+    </div>
+    <div class="text-slate-700 text-xs mt-1 text-center font-medium">
+      Department of Software Engineering, Karabük University, Karabük, Turkey
+    </div>
+    <div class="text-slate-500 text-xs mt-0.5 text-center">
+      yusuftalhaarabaci@hotmail.com | emrullahdemiral@karabuk.edu.tr | farukacar@karabuk.edu.tr
+    </div>
+  </div>
 </div>
 
 <Glossary :terms="['npu', 'igpu', 'meteor-lake', 'soc']" />
 
 ---
 layout: default
+class: rq-slide
 ---
 
 ## Agenda
@@ -108,12 +111,14 @@ layout: default
   <div class="glass-panel highlight-box-warning">
     <h3 class="text-rose font-semibold">2. Graph Reality (Sparse)</h3>
     <ul>
-      <li>GNN neighborhood aggregation aggregates node features irregularly:
-        $$h_v^{(l+1)} = \text{UPDATE}^{(l)} \left( h_v^{(l)}, \text{AGGREGATE}^{(l)} \left( \{ h_u^{(l)} : u \in \mathcal{N}(v) \} \right) \right)$$
-      </li>
-      <li>Computations rely on irregular **Sparse-Dense Matrix Multiplications (SpMM)**:
-        $$Y = A \cdot X$$
-      </li>
+      <li>GNN neighborhood aggregation aggregates node features irregularly:</li>
+    </ul>
+$$h_v^{(l+1)} = \text{UPDATE}^{(l)} \left( h_v^{(l)}, \text{AGGREGATE}^{(l)} \left( \{ h_u^{(l)} : u \in \mathcal{N}(v) \} \right) \right)$$
+    <ul>
+      <li>Computations rely on irregular Sparse-Dense Matrix Multiplications (SpMM):</li>
+    </ul>
+$$Y = A \cdot X$$
+    <ul>
       <li>Memory accesses are dynamic and sparse, disrupting hardware prefetchers.</li>
       <li><strong>Result:</strong> NPUs stall waiting for DRAM transfers, leaving compute units underutilized.</li>
     </ul>
@@ -148,17 +153,17 @@ layout: default
 <div class="mt-2 flex flex-col gap-2">
   <div class="highlight-box highlight-box-info">
     <div class="highlight-box-title">RQ 1: On-Device Efficiency & Parity</div>
-    <div class="text-xs">How efficient are consumer NPUs for sparse GNN workloads vs. CPU and iGPU on laptops?</div>
+    <div class="text-sm">How efficient are consumer NPUs for sparse GNN workloads vs. CPU and iGPU on laptops?</div>
   </div>
 
   <div class="highlight-box highlight-box-warning">
     <div class="highlight-box-title">RQ 2: The Quantization Speedup Fallacy</div>
-    <div class="text-xs">Does INT8 deliver advertised 4× acceleration on NPUs, or does it trigger regressions?</div>
+    <div class="text-sm">Does INT8 deliver advertised 4× acceleration on NPUs, or does it trigger regressions?</div>
   </div>
 
   <div class="highlight-box highlight-box-success">
     <div class="highlight-box-title">RQ 3: Compiler Maturity & Operator Fusion Limits</div>
-    <div class="text-xs">How robust is OpenVINO when lowering Gather/Scatter onto NPU microarchitectures?</div>
+    <div class="text-sm">How robust is OpenVINO when lowering Gather/Scatter onto NPU microarchitectures?</div>
   </div>
 </div>
 
@@ -366,7 +371,7 @@ layout: default
 <div class="grid-cols-2 mt-2">
   <div>
     <ul>
-      <li><strong>Intensity</strong> $= \text{FLOPs} / \text{Bytes}$ — operational density per memory transfer.</li>
+      <li><strong>Intensity</strong> <KaTeX math="= \text{FLOPs} / \text{Bytes}" /> — operational density per memory transfer.</li>
       <li><strong>Memory-bound GNNs:</strong> 0.1–10 FLOP/byte — limited by LPDDR5x bandwidth, explaining no NPU gain.</li>
       <li><strong>Compute-bound vision:</strong> CNNs/ViT saturate NPU's MAC arrays in higher intensity zones.</li>
     </ul>
@@ -390,7 +395,7 @@ layout: default
 <div class="grid-cols-2 mt-2">
   <div>
     <ul>
-      <li><strong>Formula:</strong> $E_{\text{inf}} = P_{\text{package}} \times t_{\text{latency}}$</li>
+      <li><strong>Formula:</strong> <KaTeX math="E_{\text{inf}} = P_{\text{package}} \times t_{\text{latency}}" /></li>
       <li><strong>iGPU:</strong> +7.3% peak power vs CPU, but faster — equal energy/inference.</li>
       <li><strong>INT8 on CPU:</strong> GCN −18.4% energy (73.4 vs 89.9 mJ); MPNN +59% (301.1 vs 189.3 mJ).</li>
     </ul>
@@ -493,7 +498,7 @@ layout: default
 <div class="grid-cols-2 mt-2">
   <div>
     <ul>
-      <li><strong>Pearson $r \approx -0.00$</strong> — no correlation between density &amp; latency on NPU.</li>
+      <li><strong>Pearson <KaTeX math="r \approx -0.00" /></strong> — no correlation between density &amp; latency on NPU.</li>
       <li><strong>Dataset sweep:</strong> arxiv (6.9 edges/node), products (25.3), proteins (451.7) — two orders of magnitude.</li>
       <li><strong>Static-shape compilation</strong> forces constant throughput regardless of sparsity.</li>
     </ul>
@@ -605,7 +610,7 @@ layout: default
 
   <div>
     <ul>
-      <li><strong>Energy model:</strong> $E = P \times t$ assumes stationary power; background OS activity not isolated.</li>
+      <li><strong>Energy model:</strong> <KaTeX math="E = P \times t" /> assumes stationary power; background OS activity not isolated.</li>
       <li><strong>Statistics:</strong> Bootstrap 95% CIs per config; paired hypothesis tests across devices pending.</li>
     </ul>
   </div>
@@ -707,12 +712,12 @@ layout: default
 layout: default
 ---
 
-<div class="flex flex-col items-center justify-center h-full gap-6">
+<div class="flex flex-col items-center justify-center h-full gap-5">
   <h1 class="text-3xl font-extrabold text-blue-800 text-center">Thank You!</h1>
   <h3 class="text-xl text-slate-600 font-semibold">Questions &amp; Discussion</h3>
   
-  <div class="flex items-center gap-6 mt-2">
-    <div class="p-4 bg-slate-50 border border-slate-200 rounded-lg shadow-sm max-w-xs flex-1">
+  <div class="flex items-center gap-8 mt-1">
+    <div class="p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm max-w-xs flex-1">
       <div class="font-bold text-base text-slate-900 text-center">
         Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
       </div>
@@ -721,8 +726,8 @@ layout: default
       </div>
       <div class="mt-3 text-xs text-slate-500 text-center leading-relaxed">
         <strong>Paper &amp; Data:</strong><br />
-        <a href="https://yusufarbc.github.io/intel-npu-gnn-benchmarking/" target="_blank" class="text-blue-600 underline">
-          yusufarbc.github.io/intel-npu-gnn-benchmarking
+        <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 underline font-medium">
+          github.com/yusufarbc/intel-npu-gnn-benchmarking
         </a>
       </div>
       <div class="mt-1 text-xs text-slate-500 text-center">
@@ -731,16 +736,11 @@ layout: default
     </div>
     <div class="flex-shrink-0 text-center">
       <img src="./public/qrcode.png" class="w-28 h-28 object-contain rounded border border-slate-200 shadow-sm mx-auto" alt="QR Code - GitHub Repository" />
-      <div class="text-xs text-slate-500 mt-1">
-        <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 underline font-medium">
-          github.com/yusufarbc/intel-npu-gnn-benchmarking
-        </a>
-      </div>
     </div>
   </div>
 
   <div class="text-xs text-slate-400 italic mt-1">
-    Scan QR code or click the link above &bull; Built with Slidev
+    Scan QR code for the repository &bull; Built with Slidev
   </div>
 </div>
 
