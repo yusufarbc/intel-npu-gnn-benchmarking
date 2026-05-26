@@ -13,9 +13,9 @@ routerMode: hash
 title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis"
 ---
 
-<div class="flex flex-col h-full gap-4">
-  <div class="grid grid-cols-12 gap-6 flex-1 items-start">
-    <div class="col-span-7 flex flex-col justify-start">
+<div class="flex flex-col items-center justify-center h-full gap-3">
+  <div class="grid grid-cols-12 gap-6 w-full items-center">
+    <div class="col-span-7 flex flex-col justify-center">
       <h1 class="text-3xl font-extrabold text-blue-800 leading-tight">
         Benchmarking GNN Inference on the Intel Core Ultra NPU
       </h1>
@@ -24,7 +24,7 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
         Heterogeneous Edge AI Analysis on Meteor Lake SoC
       </h3>
     </div>
-    <div class="col-span-5 flex justify-center items-start pt-1">
+    <div class="col-span-5 flex justify-center items-center">
       <div class="p-2 bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow">
         <img src="./public/meteor-lake-architecture.jpg" class="max-h-70 object-contain rounded" />
         <div class="text-center text-xs text-slate-500 mt-2 font-medium">
@@ -33,7 +33,7 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
       </div>
     </div>
   </div>
-  <div class="p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm w-full">
+  <div class="p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm w-full max-w-2xl">
     <div class="font-bold text-base text-slate-900 text-center">
       Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
     </div>
@@ -125,22 +125,6 @@ $$Y = A \cdot X$$
   </div>
 </div>
 
-<div class="mt-4" />
-
-```mermaid {scale: 0.85}
-graph LR
-  subgraph "CNN / Dense Dataflow"
-    A[Regular 2D Grid] --> B[Spatial Locality & SRAM Reuse]
-    B --> C[Compute Bound: High MAC Utilization]
-  end
-  subgraph "GNN / Sparse Dataflow"
-    D[Irregular Graph] --> E[Random Pointer-Chasing/Gather]
-    E --> F[Memory Bound: DRAM Latency Wall]
-  end
-  style C fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px
-  style F fill:#ffe4e6,stroke:#be123c,stroke-width:1.5px
-```
-
 <Glossary :terms="['gnn', 'compute-bound', 'memory-bound', 'stalls', 'locality', 'scatter-gather']" />
 
 ---
@@ -168,6 +152,29 @@ layout: default
 </div>
 
 <Glossary :terms="['openvino', 'operator-fusion', 'cpu-fallback', 'scatter-gather']" />
+
+---
+layout: default
+---
+
+## Dense vs. Sparse Dataflow
+### Visual Comparison
+
+```mermaid {scale: 0.9}
+graph LR
+  subgraph "CNN / Dense Dataflow"
+    A[Regular 2D Grid] --> B[Spatial Locality & SRAM Reuse]
+    B --> C[Compute Bound: High MAC Utilization]
+  end
+  subgraph "GNN / Sparse Dataflow"
+    D[Irregular Graph] --> E[Random Pointer-Chasing/Gather]
+    E --> F[Memory Bound: DRAM Latency Wall]
+  end
+  style C fill:#dcfce7,stroke:#16a34a,stroke-width:1.5px
+  style F fill:#ffe4e6,stroke:#be123c,stroke-width:1.5px
+```
+
+<Glossary :terms="['compute-bound', 'memory-bound', 'scatter-gather']" />
 
 ---
 layout: default
@@ -716,8 +723,8 @@ layout: default
   <h1 class="text-3xl font-extrabold text-blue-800 text-center">Thank You!</h1>
   <h3 class="text-xl text-slate-600 font-semibold">Questions &amp; Discussion</h3>
   
-  <div class="flex items-center gap-8 mt-1">
-    <div class="p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm max-w-xs flex-1">
+  <div class="flex items-start gap-5 p-5 bg-slate-50 border border-slate-200 rounded-lg shadow-sm max-w-xl w-full mt-1">
+    <div class="flex-1">
       <div class="font-bold text-base text-slate-900 text-center">
         Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
       </div>
@@ -734,13 +741,10 @@ layout: default
         <strong>Contact:</strong> yusuftalhaarabaci@hotmail.com
       </div>
     </div>
-    <div class="flex-shrink-0 text-center">
-      <img src="./public/qrcode.png" class="w-28 h-28 object-contain rounded border border-slate-200 shadow-sm mx-auto" alt="QR Code - GitHub Repository" />
+    <div class="flex-shrink-0 text-center pt-1">
+      <img src="./public/qrcode.png" class="w-28 h-28 object-contain rounded border border-slate-200 shadow-sm" alt="QR Code - GitHub Repository" />
+      <div class="text-xs text-slate-400 mt-1">Scan me</div>
     </div>
-  </div>
-
-  <div class="text-xs text-slate-400 italic mt-1">
-    Scan QR code for the repository &bull; Built with Slidev
   </div>
 </div>
 
