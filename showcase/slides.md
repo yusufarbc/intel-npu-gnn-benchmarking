@@ -733,7 +733,7 @@ layout: default
   <h1 class="text-3xl font-extrabold text-blue-800 text-center">Thank You!</h1>
   <h3 class="text-xl text-slate-600 font-semibold">Questions &amp; Discussion</h3>
   
-  <div class="p-6 bg-slate-50 border border-slate-200 rounded-lg shadow-sm max-w-sm w-full mt-1">
+  <div class="p-6 bg-slate-50 border border-slate-200 rounded-lg shadow-sm max-w-lg w-full mt-1">
     <div class="font-bold text-base text-slate-900 text-center">
       Yusuf Talha ARABACI, Emrullah DEMİRAL, Ömer Faruk ACAR
     </div>
