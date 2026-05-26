@@ -164,10 +164,11 @@ layout: default
 ## Dense vs. Sparse Dataflow
 ### Visual Comparison
 
-<div class="grid grid-cols-2 gap-4 items-start mt-2">
-<div>
+<div class="grid grid-cols-2 gap-3 items-stretch mt-1">
+<div class="flex flex-col justify-center">
 
-```mermaid {scale: 0.65}
+```mermaid {scale: 0.95}
+%%{init: {"theme": "base", "themeVariables": {"titleColor": "#1e293b", "textColor": "#1e293b", "primaryTextColor": "#1e293b", "background": "#ffffff"}}}%%
 graph TB
   subgraph Dense[CNN Dataflow]
     direction TB
@@ -178,9 +179,10 @@ graph TB
   style Dense fill:#f0fdf4,stroke:#86efac,stroke-width:1px
 ```
 </div>
-<div>
+<div class="flex flex-col justify-center">
 
-```mermaid {scale: 0.65}
+```mermaid {scale: 0.95}
+%%{init: {"theme": "base", "themeVariables": {"titleColor": "#1e293b", "textColor": "#1e293b", "primaryTextColor": "#1e293b", "background": "#ffffff"}}}%%
 graph TB
   subgraph Sparse[GNN Dataflow]
     direction TB
