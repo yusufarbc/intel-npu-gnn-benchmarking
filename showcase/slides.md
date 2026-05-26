@@ -9,7 +9,7 @@ highlighter: shiki
 drawings:
   persist: false
 transition: fade
-title: Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis
+title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis"
 ---
 
 <div class="grid grid-cols-12 gap-8 h-full items-center">
