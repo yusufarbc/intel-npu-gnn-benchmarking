@@ -1,0 +1,84 @@
+[2026-05-23 15:29:04] start mode=baseline model=GraphSAGE_fp32.onnx device=NPU warmup=5 iters=100
+[2026-05-23 15:29:04] creating session
+[2026-05-23 15:29:04] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 15:29:04] preparing inputs
+[2026-05-23 15:29:04] inputs ready
+[2026-05-23 15:29:04] warmup start
+[2026-05-23 15:29:05] warmup done
+[2026-05-23 15:29:05] benchmark iterations start
+[2026-05-23 15:29:06] iteration 25/100 elapsed_s=1.4
+[2026-05-23 15:29:08] iteration 50/100 elapsed_s=2.9
+[2026-05-23 15:29:09] iteration 75/100 elapsed_s=4.4
+[2026-05-23 15:29:10] iteration 100/100 elapsed_s=5.8
+[2026-05-23 15:29:10] benchmark iterations done
+[2026-05-23 15:29:10] mode complete mode=baseline mean_ms=58.060 std_ms=5.387 p95_ms=67.357
+[2026-05-23 15:29:11] start mode=optimized model=GraphSAGE_fp32.onnx device=NPU warmup=5 iters=100
+[2026-05-23 15:29:11] creating session
+[2026-05-23 15:29:11] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 15:29:11] preparing inputs
+[2026-05-23 15:29:11] inputs ready
+[2026-05-23 15:29:11] warmup start
+[2026-05-23 15:29:12] warmup done
+[2026-05-23 15:29:12] benchmark iterations start
+[2026-05-23 15:29:13] iteration 25/100 elapsed_s=1.4
+[2026-05-23 15:29:15] iteration 50/100 elapsed_s=2.9
+[2026-05-23 15:29:16] iteration 75/100 elapsed_s=4.4
+[2026-05-23 15:29:18] iteration 100/100 elapsed_s=5.8
+[2026-05-23 15:29:18] benchmark iterations done
+[2026-05-23 15:29:18] mode complete mode=optimized mean_ms=58.025 std_ms=5.365 p95_ms=66.527
+[2026-05-23 15:40:09] start mode=baseline model=GraphSAGE_fp32.onnx device=GPU warmup=5 iters=100
+[2026-05-23 15:40:09] creating session
+[2026-05-23 15:40:11] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 15:40:11] preparing inputs
+[2026-05-23 15:40:11] inputs ready
+[2026-05-23 15:40:11] warmup start
+[2026-05-23 15:40:11] warmup done
+[2026-05-23 15:40:11] benchmark iterations start
+[2026-05-23 15:40:12] iteration 25/100 elapsed_s=0.9
+[2026-05-23 15:40:13] iteration 50/100 elapsed_s=1.7
+[2026-05-23 15:40:14] iteration 75/100 elapsed_s=2.6
+[2026-05-23 15:40:15] iteration 100/100 elapsed_s=3.5
+[2026-05-23 15:40:15] benchmark iterations done
+[2026-05-23 15:40:15] mode complete mode=baseline mean_ms=34.947 std_ms=0.484 p95_ms=35.681
+[2026-05-23 15:40:15] start mode=optimized model=GraphSAGE_fp32.onnx device=GPU warmup=5 iters=100
+[2026-05-23 15:40:15] creating session
+[2026-05-23 15:40:16] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 15:40:16] preparing inputs
+[2026-05-23 15:40:16] inputs ready
+[2026-05-23 15:40:16] warmup start
+[2026-05-23 15:40:17] warmup done
+[2026-05-23 15:40:17] benchmark iterations start
+[2026-05-23 15:40:17] iteration 25/100 elapsed_s=0.9
+[2026-05-23 15:40:18] iteration 50/100 elapsed_s=1.8
+[2026-05-23 15:40:19] iteration 75/100 elapsed_s=2.6
+[2026-05-23 15:40:20] iteration 100/100 elapsed_s=3.5
+[2026-05-23 15:40:20] benchmark iterations done
+[2026-05-23 15:40:20] mode complete mode=optimized mean_ms=35.016 std_ms=0.448 p95_ms=35.801
+[2026-05-23 15:47:50] start mode=baseline model=GraphSAGE_fp32.onnx device=CPU warmup=5 iters=100
+[2026-05-23 15:47:50] creating session
+[2026-05-23 15:47:50] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 15:47:50] preparing inputs
+[2026-05-23 15:47:51] inputs ready
+[2026-05-23 15:47:51] warmup start
+[2026-05-23 15:47:51] warmup done
+[2026-05-23 15:47:51] benchmark iterations start
+[2026-05-23 15:47:53] iteration 25/100 elapsed_s=1.4
+[2026-05-23 15:47:54] iteration 50/100 elapsed_s=2.9
+[2026-05-23 15:47:56] iteration 75/100 elapsed_s=4.4
+[2026-05-23 15:47:57] iteration 100/100 elapsed_s=5.8
+[2026-05-23 15:47:57] benchmark iterations done
+[2026-05-23 15:47:57] mode complete mode=baseline mean_ms=58.442 std_ms=5.443 p95_ms=65.599
+[2026-05-23 15:47:57] start mode=optimized model=GraphSAGE_fp32.onnx device=CPU warmup=5 iters=100
+[2026-05-23 15:47:57] creating session
+[2026-05-23 15:47:58] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 15:47:58] preparing inputs
+[2026-05-23 15:47:58] inputs ready
+[2026-05-23 15:47:58] warmup start
+[2026-05-23 15:47:58] warmup done
+[2026-05-23 15:47:58] benchmark iterations start
+[2026-05-23 15:48:00] iteration 25/100 elapsed_s=1.4
+[2026-05-23 15:48:01] iteration 50/100 elapsed_s=2.8
+[2026-05-23 15:48:03] iteration 75/100 elapsed_s=4.4
+[2026-05-23 15:48:04] iteration 100/100 elapsed_s=5.8
+[2026-05-23 15:48:04] benchmark iterations done
+[2026-05-23 15:48:04] mode complete mode=optimized mean_ms=58.121 std_ms=4.905 p95_ms=64.355

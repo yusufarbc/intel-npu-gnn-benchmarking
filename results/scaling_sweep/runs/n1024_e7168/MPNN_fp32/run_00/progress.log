@@ -1,0 +1,56 @@
+[2026-05-23 16:04:08] start mode=baseline model=MPNN_fp32.onnx device=GPU warmup=5 iters=100
+[2026-05-23 16:04:08] creating session
+[2026-05-23 16:04:08] session ready providers=CPUExecutionProvider
+[2026-05-23 16:04:08] preparing inputs
+[2026-05-23 16:04:09] inputs ready
+[2026-05-23 16:04:09] warmup start
+[2026-05-23 16:04:09] warmup done
+[2026-05-23 16:04:09] benchmark iterations start
+[2026-05-23 16:04:09] iteration 25/100 elapsed_s=0.3
+[2026-05-23 16:04:09] iteration 50/100 elapsed_s=0.6
+[2026-05-23 16:04:10] iteration 75/100 elapsed_s=0.9
+[2026-05-23 16:04:10] iteration 100/100 elapsed_s=1.2
+[2026-05-23 16:04:10] benchmark iterations done
+[2026-05-23 16:04:10] mode complete mode=baseline mean_ms=11.714 std_ms=4.234 p95_ms=19.743
+[2026-05-23 16:04:10] start mode=optimized model=MPNN_fp32.onnx device=GPU warmup=5 iters=100
+[2026-05-23 16:04:10] creating session
+[2026-05-23 16:04:11] session ready providers=CPUExecutionProvider
+[2026-05-23 16:04:11] preparing inputs
+[2026-05-23 16:04:11] inputs ready
+[2026-05-23 16:04:11] warmup start
+[2026-05-23 16:04:11] warmup done
+[2026-05-23 16:04:11] benchmark iterations start
+[2026-05-23 16:04:12] iteration 25/100 elapsed_s=0.2
+[2026-05-23 16:04:12] iteration 50/100 elapsed_s=0.4
+[2026-05-23 16:04:12] iteration 75/100 elapsed_s=0.8
+[2026-05-23 16:04:12] iteration 100/100 elapsed_s=1.0
+[2026-05-23 16:04:12] benchmark iterations done
+[2026-05-23 16:04:12] mode complete mode=optimized mean_ms=10.044 std_ms=4.509 p95_ms=17.882
+[2026-05-23 16:10:06] start mode=baseline model=MPNN_fp32.onnx device=CPU warmup=5 iters=100
+[2026-05-23 16:10:06] creating session
+[2026-05-23 16:10:06] session ready providers=CPUExecutionProvider
+[2026-05-23 16:10:06] preparing inputs
+[2026-05-23 16:10:07] inputs ready
+[2026-05-23 16:10:07] warmup start
+[2026-05-23 16:10:07] warmup done
+[2026-05-23 16:10:07] benchmark iterations start
+[2026-05-23 16:10:07] iteration 25/100 elapsed_s=0.3
+[2026-05-23 16:10:07] iteration 50/100 elapsed_s=0.5
+[2026-05-23 16:10:07] iteration 75/100 elapsed_s=0.8
+[2026-05-23 16:10:08] iteration 100/100 elapsed_s=1.0
+[2026-05-23 16:10:08] benchmark iterations done
+[2026-05-23 16:10:08] mode complete mode=baseline mean_ms=10.171 std_ms=2.428 p95_ms=14.896
+[2026-05-23 16:10:08] start mode=optimized model=MPNN_fp32.onnx device=CPU warmup=5 iters=100
+[2026-05-23 16:10:08] creating session
+[2026-05-23 16:10:08] session ready providers=CPUExecutionProvider
+[2026-05-23 16:10:08] preparing inputs
+[2026-05-23 16:10:09] inputs ready
+[2026-05-23 16:10:09] warmup start
+[2026-05-23 16:10:09] warmup done
+[2026-05-23 16:10:09] benchmark iterations start
+[2026-05-23 16:10:09] iteration 25/100 elapsed_s=0.2
+[2026-05-23 16:10:09] iteration 50/100 elapsed_s=0.5
+[2026-05-23 16:10:10] iteration 75/100 elapsed_s=0.7
+[2026-05-23 16:10:10] iteration 100/100 elapsed_s=0.9
+[2026-05-23 16:10:10] benchmark iterations done
+[2026-05-23 16:10:10] mode complete mode=optimized mean_ms=8.868 std_ms=2.809 p95_ms=14.607

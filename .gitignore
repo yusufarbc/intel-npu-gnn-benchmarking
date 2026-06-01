@@ -34,6 +34,12 @@ __pypackages__/
 # Jupyter
 .ipynb_checkpoints/
 
+# Dataset snapshots
+data/ogbn_*/
+
+# Generated benchmark artifacts
+*.etl
+
 # Testing
 htmlcov/
 .pytest_cache/

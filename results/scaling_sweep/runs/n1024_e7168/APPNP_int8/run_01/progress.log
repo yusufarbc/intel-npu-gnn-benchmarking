@@ -1,0 +1,84 @@
+[2026-05-23 12:52:48] start mode=baseline model=APPNP_int8.onnx device=NPU warmup=5 iters=100
+[2026-05-23 12:52:48] creating session
+[2026-05-23 12:52:49] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 12:52:49] preparing inputs
+[2026-05-23 12:52:49] inputs ready
+[2026-05-23 12:52:49] warmup start
+[2026-05-23 12:52:49] warmup done
+[2026-05-23 12:52:49] benchmark iterations start
+[2026-05-23 12:52:49] iteration 25/100 elapsed_s=0.3
+[2026-05-23 12:52:49] iteration 50/100 elapsed_s=0.5
+[2026-05-23 12:52:50] iteration 75/100 elapsed_s=0.7
+[2026-05-23 12:52:50] iteration 100/100 elapsed_s=0.9
+[2026-05-23 12:52:50] benchmark iterations done
+[2026-05-23 12:52:50] mode complete mode=baseline mean_ms=8.960 std_ms=1.832 p95_ms=13.074
+[2026-05-23 12:52:50] start mode=optimized model=APPNP_int8.onnx device=NPU warmup=5 iters=100
+[2026-05-23 12:52:50] creating session
+[2026-05-23 12:52:51] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 12:52:51] preparing inputs
+[2026-05-23 12:52:51] inputs ready
+[2026-05-23 12:52:51] warmup start
+[2026-05-23 12:52:51] warmup done
+[2026-05-23 12:52:51] benchmark iterations start
+[2026-05-23 12:52:51] iteration 25/100 elapsed_s=0.3
+[2026-05-23 12:52:52] iteration 50/100 elapsed_s=0.5
+[2026-05-23 12:52:52] iteration 75/100 elapsed_s=0.7
+[2026-05-23 12:52:52] iteration 100/100 elapsed_s=0.9
+[2026-05-23 12:52:52] benchmark iterations done
+[2026-05-23 12:52:52] mode complete mode=optimized mean_ms=9.021 std_ms=1.861 p95_ms=13.935
+[2026-05-23 14:34:19] start mode=baseline model=APPNP_int8.onnx device=GPU warmup=5 iters=100
+[2026-05-23 14:34:19] creating session
+[2026-05-23 14:34:20] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 14:34:20] preparing inputs
+[2026-05-23 14:34:20] inputs ready
+[2026-05-23 14:34:20] warmup start
+[2026-05-23 14:34:20] warmup done
+[2026-05-23 14:34:20] benchmark iterations start
+[2026-05-23 14:34:21] iteration 25/100 elapsed_s=0.2
+[2026-05-23 14:34:21] iteration 50/100 elapsed_s=0.3
+[2026-05-23 14:34:21] iteration 75/100 elapsed_s=0.4
+[2026-05-23 14:34:21] iteration 100/100 elapsed_s=0.6
+[2026-05-23 14:34:21] benchmark iterations done
+[2026-05-23 14:34:21] mode complete mode=baseline mean_ms=5.895 std_ms=0.606 p95_ms=6.748
+[2026-05-23 14:34:21] start mode=optimized model=APPNP_int8.onnx device=GPU warmup=5 iters=100
+[2026-05-23 14:34:21] creating session
+[2026-05-23 14:34:24] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 14:34:24] preparing inputs
+[2026-05-23 14:34:24] inputs ready
+[2026-05-23 14:34:24] warmup start
+[2026-05-23 14:34:24] warmup done
+[2026-05-23 14:34:24] benchmark iterations start
+[2026-05-23 14:34:24] iteration 25/100 elapsed_s=0.2
+[2026-05-23 14:34:24] iteration 50/100 elapsed_s=0.3
+[2026-05-23 14:34:24] iteration 75/100 elapsed_s=0.5
+[2026-05-23 14:34:24] iteration 100/100 elapsed_s=0.6
+[2026-05-23 14:34:24] benchmark iterations done
+[2026-05-23 14:34:24] mode complete mode=optimized mean_ms=5.975 std_ms=0.883 p95_ms=7.404
+[2026-05-23 14:38:32] start mode=baseline model=APPNP_int8.onnx device=CPU warmup=5 iters=100
+[2026-05-23 14:38:32] creating session
+[2026-05-23 14:38:33] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 14:38:33] preparing inputs
+[2026-05-23 14:38:33] inputs ready
+[2026-05-23 14:38:33] warmup start
+[2026-05-23 14:38:33] warmup done
+[2026-05-23 14:38:33] benchmark iterations start
+[2026-05-23 14:38:33] iteration 25/100 elapsed_s=0.3
+[2026-05-23 14:38:33] iteration 50/100 elapsed_s=0.5
+[2026-05-23 14:38:33] iteration 75/100 elapsed_s=0.7
+[2026-05-23 14:38:34] iteration 100/100 elapsed_s=0.9
+[2026-05-23 14:38:34] benchmark iterations done
+[2026-05-23 14:38:34] mode complete mode=baseline mean_ms=9.306 std_ms=0.747 p95_ms=10.689
+[2026-05-23 14:38:34] start mode=optimized model=APPNP_int8.onnx device=CPU warmup=5 iters=100
+[2026-05-23 14:38:34] creating session
+[2026-05-23 14:38:35] session ready providers=OpenVINOExecutionProvider | CPUExecutionProvider
+[2026-05-23 14:38:35] preparing inputs
+[2026-05-23 14:38:35] inputs ready
+[2026-05-23 14:38:35] warmup start
+[2026-05-23 14:38:35] warmup done
+[2026-05-23 14:38:35] benchmark iterations start
+[2026-05-23 14:38:35] iteration 25/100 elapsed_s=0.3
+[2026-05-23 14:38:35] iteration 50/100 elapsed_s=0.5
+[2026-05-23 14:38:35] iteration 75/100 elapsed_s=0.7
+[2026-05-23 14:38:36] iteration 100/100 elapsed_s=1.0
+[2026-05-23 14:38:36] benchmark iterations done
+[2026-05-23 14:38:36] mode complete mode=optimized mean_ms=9.563 std_ms=0.997 p95_ms=11.397

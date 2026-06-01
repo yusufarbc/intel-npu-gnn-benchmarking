@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\analysis\scalability_analyzer.py", line 432, in run
+    row = self._benchmark_model(model)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\analysis\scalability_analyzer.py", line 508, in _benchmark_model
+    res = runner.run()
+          ^^^^^^^^^^^^
+  File "C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\analysis\benchmark_runner.py", line 602, in run
+    mean_latency, std_latency, p95_latency, cpu_percent, peak_mem_mb, profile_path, active_providers, fallback_to_cpu = self._run_mode(mode)
+                                                                                                                        ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\analysis\benchmark_runner.py", line 555, in _run_mode
+    session.run(None, inputs)
+  File "c:\Users\yusuf\AppData\Local\Programs\Python\Python311\Lib\site-packages\onnxruntime\capi\onnxruntime_inference_collection.py", line 296, in run
+    return self._sess.run(output_names, input_feed, run_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+onnxruntime.capi.onnxruntime_pybind11_state.Fail: [ONNXRuntimeError] : 1 : FAIL : Non-zero status code returned while running OpenVINO-EP-subgraph_8 node. Name:'OpenVINOExecutionProvider_OpenVINO-EP-subgraph_8_0' Status Message: C:\dev\packaging\ort-rel-1.24.1\onnxruntime\core\providers\openvino\ov_interface.cc:28 void __cdecl onnxruntime::openvino_ep::OvExceptionBoundary<false,class onnxruntime::openvino_ep::OVInferRequest::Infer::<lambda_1>,>(class onnxruntime::openvino_ep::OVInferRequest::Infer::<lambda_1> &&,struct std::basic_format_string<char> &&) [OpenVINO-EP] In Error Couldn't start Inference: Exception from src\inference\src\cpp\infer_request.cpp:224:
+Exception from src\plugins\intel_gpu\src\runtime\ocl\ocl_stream.cpp:424:
+[GPU] clWaitForEvents failed with -14 code
+
+
+
+
