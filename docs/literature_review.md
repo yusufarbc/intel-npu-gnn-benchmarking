@@ -273,3 +273,6 @@ The trade-offs between sparse execution (relying on CPU fallback or GPU SpMM) an
     Link: [https://arxiv.org/abs/2501.00891](https://arxiv.org/abs/2501.00891)
 48. **Bayraktar, C.** (2026). "Beyond GNNs: A Methodological Benchmark of Feature Efficiency for Link Prediction in Sparse Developer Networks." *Knowledge and Information Systems (KAIS)*, 68(1), 135-156.  
     DOI: [10.1007/s10115-026-02765-7](https://doi.org/10.1007/s10115-026-02765-7)
+49. **Singh, R. & Gill, S. S.** (2023). "Edge AI: A survey." *Internet of Things and Cyber-Physical Systems*, 3, 71-92.  
+    DOI: [10.1016/j.iotcps.2023.02.004](https://doi.org/10.1016/j.iotcps.2023.02.004)
+

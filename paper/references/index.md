@@ -62,3 +62,4 @@
 | 54 | [54 - Zhang2022graphless - Graph-less Neural Networks Teaching Old MLPs New Tricks Via Distillation.md](54 - Zhang2022graphless - Graph-less Neural Networks Teaching Old MLPs New Tricks Via Distillation.md) | Zhang2022graphless: *Graph-less Neural Networks Teaching Old MLPs New Tricks Via ...* |
 | 55 | [55 - Tailor2022 - Do We Need Anisotropic Graph Neural Networks (EGC).md](55 - Tailor2022 - Do We Need Anisotropic Graph Neural Networks (EGC).md) | Tailor2022: *Do We Need Anisotropic Graph Neural Networks (EGC)* |
 | 56 | [56 - Bayraktar2026 - Beyond GNNs A Methodological Benchmark of Feature Efficiency for Link Prediction.md](56 - Bayraktar2026 - Beyond GNNs A Methodological Benchmark of Feature Efficiency for Link Prediction.md) | Bayraktar2026: *Beyond GNNs A Methodological Benchmark of Feature Efficiency...* |
+| 57 | [57 - Singh2023 - Edge AI A survey.md](57 - Singh2023 - Edge AI A survey.md) | Singh2023: *Edge AI A survey* |

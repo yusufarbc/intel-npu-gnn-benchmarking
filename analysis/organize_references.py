@@ -139,6 +139,7 @@ CANONICAL = [
     (54, "Zhang2022graphless","Graph-less Neural Networks Teaching Old MLPs New Tricks Via Distillation"),
     (55, "Tailor2022",     "Do We Need Anisotropic Graph Neural Networks (EGC)"),
     (56, "Bayraktar2026",  "Beyond GNNs A Methodological Benchmark of Feature Efficiency for Link Prediction"),
+    (57, "Singh2023",      "Edge AI A survey"),
 ]
 
 # Map from the *current* filename prefix (number) to canonical entry
@@ -201,6 +202,7 @@ CURRENT_TO_CANONICAL_HINT = {
     "54": 36,   # Exphormer
     "55": 43,   # TT-GNN
     "56": 31,   # Unified Operator Fusion
+    "1-s2.0-S2667345223000196-main": 57,  # Edge AI Survey
 }
 
 
@@ -335,6 +337,7 @@ Key references on accelerator design and performance characterization for GNNs.
 | [28] | Tummalapalli & Arayakandy, *LLM Inference at the Edge*, 2026 | arXiv 2026 | Mobile/NPU/GPU sustained load trade-offs |
 | [29] | Kachris et al., *Cloud to Edge: Benchmarking LLM Inference*, 2025 | arXiv 2025 | Hardware-accelerated single-board benchmark |
 | [45] | Heo et al., *IANUS: NPU-PIM Unified Memory System*, 2024 | ASPLOS 2024 | NPU-PIM co-design for memory-bound workloads |
+| [57] | Singh & Gill, *Edge AI: A survey*, 2023 | IoT and Cyber-Physical Systems 2023 | Comprehensive survey of edge computing paradigms and transition to Edge AI |
 
 ---
 

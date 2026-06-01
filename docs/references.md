@@ -86,6 +86,7 @@ Key references on accelerator design and performance characterization for GNNs.
 | [28] | Tummalapalli & Arayakandy, *LLM Inference at the Edge*, 2026 | arXiv 2026 | Mobile/NPU/GPU sustained load trade-offs |
 | [29] | Kachris et al., *Cloud to Edge: Benchmarking LLM Inference*, 2025 | arXiv 2025 | Hardware-accelerated single-board benchmark |
 | [45] | Heo et al., *IANUS: NPU-PIM Unified Memory System*, 2024 | ASPLOS 2024 | NPU-PIM co-design for memory-bound workloads |
+| [57] | Singh & Gill, *Edge AI: A survey*, 2023 | IoT and Cyber-Physical Systems 2023 | Comprehensive survey of edge computing paradigms and transition to Edge AI |
 
 ---
 
