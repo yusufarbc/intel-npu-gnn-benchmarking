@@ -1,60 +1,59 @@
-# NPU GNN Benchmarking Model Guide
+# Model Guide — NPU GNN Benchmarking
 
-Bu doküman, Intel Core Ultra NPU benchmark çalışmasında kullanılan Grafik Sinir Ağları (GNN) ve karşılaştırma temelli (baseline) modellerin detaylarını içerir.
+This document describes the Graph Neural Networks (GNNs) and baseline models used in the Intel Core Ultra NPU benchmark study.
 
-## 1. Grafik Sinir Ağları (GNNs)
+## 1. Graph Neural Networks (GNNs)
 
-Bu modeller, NPU'nun seyrek (sparse) veri yapıları ve düzensiz bellek erişim desenleri üzerindeki performansını ölçmek için seçilmiştir.
+These models were selected to measure NPU performance on sparse data structures and irregular memory access patterns.
 
-| Model | Mimari Özelliği | Seçilme Nedeni |
+| Model | Architecture | Selection Rationale |
 | :--- | :--- | :--- |
-| **GCN** | Spectral Convolution | GNN literatürünün temel baseline'ı. |
-| **GAT** | Attention Mechanism | Dinamik ağırlıklandırmanın NPU üzerindeki yükünü ölçer. |
-| **GraphSAGE** | Inductive Learning | Büyük graflar için örnekleme (sampling) verimliliğini test eder. |
-| **GIN** | Isomorphism Network | Maksimum ekspresivite ve karmaşık agregasyon testi. |
-| **SGC** | Simplified Convolution | Gereksiz lineer olmayan katmanların kaldırılmasının etkisini ölçer. |
-| **APPNP** | Personalized PageRank | Uzak komşuluk ilişkilerinin (multi-hop) NPU bellek yönetimine etkisi. |
-| **GraphTransformer**| Self-Attention | GNN ve Transformer hibrit yapılarının NPU uyumluluğu. |
+| **GCN** | Spectral Convolution | The foundational baseline of GNN literature. |
+| **GAT** | Attention Mechanism | Measures the overhead of dynamic attention weighting on NPU. |
+| **GATv2** | Dynamic Attention | Enhanced attention with improved expressiveness over GAT. |
+| **GraphSAGE** | Inductive Learning | Tests sampling efficiency for large graphs. |
+| **GIN** | Isomorphism Network | Maximum expressivity and complex aggregation test. |
+| **SGC** | Simplified Convolution | Measures the effect of removing unnecessary non-linear layers. |
+| **APPNP** | Personalized PageRank | Effect of multi-hop neighborhood propagation on NPU memory management. |
+| **GraphTransformer** | Hybrid Self-Attention | NPU compatibility of GNN–Transformer hybrid architectures. |
+| **MPNN** | Message Passing | General message-passing framework; baseline for learned edge features. |
 
-## 2. Karşılaştırma Modelleri (Baselines)
+## 2. Dense Baseline Models
 
-NPU'nun asıl güçlü olduğu alanlar (Dense CNN) ile GNN'ler arasındaki farkı göstermek için kullanılır.
+Used to contrast NPU performance in its intended use case (dense CNNs/Transformers) against GNNs.
 
-*   **ResNet50 (FP32/INT8):** Standart evrişimli sinir ağı (CNN). NPU'nun "compute-bound" senaryolardaki tavan performansını (Peak TOPS) gösterir.
-*   **MobileNetV2 (FP32/INT8):** Edge cihazlar için optimize edilmiş hafif CNN. Verimlilik kıyası için kullanılır.
-*   **BERT-tiny (FP32/INT8):** Transformer mimarisinin en küçük hali. "Fusion Overhead Paradox"u NLP bağlamında kanıtlar.
+| Model | Type | FP32 | INT8 | Params |
+|-------|------|------|------|--------|
+| **ResNet50** | CNN | ✅ | ✅ | 25.5M |
+| **MobileNetV2** | CNN | ✅ | ✅ | 3.5M |
+| **EfficientNet-B0** | CNN | ✅ | ❌ | 5.3M |
+| **ViT-Tiny** | Vision Transformer | ✅ | ❌ | 5.7M |
+| **BERT-Tiny** | NLP Transformer | ✅ | ✅ | 4.4M |
 
-## 3. Hassasiyet ve Versiyonlar
+## 3. Precision and Versions
 
-Her model iki farklı hassasiyet (precision) seviyesinde test edilmektedir:
+Each model is tested at two precision levels:
 
-1.  **FP32 (Floating Point 32):** Orijinal hassasiyet. NPU'nun en az verimli olduğu ama doğruluğun en yüksek olduğu mod.
-2.  **INT8 (Integer 8):** NNCF (Neural Network Compression Framework) ile kuantize edilmiş versiyon. NPU'nun donanım hızlandırıcılarını (Movidius VPU/NPU IP) tam kapasite kullandığı "native" mod.
+1. **FP32 (Floating Point 32):** Original precision. Highest accuracy but least efficient on NPU hardware.
+2. **INT8 (Integer 8):** Quantized via NNCF (Neural Network Compression Framework). Activates the NPU's hardware accelerators (Movidius VPU/NPU IP) at full capacity — the "native" NPU mode.
 
-## 4. Teknik Kısıtlamalar ve Karşılaşılan Hatalar
+## 4. Known Limitations and Compilation Failures
 
-Benchmark sürecinde bazı modellerde mimari uyuşmazlıklar tespit edilmiştir. Bu durumlar akademik raporlamada "NPU Donanım/Yazılım Olgunluk Analizi" kapsamında sunulmalıdır:
+Several architecture-specific incompatibilities were discovered during benchmarking. These are reported as research findings in the paper under *"NPU Hardware/Software Maturity Analysis"*:
 
-*   **GAT (Graph Attention Network):** OpenVINO Execution Provider (EP), NPU üzerinde GAT modellerini derlerken `Output names mismatch between OpenVINO and ONNX` hatası vermektedir. Bu durum, NPU plugin'inin dikkat mekanizmasındaki (attention) alt grafiklerin çıktı isimlendirmelerini henüz tam olarak eşleştiremediğini göstermektedir. Bu model, NPU kısıtlaması nedeniyle CPU fallback modunda çalıştırılmaktadır.
-*   **GraphTransformer:** Modelin `Self-Attention` katmanlarındaki dinamik tensör şekilleri ve `Sub` operatörü üzerindeki boyut uyuşmazlıkları (Incompatible dimensions), statik kuantizasyon (PTQ) sürecinde "Shape Inference" hatalarına yol açmıştır. (Giriş şekilleri optimize edilerek bazı versiyonlarda aşılmıştır).
-*   **BERT-tiny:** Opset yükseltme (Opset 11 -> 13) sırasında `Unsqueeze` operatörünün parametre sınırları dışında kalması nedeniyle kuantizasyon motoru (NNCF/ONNX) tarafından reddedilmiştir.
-*   **BERT-tiny (GPU):** OpenVINO GPU backend, `bert-tiny_fp32` için derleme sırasında hata vermektedir. Bu yüzden `hw_comparison` aşamasında GPU koşumu otomatik olarak atlanır; CPU ve NPU sonuçları raporlanır.
+### INT8 Quantization Failures
+- **GAT / GATv2:** The OpenVINO Execution Provider fails with `Output names mismatch between OpenVINO and ONNX` during NPU compilation. The NPU plugin cannot yet fully reconcile the output naming of attention sub-graphs. These models run in CPU fallback mode.
+- **EfficientNet-B0:** INT8 compilation fails due to unsupported operator patterns in the NPU plugin.
+- **ViT-Tiny:** INT8 compilation fails due to shape inference issues during quantization.
 
-**Akademik Not:** GAT modelinde karşılaşılan derleme hatası ve diğer modellerdeki kuantizasyon zorlukları, Intel Core Ultra NPU mimarisinin (NPU 3720 IP) özellikle dinamik attention mekanizmalarına sahip grafik yapıları için yazılım kütüphanesi seviyesinde (OpenVINO NPU Plugin) geliştirilmeye muhtaç alanlarını kanıtlayan kritik "araştırma bulguları" (research findings) olarak nitelendirilmelidir.
+### NPU Hardware Compiler Constraints (VPUX37XX)
+
+1. **Negative Post-Shift Quantization Error:** Some GNN INT8 models (e.g., `APPNP_int8`) produce extreme scaling factors during NNCF quantization. The NPU hardware compiler rejects these with: `postShift is not supported`. This is a hardware limitation — not a model bug.
+
+2. **Intel Graphics Compiler (IGC) Crashes:** The shared IGC compiler can produce fatal memory segmentation errors (`intersects with V37`) when processing certain INT8 GNN graphs. The pipeline includes GPU bypass mechanisms to prevent full-process crashes.
+
+> **Academic Note:** These failures are valuable research findings demonstrating current limitations of the Intel Core Ultra NPU software stack for sparse GNN workloads, rather than simple bugs.
 
 ---
-*Son Güncelleme: 30 Nisan 2026*
 
-### Intel Core Ultra NPU (VPUX37XX) Donanım ve Derleyici Limitasyonları
-
-Benchmarking çalışmaları sırasında Intel NPU çekirdek sürücüsü (OpenVINO NPU Plugin) seviyesinde bazı mimari kısıtlamalar tespit edilmiştir:
-
-1.  **Negatif Post-Shift Kuantizasyon Hatası:**
-    Özellikle Message-Passing tabanlı bazı GNN modellerinin (örn. `APPNP_int8.onnx`) INT8 kuantizasyon sürecinde aşırı uçlarda ölçekleme faktörleri (scale factors) üretilmektedir. NPU donanımı (VPUX37XX mimarisi) derleme esnasında şu hatayı fırlatmaktadır:
-    `ConvertIEToVPUNCE Pass failed : Encountered an attempt to approximate 56674.56 as mult = 28337, shift = 0, postShift = -1 ... but postShift is not supported`
-    Bu hata, donanımın o spesifik tensor için hesaplanan kuantizasyon `post-shift` değerini (örn: `-1`) donanımsal olarak desteklememesinden kaynaklanır. Bu modellerin çalışması OpenVINO tarafından otomatik olarak iptal edilir.
-    
-2.  **Intel Graphics Compiler (IGC) Çökmeleri:**
-    NPU ve GPU backend'leri tarafından ortak olarak kullanılan IGC derleyicisi, bazı INT8 Quantized GNN grafikleri işlenirken `intersects with V37` şeklinde ölümcül bellek segmentasyon hataları (Memory Access / Intersection Error) vermektedir. Pipeline bu hataların tüm Python sürecini çökertmemesi için koruma mekanizmaları (GPU Bypass) ile donatılmıştır.
-
-Bu kısıtlamalar bir yazılım hatasından (bug) ziyade, GNN'lerin standart CNN ve Transformer modelleri için tasarlanmış NPU donanım/yazılım yığınlarıyla mevcut uyumsuzluklarını gösteren kıymetli araştırma bulgularıdır.
+*Last updated: 1 June 2026*

@@ -37,8 +37,25 @@ __pypackages__/
 # Dataset snapshots
 data/ogbn_*/
 
-# Generated benchmark artifacts
+# ONNX models (large binary files — regenerate with: python analysis/model_prep.py)
+models/*.onnx
+models/*.onnx.data
+models/*.onnx.failed
+
+# Benchmark runtime artifacts
 *.etl
+results/**/*.log
+results/**/progress.log
+results/scaling_sweep/runs/
+results/density_sweep/runs/
+
+# Reference PDFs (copyright — cite via references.bib)
+paper/references/*.pdf
+paper/references/*.md
+
+# Large standalone PDFs
+*.pdf
+!paper/paper.pdf
 
 # Testing
 htmlcov/
@@ -58,6 +75,7 @@ htmlcov/
 *.ind
 *.lof
 paper/*.log
+texput.log
 *.lot
 *.lol
 *.nav

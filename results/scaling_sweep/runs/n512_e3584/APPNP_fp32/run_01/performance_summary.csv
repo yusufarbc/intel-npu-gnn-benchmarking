@@ -1,3 +1,0 @@
-mode,avg_latency_ms,std_latency_ms,p95_latency_ms,peak_memory_mb,cpu_utilization_pct,iterations,providers,fallback_to_cpu,profiling_json
-baseline,4.590812000533333,1.3984142193476172,6.184675000986317,686.23046875,915.5,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\scaling_sweep\runs\n512_e3584\APPNP_fp32\run_01\baseline_profiling.json
-optimized,4.36095099998056,0.5163420428955329,5.3295950034225825,686.23046875,876.1,100,OpenVINOExecutionProvider | CPUExecutionProvider,False,C:\Users\yusuf\Projects\npu-graph-opt-benchmarking\results\scaling_sweep\runs\n512_e3584\APPNP_fp32\run_01\optimized_profiling.json

@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this benchmark suite or build on this work, please cite it as below."
+type: software
+authors:
+  - family-names: Arabacı
+    given-names: Yusuf Talha
+    affiliation: Karabük University
+    country: TR
+title: "Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs"
+abstract: >
+  A comprehensive benchmarking framework for evaluating Graph Neural Network (GNN)
+  inference on Intel Core Ultra (Meteor Lake) NPUs, comparing against CPU and
+  integrated GPU (iGPU) backends under OpenVINO. Covers 14 models (9 GNNs + 5 dense
+  baselines), 3 real-world OGB datasets, FP32/INT8 precision analysis, and
+  operator-level CPU fallback profiling.
+version: "1.0.0"
+date-released: "2026-06-01"
+url: "https://github.com/yusufarbc/intel-npu-gnn-benchmarking"
+repository-code: "https://github.com/yusufarbc/intel-npu-gnn-benchmarking"
+license: MIT
+keywords:
+  - graph neural networks
+  - GNN
+  - NPU
+  - Intel Core Ultra
+  - Meteor Lake
+  - inference benchmarking
+  - OpenVINO
+  - ONNX Runtime
+  - INT8 quantization
+  - edge AI
