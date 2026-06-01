@@ -1,0 +1,271 @@
+Empirical Performance Analysis of Graph Optimizations and Memory Constraints on Neural Processing Units
+The architectural trajectory of deep learning acceleration has entered a pivotal phase where the theoretical compute capability of silicon is no longer the primary determinant of system throughput. As neural network architectures scale in complexity and deployment migrates toward the computational periphery, the traditional reliance on the Random Access Memory (RAM) model—which assumes uniform costs for all memory accesses—has become increasingly fallacious. In the current era of Neural Processing Units (NPUs), performance is governed by the "Memory Wall," a phenomenon where the disparity between processor speed and memory bandwidth creates a fundamental bottleneck for artificial intelligence workloads. This report provides a comprehensive empirical analysis of the intersection between compiler-level graph optimizations, specifically operator fusion, and the physical execution constraints of modern NPU hardware. It explores how memory I/O complexity, kernel dispatch overheads, and the rigid execution models of contemporary compilers interact to define the effective throughput of edge AI systems.
+
+Executive Summary
+The transition from general-purpose GPUs to specialized NPUs marks a shift toward architectural specialization designed to address the unique dataflow requirements of deep learning. While NPUs offer superior energy efficiency and peak performance-per-watt, their actualized performance frequently falls short of vendor-claimed specifications. Empirical evaluations across diverse platforms—including Intel AI Boost, Ascend 910B, and Qualcomm Hexagon—reveal that effective throughput (Effective TOPS) can be up to 42 times lower than peak theoretical capability. This gap is primarily driven by the "Memory Wall," which manifests during memory-bound operations like the autoregressive decoding phase of large language models, where arithmetic intensity often drops to approximately 1 FLOP/byte.
+
+Compiler optimizations such as operator fusion are the primary defense against this bottleneck, seeking to minimize global memory traffic by combining multiple graph operations into single executable kernels. However, this study identifies a "Fusion Overhead Paradox," where the compilation, optimization, and dispatch costs associated with fusion exceed the raw execution time for smaller models, such as BERT-tiny. Furthermore, the reliance of NPU compilers on static execution models and "Static Shape" mechanisms creates significant friction when deploying modern, dynamic architectures. This friction frequently results in costly "CPU fallbacks," where unsupported operators force data layout conversions and transfers across the system bus, introducing prohibitive latency penalties. Through a synthesis of recent literature (2021-2026) and physical telemetry data, this report illuminates the critical trade-offs between optimization aggressiveness and hardware-specific execution limits, identifying a path forward through hardware-aware, universal graph compilation and adaptive orchestration frameworks.
+
+Thematic Synthesis
+Theme 1: The Evolution of the Memory Wall and I/O Complexity
+The "Memory Wall" is no longer a peripheral constraint but the defining characteristic of NPU-based inference. This theme explores how the shift from compute-bound to memory-bound workloads has necessitated a re-evaluation of hardware efficiency through the lens of arithmetic intensity and the Roofline model.
+
+The Roofline Model as a Diagnostic Tool
+In modern NPU architectures, performance is bounded by two distinct ceilings: peak computational throughput (π) and peak memory bandwidth (β). The intersection of these ceilings defines the "ridge point" (ρ), the critical arithmetic intensity at which a workload transitions from being memory-bound to compute-bound. Quantitative measurements demonstrate that contemporary accelerators exhibit widely varying ridge points. For instance, the Intel AI Boost NPU possesses a ridge point of 130 FLOPs/byte, whereas high-end GPUs like the NVIDIA RTX PRO 5000 Blackwell reach 218.   
+
+The mathematical relationship governing achievable performance (P 
+achievable
+​
+ ) is expressed as:
+
+P 
+achievable
+​
+ =min(π 
+i
+​
+ ,β 
+i
+​
+ ×AI)
+Where AI (Arithmetic Intensity) is defined by the ratio of total operations performed (W) to the bytes of data transferred between compute units and off-chip memory (Q):
+
+AI= 
+Q
+W
+​
+ 
+   
+
+For large language model (LLM) decoding operations, the arithmetic intensity is approximately 1 FLOP/byte, which is significantly lower than the ridge points of most NPUs. This discrepancy implies that during token generation, the compute units of an NPU may remain idle for over 99% of the execution cycle, waiting for weight and activation data to be fetched from High Bandwidth Memory (HBM). Consequently, simply increasing the floating-point operations per second (FLOPS) of a processor yields diminishing returns for inference latency unless the memory bottleneck is addressed.   
+
+Memory Hierarchy and Energy Complexity
+The physical cost of data movement is increasingly dominant in the energy budget of AI systems. Empirical data indicates that a 32-bit DRAM read operation costs approximately 640 pJ at the 45 nm process node, which is nearly two orders of magnitude greater than the 3.7 pJ required for a floating-point multiply-accumulate operation. This energy disparity highlights that inference efficiency is a function of I/O minimization.   
+
+To analyze this complexity, recent literature decomposes inference I/O into three distinct flows: model weight I/O (W), Key-Value (KV) cache I/O (K), and activation I/O (A). Each flow targets different levels of the memory hierarchy. While quantization (INT8, INT4) effectively reduces the footprint of W and K, the activation flow A is often constrained by the limited capacity of on-chip Static Random-Access Memory (SRAM) or Tightly Coupled Memory (TCM). When activation tensors exceed these local buffers, "activation spill" occurs, forcing data into slower main memory and causing a non-monotonic relationship between batch size and throughput.   
+
+Hardware Component	Peak Compute (π)	Peak Bandwidth (β)	Ridge Point (ρ)
+Intel AI Boost NPU	6.5 TFLOPS	50 GB/s	130
+Intel Core Ultra 9 CPU	0.72 TFLOPS	90 GB/s	8
+NVIDIA RTX PRO 5000	209.5 TFLOPS	960 GB/s	218
+Qualcomm Snapdragon 8 G2	486 GOPS	36 GB/s	~13.5
+   
+
+The Capacity Optimized HBM and the Overprovisioning Paradox
+As LLM sizes continue to expand, the "Memory Overprovisioning Paradox" has emerged as a significant design challenge. This paradox describes a fundamental mismatch: high-capacity DRAM-based memories (HBM, LPDDR) trade capacity for bandwidth, while SRAM-based architectures (Cerebras WSE, Groq) trade bandwidth for capacity. Achieving a 1 ms token latency for models like Llama-3 while fully utilizing memory capacity would require a Bandwidth-to-Capacity ratio (BW/Cap) of approximately 1000 (1 TB/s per GB). Current HBM3e stacks, however, offer a BW/Cap of only 27.   
+
+To meet the bandwidth requirements for low-latency decoding, system designers are forced to aggregate multiple memory stacks, increasing the total capacity far beyond the model's actual footprint. In a typical configuration, only 2.7% of the total memory capacity may be effectively utilized for storage, while 74% of the HBM energy is consumed solely by internal data movement. This inefficiency has led to the proposal of "Capacity-Optimized High-Bandwidth Memory" (HBM-CO), which reduces capacity in exchange for lower energy consumption and costs, specifically targeting memory-bound reasoning applications.   
+
+Theme 2: Efficacy of Operator Fusion and the Fusion Overhead Paradox
+Operator fusion is a primary compiler-level optimization designed to mitigate the memory wall by merging multiple graph operations into a single kernel. This synthesis examines the empirical efficacy of fusion across different model scales and the specific scenarios where fusion fails.
+
+Mechanisms of Advanced Operator Fusion
+Traditional operator fusion targets simple sequences like Convolution followed by ReLU. However, modern transformers require the fusion of complex patterns involving cascaded reductions and loop-carried dependencies, such as those found in attention mechanisms. Recent frameworks like RedFuser and Neptune have introduced formal methodologies for analyzing these patterns. Neptune, for instance, uses algebraic correction expressions to intentionally break dependencies during fusion, allowing for the generation of kernels that produce correct results while significantly reducing global memory transfers.   
+
+Empirical results demonstrate that unified operator fusion (UOF) frameworks, which utilize hardware-agnostic intermediate representations and device-aware cost models, can achieve up to 3.8x end-to-end speedups on ResNet-50 and BERT-small benchmarks across heterogeneous platforms including NPUs and GPUs. The core of these speedups is the reduction of kernel launch overhead and the improvement of data reuse within the NPU's specialized local buffers (L0/L1).   
+
+The Fusion Overhead Paradox for Small Models
+While fusion is a cornerstone of performance for large CNNs and Transformers, it encounters a diminishing return or even a performance penalty when applied to "tiny" models (e.g., BERT-tiny). This is defined as the "Fusion Overhead Paradox." In these scenarios, the time spent by the runtime to analyze the graph, manage virtual registers, and dispatch the fused kernel exceeds the total execution time of the unfused operations.   
+
+Telemetry data reveals that for small tensor operations common in edge inference, the "kernel launch gap"—the idle time between kernel executions—can dominate the total latency. JIT-based systems like GPUOS attempt to mitigate this by using persistent kernels and runtime operator injection, achieving up to 7.3x speedups for small-scale simulations. Furthermore, an ablation study on the UOF framework showed that removing the hardware-aware cost model can lead to "over-fusion," where the compiler merges operations excessively, leading to increased register pressure and a 15% performance degradation.   
+
+The Model Scaling Paradox in NPU Deployment
+The "Model Scaling Paradox" provides an empirical illustration of memory-bound behavior on platforms like the Ascend 910B NPU. When processing standard requests with short context lengths (e.g., 2K tokens), a 1B parameter model can comprehensively outperform a 7B backbone in terms of throughput (21.58 TPS vs. 17.18 TPS). This counterintuitive result stems from the fact that the 1B model's weight-fetching overhead is significantly smaller, allowing it to bypass the HBM bandwidth wall that starves the compute resources during 7B model execution.   
+
+However, as context scales to 32K tokens, the 1B model’s accuracy collapses, making the 7B model indispensable. This paradox highlights that "micro-level" optimizations like operator fusion are insufficient for dynamic workloads, necessitating "macro-level" orchestration frameworks (e.g., A-IO) that can dynamically route requests to the optimal model based on intent sensing.   
+
+Model Scale	HBM Fetch Size (FP16)	Throughput (TPS)	HBM Cumulative Transfer (512-tokens)
+Open-Pangu 1B	~2 GB	21.58	1.0 TB
+Open-Pangu 7B	~14 GB	17.18	7.1 TB
+   
+
+Theme 3: Compiler-Hardware Friction and NPU Execution Limits
+This theme analyzes the disconnect between high-level deep learning compilers (OpenVINO, ONNX Runtime) and the specialized hardware constraints of NPUs, specifically focusing on CPU fallbacks and the limitations of current drivers.
+
+The Static Shape Constraint and Dynamic Logic
+The underlying architecture of most NPUs relies on specialized computing units (Cube and Vector cores) and explicit memory management (L0/L1 buffers) that favor a static execution model. Most NPU software stacks perform optimal operator fusion and memory allocation during an offline compilation phase based on "Static Shape" assumptions—where input tensor shapes and graph topology remain invariant during execution.   
+
+Speculative decoding algorithms, which are crucial for accelerating LLM inference, are inherently dynamic, as the number of tokens accepted and the shape of the attention mask change at every step. On an NPU, this dynamism forces the runtime to either fall back to scalar execution on the CPU or trigger expensive Just-In-Time (JIT) recompilation, both of which introduce prohibitive latency penalties. For example, as KV-cache grows, the memory access pattern becomes increasingly sparse, causing computational overhead to rise by 1.77x at a sequence length of 1024 tokens.   
+
+CPU Fallbacks and Layout Conversion Penalties
+Current deployment frameworks like OpenVINO and ONNX Runtime exhibit several fundamental limitations that constrain NPU performance. A primary issue is the "CPU fallback," which occurs when an operator is unsupported by the NPU driver. This is not merely a compute penalty but an I/O penalty; the data must be transferred from the NPU's private memory back to system RAM, often requiring a layout conversion.   
+
+NPUs typically require specific data layouts (e.g., NHWC or proprietary tiled formats) to achieve peak bandwidth. Converting these layouts for CPU processing (which usually prefers NCHW or planar data) involves massive data shuffles that can consume more time than the actual computation. Furthermore, the lack of principled buffer management and liveness analysis in standard frameworks leads to "fragmentary" NPU dispatches separated by intervening CPU operations, causing unnecessary data copies.   
+
+Compiler Limitations: Visibility and Scalability
+Empirical analysis of Intel’s AI Boost NPU using the FORGE-UGC compiler reveals that industry-standard frameworks often utilize "opaque" compilation pipelines with limited pass-level visibility. Key limitations include:   
+
+Lossy Export: Frameworks often require converting PyTorch models into intermediate formats (TorchScript, ONNX) that cannot represent modern LLM constructs like data-dependent control flow, leading to manual decomposition errors.   
+
+Super-Linear Compilation Time: Compilation times for frameworks like OpenVINO scale super-linearly with model depth, reaching 60 seconds for an 8B model—prohibitive for iterative development.   
+
+Opaque Buffer Management: Developers lack control over virtual register abstraction and instruction scheduling, preventing the minimization of device transitions.   
+
+In contrast, specialized compilers like FORGE-UGC achieve 6.9x to 9.2x faster compilation than OpenVINO and 18.2% to 35.7% lower end-to-end latency by using a four-phase hardware-agnostic design that decouples graph capture from backend scheduling.   
+
+Literature Synthesis Matrix
+The following matrix compares recent empirical studies (2021-2026) that investigate NPU performance under memory and compiler constraints.
+
+Author (Year)	Core Focus	Methodology	Key Findings regarding Memory/Fusion	Limitations
+Zhang et al. (2025) 
+
+Unified Operator Fusion (UOF)	Cost-model driven graph rewrites; profiling of compute peaks and bandwidth.	UOF delivered 3.8x speedup on mobile NPU; 15% slowdown observed without device-aware cost model.	Requires extensive offline profiling; limited to static graph patterns.
+Dai et al. (2026) 
+
+Speculative Decoding on NPU	Static execution mode for Medusa heads on Ascend 910B.	Paradigm shift to static tensors reduced NPU-CPU sync overhead; identified memory-bound scaling with KV-cache.	Specific to OpenPangu/Medusa architecture; not easily generalized to all NPUs.
+Zhang et al. (2026) 
+
+FORGE-UGC Compiler	ATen operator level graph capture and virtual register assignment.	18.2-35.7% lower latency vs. OpenVINO; 30-48% reduction in peak buffer count via liveness analysis.	Evaluated only on Intel AI Boost; needs validation on ARM/Qualcomm backends.
+Pirolo (2025) 
+
+INT4 GEMM on Mobile SoCs	Systematic batch-driven Roofline shift using handwritten ARM NEON kernels.	Throughput peaks at batch=8 (243 GMACs/s); degrades beyond due to L1 activation spill.	Focused on mobile CPU rather than dedicated NPU silicon.
+Neutron Team (2025) 
+
+eIQ Neutron NPU	Constrained programming for compute/data movement co-optimization.	Effective TOPS up to 42x lower than advertised peak; achieved 1.8x speedup over leading stacks.	Proprietary NPU IP; limited transparency on lower-level ISA.
+A-IO Framework (2026) 
+
+Adaptive Inference Orchestration	1B probe model for intent sensing and traffic isolation on Ascend 910B.	Reducing per-token HBM fetch from 14GB to 2GB for simple tasks; breaks the throughput Pareto frontier.	15-17.4ms static system latency per request; 8% intent misclassification rate.
+Dai et al. (2025) 
+
+μNPU Benchmarking	Standardized pipeline for microcontroller-scale neural processing units.	Discovered surprising disparities between hardware specs and actual performance under model complexity.	Limited to ultra-low-power regimes (<1W); lacks LLM scale evaluation.
+  
+Research Gaps
+The synthesized literature identifies several critical voids in the current understanding and optimization of NPU performance.
+
+Lack of Dynamic Roofline Modeling
+Traditional Roofline models are static, providing a fixed view of hardware limits. However, on-device inference is subject to aggressive thermal management. For example, the iPhone 16 Pro loses nearly 50% of its throughput within a few iterations due to thermal throttling, while the S24 Ultra enforces a hard GPU frequency floor. Current literature lacks a "Dynamic Roofline" that accounts for thermal envelopes and battery power ceilings as primary constraints, rather than secondary observations. There is an urgent need for compilers that can adapt fusion aggressiveness and batching strategies in real-time based on the hardware's thermal state.   
+
+Inadequate Telemetry Tools for Edge Inference
+While cloud systems benefit from mature observability frameworks, edge NPU telemetry is fragmented. Most vendor SDKs provide opaque performance figures that lack "pass-level visibility"—making it impossible for developers to understand which fusion rules were applied or to quantify the contribution of individual optimization passes. Furthermore, existing benchmarks often focus on single-inference latency rather than sustained back-to-back query sequences, which are required to characterize the full performance degradation curve of autonomous agents.   
+
+Real-Time Scheduling and Virtualization Gaps
+In airborne and automotive embedded systems, NPUs must handle multi-tenant workloads with strict timing constraints. However, most NPU hardware does not support preemptive scheduling or task prioritization. When a high-priority task arrives, it is frequently blocked by an ongoing low-priority task, leading to deadline misses. Current NPU virtualization research is largely limited compared to GPUs, and there is a lack of general-purpose resource management mechanisms that can guarantee quality-of-service (QoS) across heterogeneous multi-core systems.   
+
+Standardized Comparison Across Diverse NPU Tiers
+The rapid proliferation of NPU architectures—from milli-watt μNPUs to high-performance SoCs—has created an evaluation crisis. There is no standardized benchmark suite that allows for a fair side-by-side comparison of different platforms using identical models and quantization strategies. Vendors often report "fragmentary" figures that obscure the end-to-end costs of NPU initialization, memory I/O overheads, and pre/post-processing on the CPU.   
+
+Conclusion
+The empirical performance of Neural Processing Units is fundamentally a function of the I/O complexity and memory hierarchy management, rather than raw arithmetic capability. The "Memory Wall" remains the preeminent barrier, particularly for low-arithmetic-intensity workloads like LLM decoding, where the compute capacity of modern NPUs is systematically underutilized. While graph optimizations like operator fusion provide substantial gains for large-scale models by reducing global memory traffic, they are subject to the "Fusion Overhead Paradox" in smaller architectures, where dispatch and compilation costs become prohibitive.
+
+Current deployment frameworks like OpenVINO and ONNX Runtime are hindered by opaque pipelines, lack of pass-level visibility, and rigid "Static Shape" execution models that trigger costly CPU fallbacks and layout conversion penalties. The path toward efficient NPU-based inference lies in hardware-aware co-design: compilers that can perform principled buffer management and liveness analysis, and orchestration frameworks like A-IO that can dynamically bypass the HBM bandwidth wall through intelligent traffic routing. Addressing the identified gaps—specifically the need for dynamic thermal-aware roofline modeling and standardized edge telemetry—is essential for the maturation of the NPU ecosystem. As the field moves toward "Physical AI" and autonomous edge agents, the ability to align neural structures with physical hardware constraints will distinguish successful deployments from those constrained by architectural friction.
+
+
+arxiv.org
+1 Introduction - arXiv
+Yeni pencerede açılır
+
+arxiv.org
+Accelerating OpenPangu Inference on NPU via Speculative ... - arXiv
+Yeni pencerede açılır
+
+assets-eu.researchsquare.com
+I/O for LLM Inference: A Survey of Storage and Memory Bottlenecks - Research Square
+Yeni pencerede açılır
+
+researchgate.net
+4-bit Batched GEMM on Commodity Hardware: Roofline Analysis, big.LITTLE Scheduling, and Batched Arithmetic Intensity Scaling to 243 GMACs/s on a Commercial Mobile SoC - ResearchGate
+Yeni pencerede açılır
+
+arxiv.org
+RPU – A Reasoning Processing Unit - arXiv
+Yeni pencerede açılır
+
+researchgate.net
+DNNFusion: accelerating deep neural networks execution with advanced operator fusion | Request PDF - ResearchGate
+Yeni pencerede açılır
+
+preprints.org
+Unified Operator Fusion for Heterogeneous Hardware in ML Inference Frameworks - Preprints.org
+Yeni pencerede açılır
+
+ieeexplore.ieee.org
+Unified Operator Fusion for Heterogeneous Hardware in ML Inference Frameworks
+Yeni pencerede açılır
+
+github.com
+zhixin612/awesome-papers-LMsys: Daily Arxiv Papers on LLM Systems - GitHub
+Yeni pencerede açılır
+
+arxiv.org
+Computer Science - arXiv
+Yeni pencerede açılır
+
+researchgate.net
+Unified Operator Fusion for Heterogeneous Hardware in ML Inference Frameworks | Request PDF - ResearchGate
+Yeni pencerede açılır
+
+arxiv.org
+A-IO: Adaptive Inference Orchestration for Memory-Bound NPUs - arXiv
+Yeni pencerede açılır
+
+arxiv.org
+A-IO: Adaptive Inference Orchestration for Memory-Bound NPUs - arXiv
+Yeni pencerede açılır
+
+arxiv.org
+A-IO: Adaptive Inference Orchestration for Memory-Bound ... - arXiv
+Yeni pencerede açılır
+
+arxiv.org
+1 Introduction - arXiv
+Yeni pencerede açılır
+
+chatpaper.ai
+Forge-UGC: FX optimization and register-graph engine for universal graph compiler - Paper Details - ChatPaper.ai
+Yeni pencerede açılır
+
+researchgate.net
+characteristics of four recent multicore computers. | Download Table - ResearchGate
+Yeni pencerede açılır
+
+arxiv.org
+arxiv.org
+Yeni pencerede açılır
+
+anil.recoil.org
+Benchmarking Ultra-Low-Power μNPUs - Anil Madhavapeddy
+Yeni pencerede açılır
+
+arxiv.org
+Benchmarking Ultra-Low-Power 𝜇NPUs - arXiv
+Yeni pencerede açılır
+
+arxiv.org
+LLM Inference at the Edge: Mobile, NPU, and GPU Performance Efficiency Trade-offs Under Sustained Load - arXiv
+Yeni pencerede açılır
+
+computer.org
+Workload-Aware Performance Model Based Soft Preemptive Real-Time Scheduling for Neural Processing Units - IEEE Computer Society
+Yeni pencerede açılır
+
+pmc.ncbi.nlm.nih.gov
+Hardware-Assisted Low-Latency NPU Virtualization Method for Multi-Sensor AI Systems
+Yeni pencerede açılır
+
+mdpi.com
+Performance and Efficiency Gains of NPU-Based Servers over GPUs for AI Model Inference
+Alıntılanan çalışmalar
+1 Introduction - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/html/2602.06057v3
+Accelerating OpenPangu Inference on NPU via Speculative ... - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/pdf/2603.03383
+I/O for LLM Inference: A Survey of Storage and Memory Bottlenecks - Research Square, erişim tarihi Nisan 27, 2026, https://assets-eu.researchsquare.com/files/rs-9036613/v1_covered_6447e1e8-b399-4716-af42-991e77ccd91b.pdf
+4-bit Batched GEMM on Commodity Hardware: Roofline Analysis, big.LITTLE Scheduling, and Batched Arithmetic Intensity Scaling to 243 GMACs/s on a Commercial Mobile SoC - ResearchGate, erişim tarihi Nisan 27, 2026, https://www.researchgate.net/publication/403472490_4-bit_Batched_GEMM_on_Commodity_Hardware_Roofline_Analysis_bigLITTLE_Scheduling_and_Batched_Arithmetic_Intensity_Scaling_to_243_GMACss_on_a_Commercial_Mobile_SoC
+RPU – A Reasoning Processing Unit - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/html/2602.18568v2
+DNNFusion: accelerating deep neural networks execution with advanced operator fusion | Request PDF - ResearchGate, erişim tarihi Nisan 27, 2026, https://www.researchgate.net/publication/352717214_DNNFusion_accelerating_deep_neural_networks_execution_with_advanced_operator_fusion
+Unified Operator Fusion for Heterogeneous Hardware in ML Inference Frameworks - Preprints.org, erişim tarihi Nisan 27, 2026, https://www.preprints.org/manuscript/202507.1862/download/final_file
+Unified Operator Fusion for Heterogeneous Hardware in ML Inference Frameworks, erişim tarihi Nisan 27, 2026, https://ieeexplore.ieee.org/document/11181270/
+zhixin612/awesome-papers-LMsys: Daily Arxiv Papers on LLM Systems - GitHub, erişim tarihi Nisan 27, 2026, https://github.com/zhixin612/awesome-papers-LMsys
+Computer Science - arXiv, erişim tarihi Nisan 27, 2026, https://www.arxiv.org/list/cs/new?skip=500&show=500
+Unified Operator Fusion for Heterogeneous Hardware in ML Inference Frameworks | Request PDF - ResearchGate, erişim tarihi Nisan 27, 2026, https://www.researchgate.net/publication/394686391_Unified_Operator_Fusion_for_Heterogeneous_Hardware_in_ML_Inference_Frameworks
+A-IO: Adaptive Inference Orchestration for Memory-Bound NPUs - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/html/2604.09752v2
+A-IO: Adaptive Inference Orchestration for Memory-Bound NPUs - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/html/2604.09752v1
+A-IO: Adaptive Inference Orchestration for Memory-Bound ... - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/pdf/2604.09752
+1 Introduction - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/html/2604.16498v1
+Forge-UGC: FX optimization and register-graph engine for universal graph compiler - Paper Details - ChatPaper.ai, erişim tarihi Nisan 27, 2026, https://www.chatpaper.ai/dashboard/paper/cbc8e6c9-bd1f-4d4f-85bf-305f02a7ba40
+characteristics of four recent multicore computers. | Download Table - ResearchGate, erişim tarihi Nisan 27, 2026, https://www.researchgate.net/figure/characteristics-of-four-recent-multicore-computers_tbl1_220423225
+arxiv.org, erişim tarihi Nisan 27, 2026, https://arxiv.org/html/2509.14388v1
+Benchmarking Ultra-Low-Power μNPUs - Anil Madhavapeddy, erişim tarihi Nisan 27, 2026, https://anil.recoil.org/papers/2025-npu-bench.pdf
+Benchmarking Ultra-Low-Power 𝜇NPUs - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/html/2503.22567v2
+LLM Inference at the Edge: Mobile, NPU, and GPU Performance Efficiency Trade-offs Under Sustained Load - arXiv, erişim tarihi Nisan 27, 2026, https://arxiv.org/html/2603.23640v1
+Workload-Aware Performance Model Based Soft Preemptive Real-Time Scheduling for Neural Processing Units - IEEE Computer Society, erişim tarihi Nisan 27, 2026, https://www.computer.org/csdl/journal/td/2025/06/10942549/25s1sGu53ZS
+Hardware-Assisted Low-Latency NPU Virtualization Method for Multi-Sensor AI Systems, erişim tarihi Nisan 27, 2026, https://pmc.ncbi.nlm.nih.gov/articles/PMC11679731/
+Performance and Efficiency Gains of NPU-Based Servers over GPUs for AI Model Inference, erişim tarihi Nisan 27, 2026, https://www.mdpi.com/2079-8954/13/9/797

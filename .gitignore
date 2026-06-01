@@ -51,7 +51,7 @@ results/density_sweep/runs/
 
 # Reference PDFs (copyright — cite via references.bib)
 paper/references/*.pdf
-paper/references/*.md
+# paper/references/*.md  ← .md files are our own extracted notes, tracked intentionally
 
 # Large standalone PDFs
 *.pdf
