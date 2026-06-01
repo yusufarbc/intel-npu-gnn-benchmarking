@@ -7,7 +7,7 @@
 
 A comprehensive benchmarking framework for evaluating Graph Neural Network (GNN) inference on **Intel Core Ultra (Meteor Lake) NPUs**, comparing against CPU and integrated GPU (iGPU) backends under OpenVINO.
 
-> 📄 **Paper:** *Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs* — Yusuf Talha Arabacı, Karabük University  
+> 📄 **Paper:** *Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis* — Yusuf Talha Arabacı, Emrullah Demiral, Ömer Faruk Acar (Karabük University)  
 > 🎯 **Key Finding:** The NPU delivers strong FP32 throughput for dense vision models (MobileNetV2: 1.97ms, ResNet50: 3.92ms), but GNN workloads show limited NPU advantage due to irregular memory access patterns and sparse operator coverage.
 
 ![Latency comparison across CPU, iGPU, and NPU for all 14 models](results/figures/fig1_latency_comparison.png)
