@@ -19,6 +19,12 @@ import shutil
 import argparse
 from pathlib import Path
 
+# Force stdout/stderr to UTF-8 for Windows console support
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
+
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
@@ -422,42 +428,71 @@ def run(dry_run: bool = False) -> None:
     # 2. Build canonical name map
     canonical_map = {entry[0]: entry for entry in CANONICAL}
 
-    # 3. Rename .md files
-    print("\n── Step 2: Renaming .md files ──")
-    # Collect existing md files (excluding PDFs)
-    existing_mds = sorted(REFS_DIR.glob("*.md"))
+    # 3. Rename files (both .md and .pdf)
+    print("\n── Step 2: Renaming reference files (.md and .pdf) ──")
+    existing_files = sorted(list(REFS_DIR.glob("*.md")) + list(REFS_DIR.glob("*.pdf")))
 
     renamed = {}
     used_targets = set()
 
-    for f in existing_mds:
+    for f in existing_files:
         if f.name in {"index.md", "academic-sources-summary.md"}:
             continue
 
+        ext = f.suffix.lower()[1:]  # 'md' or 'pdf'
+        stem = f.stem
+
         # Determine which canonical entry this file maps to
-        # Try prefix-based matching
         canonical_num = None
-        for hint, cnum in CURRENT_TO_CANONICAL_HINT.items():
-            stem = f.stem
-            # Exact hint match or starts with hint
-            if stem.startswith(hint):
-                canonical_num = cnum
+
+        # A. First try matching by canonical slug contained in the filename (e.g. "Kipf2017" or "Bayraktar2026")
+        for entry in CANONICAL:
+            num, slug, title = entry
+            # Match slug as a word boundary
+            if re.search(r"\b" + re.escape(slug) + r"\b", stem, re.IGNORECASE):
+                canonical_num = num
                 break
+
+        # B. If no slug match, try prefix-based matching from CURRENT_TO_CANONICAL_HINT
+        if canonical_num is None:
+            sorted_hints = sorted(CURRENT_TO_CANONICAL_HINT.keys(), key=len, reverse=True)
+            for hint in sorted_hints:
+                if hint.isdigit():
+                    if re.match(r"^" + hint + r"\b", stem):
+                        canonical_num = CURRENT_TO_CANONICAL_HINT[hint]
+                        break
+                else:
+                    if stem.startswith(hint):
+                        canonical_num = CURRENT_TO_CANONICAL_HINT[hint]
+                        break
+
+        # C. Special case: if it contains "s10115" (Bayraktar DOI prefix), map to Bayraktar (56)
+        if canonical_num is None:
+            if "s10115" in stem.lower():
+                canonical_num = 56
 
         if canonical_num and canonical_num in canonical_map:
             entry = canonical_map[canonical_num]
-            new_name = canonical_name(entry)
+            num, slug, title = entry
+            clean_title = safe_filename(title)
+            new_name = f"{num:02d} - {slug} - {clean_title}.{ext}"
+
             # Handle duplicates (multiple old files → same canonical)
-            if new_name in used_targets:
+            target_key = (new_name, ext)
+            if target_key in used_targets:
                 # append suffix
-                base = new_name[:-3]
-                new_name = f"{base}_alt.md"
-            used_targets.add(new_name)
+                base = new_name[:-(len(ext)+1)]
+                new_name = f"{base}_alt.{ext}"
+            used_targets.add(target_key)
+
             new_path = REFS_DIR / new_name
             if f != new_path:
                 print(f"  RENAME  {f.name!r}")
                 print(f"       →  {new_name!r}")
                 if not dry_run:
+                    # If target already exists (e.g. from previous partial runs), remove it first to avoid collision
+                    if new_path.exists():
+                        new_path.unlink()
                     f.rename(new_path)
                 renamed[f.name] = new_name
         else:
