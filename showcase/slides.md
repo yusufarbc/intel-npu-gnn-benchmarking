@@ -421,26 +421,26 @@ layout: default
 ## Scaling &amp; Density Behavior on NPU
 ### Graph Size vs. Latency — Decoupled by Static-Shape Compilation
 
-<div class="grid grid-cols-2 gap-4 mt-2">
+<div class="grid grid-cols-2 gap-3 mt-1">
   <div>
-    <ul>
-      <li><strong>Flat latency across sizes:</strong> Unlike CPU/GPU, NPU latency stays constant across node/edge counts (ONNX Runtime static-shape tensors).</li>
-      <li><strong>Density correlation: <KaTeX math="r \approx -0.00" /></strong> — no correlation between density &amp; latency on NPU across two orders of magnitude (6.9–451.7 edges/node).</li>
-      <li><strong>Trade-off:</strong> Predictable latency, but no benefit from sparser subgraphs — and no penalty for denser ones.</li>
+    <ul class="text-sm">
+      <li><strong>Flat latency across sizes:</strong> NPU latency stays constant across node/edge counts — ONNX Runtime uses static-shape tensors, unlike CPU/GPU.</li>
+      <li><strong>Density correlation: <KaTeX math="r \approx -0.00" /></strong> — no correlation across two orders of magnitude (6.9–451.7 edges/node).</li>
+      <li><strong>Trade-off:</strong> Predictable but fixed — no benefit from sparser subgraphs, no penalty for denser ones.</li>
     </ul>
-    <div class="highlight-box highlight-box-warning text-xs mt-1">
+    <div class="highlight-box highlight-box-warning text-xs mt-2">
       <strong>🔑</strong> NPU latency is <strong>completely decoupled</strong> from graph density. Static-shape compilation is the key mechanism.
     </div>
   </div>
 
-  <div class="flex flex-col gap-3 justify-center items-center">
+  <div class="grid grid-cols-2 gap-2 items-start">
     <div class="flex flex-col items-center">
-      <img src="./public/figures/fig6_scaling.svg" class="slide-img" />
-      <span class="text-xs text-slate-500 mt-1">Figure 6: Flat NPU latency across graph sizes</span>
+      <img src="./public/figures/fig6_scaling.svg" style="max-height:160px; width:100%; object-fit:contain;" />
+      <span class="text-xs text-slate-500 mt-1 text-center">Fig 6: Scaling</span>
     </div>
     <div class="flex flex-col items-center">
-      <img src="./public/figures/fig7_density_vs_latency.svg" class="slide-img" />
-      <span class="text-xs text-slate-500 mt-1">Figure 7: Flat latency across density levels</span>
+      <img src="./public/figures/fig7_density_vs_latency.svg" style="max-height:160px; width:100%; object-fit:contain;" />
+      <span class="text-xs text-slate-500 mt-1 text-center">Fig 7: Density</span>
     </div>
   </div>
 </div>
@@ -512,34 +512,34 @@ layout: default
 ## Why Do GNNs Struggle on Consumer NPUs?
 ### Architectural Bottlenecks &amp; Failure Modes
 
-<div class="grid grid-cols-2 gap-4 mt-2">
-  <div>
-    <div class="glass-panel highlight-box-warning mb-2">
-      <h3 class="font-semibold text-rose" style="font-size:0.85rem">Key Bottlenecks</h3>
-      <ul>
-        <li><strong>1. Memory Wall:</strong> GNNs are memory-bound (0.1–10 FLOP/byte). 2–4× more shape operators (Gather, Scatter) than vision models — poorly served by NPU's streaming-dataflow.</li>
-        <li><strong>2. Compiler Fusion Limits:</strong> Indirect indexing (Gather, Scatter) prevents static flow optimization; fewer fusion passes on GNN subgraphs.</li>
-        <li><strong>3. Operator Coverage:</strong> MPNN fails entirely on NPU — <code>index_add_</code> unsupported, forcing 100% CPU fallback.</li>
+<div class="grid grid-cols-2 gap-3 mt-1">
+  <div class="flex flex-col gap-2">
+    <div class="glass-panel highlight-box-warning" style="padding:0.5rem 0.75rem">
+      <h3 class="font-semibold text-rose" style="font-size:0.8rem; margin-bottom:0.25rem">Key Bottlenecks</h3>
+      <ul class="text-xs" style="margin:0">
+        <li><strong>1. Memory Wall:</strong> Memory-bound (0.1–10 FLOP/byte); 2–4× more Gather/Scatter ops than vision — NPU streaming-dataflow stalls.</li>
+        <li><strong>2. Compiler Fusion:</strong> Indirect indexing blocks static flow optimization; fewer fusion passes on GNN subgraphs.</li>
+        <li><strong>3. Operator Coverage:</strong> MPNN: <code>index_add_</code> unsupported → 100% CPU fallback.</li>
       </ul>
     </div>
-    <div class="glass-panel">
-      <h3 class="font-semibold text-blue" style="font-size:0.85rem">Silent Failure Modes</h3>
-      <ul>
-        <li><strong>Silent CPU Fallback:</strong> OpenVINO silently dispatches unsupported quantized ops to CPU — MobileNetV2, ResNet50, BERT-Tiny INT8 report misleading "NPU" latencies.</li>
-        <li><strong>Compilation Rejection:</strong> GAT, GATv2, EfficientNet-B0 fail INT8 lowering — dynamic Gather/Scatter unsupported in NPU quantized operator set.</li>
-        <li><strong>Root Cause:</strong> Toolchain assumes dense, regular computation graphs. Halving precision (FP32→INT8) does not reduce DRAM traffic for memory-bound sparse workloads.</li>
+    <div class="glass-panel" style="padding:0.5rem 0.75rem">
+      <h3 class="font-semibold text-blue" style="font-size:0.8rem; margin-bottom:0.25rem">Silent Failure Modes</h3>
+      <ul class="text-xs" style="margin:0">
+        <li><strong>Silent Fallback:</strong> MobileNetV2, ResNet50, BERT-Tiny INT8 silently run on CPU — misleading "NPU" latencies.</li>
+        <li><strong>Compilation Rejection:</strong> GAT, GATv2, EfficientNet-B0 fail INT8 lowering entirely.</li>
+        <li><strong>Root Cause:</strong> Toolchain assumes dense graphs; halving precision (FP32→INT8) cannot reduce DRAM traffic for sparse workloads.</li>
       </ul>
     </div>
   </div>
 
-  <div class="flex flex-col gap-3 justify-center items-center">
+  <div class="grid grid-cols-2 gap-2 items-start">
     <div class="flex flex-col items-center">
-      <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" class="slide-img" />
-      <span class="text-xs text-slate-500 mt-1">Figure 4: CPU fallback fraction per model.</span>
+      <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" style="max-height:155px; width:100%; object-fit:contain;" />
+      <span class="text-xs text-slate-500 mt-1 text-center">Fig 4: CPU fallback</span>
     </div>
     <div class="flex flex-col items-center">
-      <img src="./public/figures/fig3_operator_breakdown.svg" class="slide-img" />
-      <span class="text-xs text-slate-500 mt-1">Figure 3: Operator composition — GNNs vs. vision</span>
+      <img src="./public/figures/fig3_operator_breakdown.svg" style="max-height:155px; width:100%; object-fit:contain;" />
+      <span class="text-xs text-slate-500 mt-1 text-center">Fig 3: Operators</span>
     </div>
   </div>
 </div>
