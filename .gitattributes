@@ -1,0 +1,30 @@
+# Normalize line endings to LF on check-in for cross-platform consistency
+* text=auto eol=lf
+
+# Source files
+*.py    text eol=lf
+*.md    text eol=lf
+*.tex   text eol=lf
+*.bib   text eol=lf
+*.csv   text eol=lf
+*.json  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.txt   text eol=lf
+*.css   text eol=lf
+*.vue   text eol=lf
+*.js    text eol=lf
+
+# Binary files — no diffing or line-ending conversion
+*.onnx          binary
+*.onnx.data     binary
+*.pdf           binary
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.ico           binary
+*.zip           binary
+*.gz            binary
+*.tar           binary
+*.cls           binary

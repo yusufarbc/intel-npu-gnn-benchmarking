@@ -72,7 +72,7 @@ class: rq-slide
   <div class="glass-panel">
     <div class="flex items-center gap-3">
       <span class="text-lg font-bold text-blue" style="min-width:2rem">3</span>
-      <div><strong>Results</strong> — Latency, INT8 quantization, operator analysis, roofline, density, energy</div>
+      <div><strong>Results</strong> — Latency, INT8 quantization, operator analysis, roofline, scaling &amp; density, energy</div>
     </div>
   </div>
   <div class="glass-panel">
@@ -98,7 +98,7 @@ layout: default
 ## The Paradox of Edge AI Acceleration
 ### Dense Optimization vs. Sparse Reality
 
-<div class="grid-cols-2 mt-4">
+<div class="grid grid-cols-2 gap-4 mt-4">
   <div class="glass-panel">
     <h3 class="text-blue font-semibold">1. Hardware Hype (Dense)</h3>
     <ul>
@@ -140,17 +140,17 @@ layout: default
 
 <div class="mt-2 flex flex-col gap-2">
   <div class="highlight-box highlight-box-info">
-    <div class="highlight-box-title">RQ 1: On-Device Efficiency & Parity</div>
+    <div class="highlight-box-title">RQ 1: On-Device Efficiency &amp; Parity</div>
     <div class="text-sm">How efficient are consumer NPUs for sparse GNN workloads vs. CPU and iGPU on laptops?</div>
   </div>
 
   <div class="highlight-box highlight-box-warning">
-    <div class="highlight-box-title">RQ 2: The Quantization Speedup Fallacy</div>
-    <div class="text-sm">Does INT8 deliver advertised 4× acceleration on NPUs, or does it trigger regressions?</div>
+    <div class="highlight-box-title">RQ 2: Quantization: Limited and Negative Returns</div>
+    <div class="text-sm">Does INT8 deliver advertised 4× acceleration on NPUs, or does it trigger regressions on sparse GNN workloads?</div>
   </div>
 
   <div class="highlight-box highlight-box-success">
-    <div class="highlight-box-title">RQ 3: Compiler Maturity & Operator Fusion Limits</div>
+    <div class="highlight-box-title">RQ 3: Compiler Maturity &amp; Operator Fusion Limits</div>
     <div class="text-sm">How robust is OpenVINO when lowering Gather/Scatter onto NPU microarchitectures?</div>
   </div>
 </div>
@@ -201,10 +201,10 @@ graph TB
 layout: default
 ---
 
-## Hardware & Software Methodology
+## Hardware &amp; Software Methodology
 ### Experimental Configuration
 
-<div class="grid-cols-2 mt-4">
+<div class="grid grid-cols-2 gap-4 mt-4">
   <div class="glass-panel">
     <h3 class="font-semibold text-blue">Hardware Platform</h3>
     <ul>
@@ -237,7 +237,7 @@ layout: default
 ## Evaluated Models and OGB Datasets
 ### Workload Characterization
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div class="glass-panel">
     <h3 class="font-semibold text-blue">14 Model Architectures</h3>
     <div class="text-xs">
@@ -306,7 +306,7 @@ layout: default
 ## Inference Latency: NPU vs. CPU vs. iGPU
 ### High-Contrast Performance Profile (FP32)
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div>
     <ul>
       <li><strong>Dense Acceleration:</strong> NPU massively accelerates vision models:
@@ -318,6 +318,7 @@ layout: default
       </li>
       <li><strong>GNN Parity:</strong> Close CPU-NPU (&plusmn;6%) — DRAM-bound.</li>
       <li><strong>iGPU leads GNNs:</strong> GraphTransformer 6.03 ms GPU vs. 10.72 ms NPU.</li>
+      <li><strong>GraphSAGE outlier:</strong> ~45 ms on NPU — 4–6× slower than other GNNs due to heavy Gather/Scatter chains that fully serialize memory accesses.</li>
     </ul>
   </div>
   
@@ -334,9 +335,9 @@ layout: default
 ---
 
 ## Counter-Intuitive INT8 Quantization Results
-### Quantization Paradox & Silent Fallbacks
+### Quantization Paradox &amp; Silent Fallbacks
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div>
     <ul>
       <li><strong>Minor-to-Negative Gains on NPU:</strong> GCN (1.04&times;), GraphSAGE (1.05&times;) marginal; SGC shows <strong>2.2&times; regression</strong> (173.9 vs 78.6 ms).</li>
@@ -363,7 +364,7 @@ layout: default
 ## Structured vs. Irregular Attention Patterns
 ### ViT-Tiny vs. GraphTransformer on NPU
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div class="glass-panel">
     <h3 class="font-semibold text-emerald" style="font-size:0.85rem">Structured (ViT-Tiny)</h3>
     <ul>
@@ -393,10 +394,10 @@ layout: default
 layout: default
 ---
 
-## Roofline Analysis & Computational Efficiency
+## Roofline Analysis &amp; Computational Efficiency
 ### Memory Bandwidth Wall vs. Compute Saturation
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div>
     <ul>
       <li><strong>Intensity</strong> <KaTeX math="= \text{FLOPs} / \text{Bytes}" /> — operational density per memory transfer.</li>
@@ -417,16 +418,52 @@ layout: default
 layout: default
 ---
 
+## Scaling &amp; Density Behavior on NPU
+### Graph Size vs. Latency — Decoupled by Static-Shape Compilation
+
+<div class="grid grid-cols-2 gap-3 mt-1">
+  <div>
+    <ul class="text-sm">
+      <li><strong>Flat latency across sizes:</strong> NPU latency stays constant across node/edge counts — ONNX Runtime uses static-shape tensors, unlike CPU/GPU.</li>
+      <li><strong>Density correlation: <KaTeX math="r \approx -0.00" /></strong> — no correlation across two orders of magnitude (6.9–451.7 edges/node).</li>
+      <li><strong>Trade-off:</strong> Predictable but fixed — no benefit from sparser subgraphs, no penalty for denser ones.</li>
+    </ul>
+    <div class="highlight-box highlight-box-warning text-xs mt-2">
+      <strong>🔑</strong> NPU latency is <strong>completely decoupled</strong> from graph density. Static-shape compilation is the key mechanism.
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-2 items-start">
+    <div class="flex flex-col items-center">
+      <img src="./public/figures/fig6_scaling.svg" style="max-height:160px; width:100%; object-fit:contain;" />
+      <span class="text-xs text-slate-500 mt-1 text-center">Fig 6: Scaling</span>
+    </div>
+    <div class="flex flex-col items-center">
+      <img src="./public/figures/fig7_density_vs_latency.svg" style="max-height:160px; width:100%; object-fit:contain;" />
+      <span class="text-xs text-slate-500 mt-1 text-center">Fig 7: Density</span>
+    </div>
+  </div>
+</div>
+
+<Glossary :terms="['sparse-graph', 'adjacency-matrix', 'spmm', 'static-shape', 'memory-bound', 'onnx']" />
+
+---
+layout: default
+---
+
 ## Power Consumption and Throughput per Watt
 ### SoCWatch Package-Level Telemetry
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div>
     <ul>
       <li><strong>Formula:</strong> <KaTeX math="E_{\text{inf}} = P_{\text{package}} \times t_{\text{latency}}" /></li>
       <li><strong>iGPU:</strong> +7.3% peak power vs CPU, but faster — equal energy/inference.</li>
       <li><strong>INT8 on CPU:</strong> GCN −18.4% energy (73.4 vs 89.9 mJ); MPNN +59% (301.1 vs 189.3 mJ).</li>
     </ul>
+    <div class="highlight-box highlight-box-info text-xs mt-2">
+      <strong>⚠ Scope:</strong> 2 models (GCN, MPNN), 2 backends (CPU, iGPU). NPU power rail not available in Meteor Lake PMT counters — package-level only. Isolated NPU measurement requires shunt resistors.
+    </div>
   </div>
 
   <div>
@@ -472,162 +509,51 @@ layout: default
 layout: default
 ---
 
-## Cross-Platform Latency Overview
-### Heatmap Across Models, Devices, and Precisions
+## Why Do GNNs Struggle on Consumer NPUs?
+### Architectural Bottlenecks &amp; Failure Modes
 
-<div class="grid-cols-2 mt-2">
-  <div>
-    <ul>
-      <li><strong>iGPU Dominance:</strong> Lowest latency across GNNs and vision.</li>
-      <li><strong>NPU Sweet Spot:</strong> Dense vision (ResNet50, MobileNetV2, ViT) — 4.5–11.4× vs CPU.</li>
-      <li><strong>GNN Parity:</strong> All backends cluster tightly — memory-bound bottleneck is platform-independent.</li>
-    </ul>
-  </div>
-
-  <div class="flex flex-col justify-center items-center">
-    <img src="./public/figures/fig8_latency_heatmap.svg" class="slide-img" />
-    <span class="text-xs text-slate-500 mt-1">Figure 8: FP32 latency heatmap (14 models &times; 3 backends)</span>
-  </div>
-</div>
-
-<Glossary :terms="['npu', 'igpu', 'memory-bound', 'onnx']" />
-
----
-layout: default
----
-
-## Scaling Characteristics on NPU
-### Graph Size vs. Latency
-
-<div class="grid-cols-2 mt-2">
-  <div>
-    <ul>
-      <li><strong>Flat latency:</strong> Unlike CPU/GPU, NPU latency stays constant across node/edge counts.</li>
-      <li><strong>Why?</strong> ONNX Runtime compiles with statically shaped tensors — fixed throughput regardless of input.</li>
-      <li><strong>Trade-off:</strong> Predictable latency, but no benefit from sparser subgraphs.</li>
-    </ul>
-  </div>
-
-  <div class="flex flex-col justify-center items-center">
-    <img src="./public/figures/fig6_scaling.svg" class="slide-img" />
-    <span class="text-xs text-slate-500 mt-1">Figure 6: Flat NPU latency across graph sizes</span>
-  </div>
-</div>
-
-<Glossary :terms="['memory-bound', 'npu', 'static-shape', 'onnx']" />
-
----
-layout: default
----
-
-## Impact of Graph Density on NPU Efficiency
-### Density-Latency Decoupling
-
-<div class="grid-cols-2 mt-2">
-  <div>
-    <ul>
-      <li><strong>Pearson <KaTeX math="r \approx -0.00" /></strong> — no correlation between density &amp; latency on NPU.</li>
-      <li><strong>Dataset sweep:</strong> arxiv (6.9 edges/node), products (25.3), proteins (451.7) — two orders of magnitude.</li>
-      <li><strong>Static-shape compilation</strong> forces constant throughput regardless of sparsity.</li>
-    </ul>
-    <div class="highlight-box highlight-box-warning text-xs mt-1">
-      <strong>🔑</strong> NPU latency is <strong>completely decoupled</strong> from graph density. Unlike CPU/GPU, sparser subgraphs yield no speedup.
+<div class="grid grid-cols-2 gap-3 mt-1">
+  <div class="flex flex-col gap-2">
+    <div class="glass-panel highlight-box-warning" style="padding:0.5rem 0.75rem">
+      <h3 class="font-semibold text-rose" style="font-size:0.8rem; margin-bottom:0.25rem">Key Bottlenecks</h3>
+      <ul class="text-xs" style="margin:0">
+        <li><strong>1. Memory Wall:</strong> Memory-bound (0.1–10 FLOP/byte); 2–4× more Gather/Scatter ops than vision — NPU streaming-dataflow stalls.</li>
+        <li><strong>2. Compiler Fusion:</strong> Indirect indexing blocks static flow optimization; fewer fusion passes on GNN subgraphs.</li>
+        <li><strong>3. Operator Coverage:</strong> MPNN: <code>index_add_</code> unsupported → 100% CPU fallback.</li>
+      </ul>
+    </div>
+    <div class="glass-panel" style="padding:0.5rem 0.75rem">
+      <h3 class="font-semibold text-blue" style="font-size:0.8rem; margin-bottom:0.25rem">Silent Failure Modes</h3>
+      <ul class="text-xs" style="margin:0">
+        <li><strong>Silent Fallback:</strong> MobileNetV2, ResNet50, BERT-Tiny INT8 silently run on CPU — misleading "NPU" latencies.</li>
+        <li><strong>Compilation Rejection:</strong> GAT, GATv2, EfficientNet-B0 fail INT8 lowering entirely.</li>
+        <li><strong>Root Cause:</strong> Toolchain assumes dense graphs; halving precision (FP32→INT8) cannot reduce DRAM traffic for sparse workloads.</li>
+      </ul>
     </div>
   </div>
 
-  <div class="flex flex-col justify-center items-center">
-    <img src="./public/figures/fig7_density_vs_latency.svg" class="slide-img" />
-    <span class="text-xs text-slate-500 mt-1">Figure 7: Flat latency across density levels</span>
+  <div class="grid grid-cols-2 gap-2 items-start">
+    <div class="flex flex-col items-center">
+      <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" style="max-height:155px; width:100%; object-fit:contain;" />
+      <span class="text-xs text-slate-500 mt-1 text-center">Fig 4: CPU fallback</span>
+    </div>
+    <div class="flex flex-col items-center">
+      <img src="./public/figures/fig3_operator_breakdown.svg" style="max-height:155px; width:100%; object-fit:contain;" />
+      <span class="text-xs text-slate-500 mt-1 text-center">Fig 3: Operators</span>
+    </div>
   </div>
 </div>
 
-<Glossary :terms="['sparse-graph', 'adjacency-matrix', 'spmm', 'static-shape']" />
+<Glossary :terms="['memory-bound', 'operator-fusion', 'cpu-fallback', 'spmm', 'scatter-gather', 'int8']" />
 
 ---
 layout: default
 ---
 
-## Why Do GNNs Struggle on Consumer NPUs?
-### Key Architectural Bottlenecks
-
-<div class="grid-cols-2 mt-2">
-  <div>
-    <ul>
-      <li><strong>1. Memory Wall:</strong> GNNs are memory-bound (0.1–10 FLOP/byte). 2–4× more shape operators (Gather, Scatter) than vision models — poorly served by NPU's streaming-dataflow.</li>
-      <li><strong>2. Compiler Fusion Limits:</strong> Indirect indexing (Gather, Scatter) prevents static flow optimization; fewer fusion passes on GNN subgraphs.</li>
-      <li><strong>3. Operator Coverage:</strong> MPNN fails entirely on NPU — <code>index_add_</code> unsupported, forcing 100% CPU fallback.</li>
-    </ul>
-  </div>
-
-  <div class="flex flex-col justify-center items-center">
-    <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" class="slide-img" />
-    <span class="text-xs text-slate-500 mt-1">Figure 4: CPU fallback fraction per model.</span>
-  </div>
-</div>
-
-<Glossary :terms="['memory-bound', 'operator-fusion', 'cpu-fallback', 'spmm', 'scatter-gather']" />
-
----
-layout: default
----
-
-## Operator Composition Analysis
-### GNNs vs. Vision Models
-
-<div class="grid-cols-2 mt-2">
-  <div>
-    <ul>
-      <li><strong>GNNs:</strong> MatMul (30–60%), 2–4× more Gather/Scatter/Reshape than vision.</li>
-      <li><strong>Vision:</strong> Conv (50–80%), minimal shape manipulation.</li>
-      <li><strong>Insight:</strong> Gather/Scatter irregularity clashes with NPU's streaming-dataflow.</li>
-    </ul>
-  </div>
-
-  <div class="flex flex-col justify-center items-center">
-    <img src="./public/figures/fig3_operator_breakdown.svg" class="slide-img" />
-    <span class="text-xs text-slate-500 mt-1">Figure 3: Operator composition — GNNs vs. vision</span>
-  </div>
-</div>
-
-<Glossary :terms="['spmm', 'operator-fusion', 'cpu-fallback', 'scatter-gather']" />
-
----
-layout: default
----
-
-## Intel AI Boost: Failure Mode Analysis
-### Silent CPU Fallback as a Toolchain Maturity Signal
-
-<div class="mt-2">
-  <div class="glass-panel highlight-box-warning">
-    <h3 class="font-semibold text-rose">Observed Failure Modes on Meteor Lake NPU</h3>
-    <ul>
-      <li><strong>Silent CPU Fallback:</strong> OpenVINO silently dispatches unsupported quantized ops to CPU — MobileNetV2, ResNet50, BERT-Tiny INT8 report misleading "NPU" latencies identical to CPU execution.</li>
-      <li><strong>Compilation Rejection:</strong> GAT, GATv2, EfficientNet-B0 fail INT8 lowering entirely — dynamic Gather/Scatter unsupported in NPU quantized operator set.</li>
-      <li><strong>Full Backend Bypass:</strong> MPNN's <code>index_add_</code> and <code>scatter_mean</code> operators lie outside the NPU plugin — 100% CPU fallback regardless of designated backend.</li>
-    </ul>
-  </div>
-
-  <div class="glass-panel mt-2">
-    <h3 class="font-semibold text-blue">Root Cause</h3>
-    <ul>
-      <li>Quantization toolchain assumes dense, regular computation graphs — GNNs violate this contract at every level.</li>
-      <li>Halving arithmetic precision (FP32 → INT8) does not reduce DRAM traffic for memory-bound sparse workloads.</li>
-      <li>As NPU compilers mature toward explicit mixed-precision support, operator coverage should expand; the memory-bandwidth bottleneck will persist for any streaming-dataflow architecture without sparse acceleration.</li>
-    </ul>
-  </div>
-</div>
-
-<Glossary :terms="['npu', 'cpu-fallback', 'int8', 'scatter-gather']" />
-
----
-layout: default
----
-
-## Scientific Limitations & Threats to Validity
+## Scientific Limitations &amp; Threats to Validity
 ### Experimental Constraints
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div>
     <ul>
       <li><strong>Single platform:</strong> Results restricted to Core Ultra 5 125H. Memory SKU variations affect bandwidth.</li>
@@ -669,6 +595,8 @@ layout: default
   </div>
 </div>
 
+<Glossary :terms="['npu', 'igpu', 'openvino', 'cpu-fallback', 'int8', 'fp32']" />
+
 ---
 layout: default
 ---
@@ -676,7 +604,7 @@ layout: default
 ## Key Findings Summary
 ### What This Study Reveals
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div class="glass-panel" style="border-left:3px solid var(--color-emerald)">
     <h3 class="text-emerald font-bold" style="font-size:0.8rem">✅ NPU Excels For</h3>
     <ul class="text-xs" style="margin:0">
@@ -716,7 +644,7 @@ layout: default
 ## Key References
 ### Selected Bibliography
 
-<div class="grid-cols-2 mt-2">
+<div class="grid grid-cols-2 gap-4 mt-2">
   <div>
     <ul style="font-size:0.7rem">
       <li><strong>Meteor Lake</strong> — Intel Hot Chips 2023, Foveros 3D packaging</li>

@@ -1,45 +1,52 @@
-# NPU GNN Performans Karakterizasyonu Metodolojisi
+# Methodology — NPU GNN Performance Characterization
 
-Bu doküman, Intel Core Ultra NPU mimarisi üzerinde Grafik Sinir Ağları (GNN) için uygulanan bilimsel analiz yöntemlerini detaylandırır.
+This document details the scientific analysis methodology applied to characterize Graph Neural Network (GNN) inference on the Intel Core Ultra NPU architecture.
 
-## 1. Temel Performans Metrikleri
+## 1. Core Performance Metrics
 
-Standart gecikme (latency) ölçümlerinin ötesinde, donanım-yazılım etkileşimini anlamak için şu metrikler kullanılmaktadır:
+Beyond standard latency measurements, the following metrics are used to understand hardware–software interaction:
 
 ### Fusion Gain Ratio (FGR)
-Derleyici seviyesindeki operatör birleştirme (operator fusion) optimizasyonlarının gerçek hızlanma etkisini ölçer.
-$$FGR = \frac{Gecikme_{Baz}}{Gecikme_{Optimize}}$$
-*   **FGR < 1:** "Fusion Overhead Paradox" durumu; optimizasyonun ek yükü kazancından fazladır.
+Measures the real speedup effect of compiler-level operator fusion optimizations.
+
+$$FGR = \frac{Latency_{Baseline}}{Latency_{Optimized}}$$
+
+- **FGR > 1:** Optimization is beneficial — fusion reduces execution time.
+- **FGR < 1:** "Fusion Overhead Paradox" — the optimization overhead exceeds its gains.
 
 ### Compilation Efficiency Index (CEI)
-Modelin derleme (compilation) süresinin, sağladığı performans artışına oranını temsil eder.
-$$CEI = \frac{Derleme\_Suresi}{Gecikme\_Azalimi}$$
+Represents the ratio of model compilation time to the performance improvement it provides.
 
-### Aritmetik Yoğunluk (AI)
-Modellerin hesaplama odaklı (compute-bound) mu yoksa bellek odaklı (memory-bound) mu olduğunu belirler.
-$$AI = \frac{Toplam\_FLOP}{Toplam\_Bellek\_Transferi\_Bayt}$$
+$$CEI = \frac{Compilation\_Time}{Latency\_Reduction}$$
 
----
+### Arithmetic Intensity (AI)
+Determines whether models are compute-bound or memory-bound.
 
-## 2. Deneysel Düzenek ve Veri Seti
-
-*   **Donanım:** Intel Core Ultra 5 125H (Meteor Lake) NPU 3720.
-*   **Yazılım:** OpenVINO 2024.1, ONNX Runtime 1.17.
-*   **Veri Seti:** **Cora** Alıntı Ağı (2708 düğüm, 5429 kenar). NPU üzerinde statik shape desteği için girişler sabitlenmiş ve padding uygulanmıştır.
-*   **Hassasiyet:** FP32 (baseline) ve INT8 (NNCF ile kuantize edilmiş native NPU modu).
+$$AI = \frac{Total\_FLOPs}{Total\_Memory\_Transfer\_Bytes}$$
 
 ---
 
-## 3. Analitik Modeller
+## 2. Experimental Setup
 
-### Roofline Performans Modeli
-NPU'nun tepe işlem gücü ve bellek bant genişliği limitlerini modelin gerçek performansıyla kıyaslar. GNN'lerin neden "Bellek Duvarı" (Memory Wall) darboğazına takıldığını kanıtlar.
-
-### Latency Breakdown (Gecikme Ayrıştırması)
-Toplam çıkarım süresini şu üç ana bileşene ayırır:
-1.  **Compute:** Saf kernel hesaplama süresi.
-2.  **DMA:** CPU ve NPU arasındaki veri transfer süresi.
-3.  **Dispatch:** Kernel fırlatma ve zamanlama maliyeti.
+- **Hardware:** Intel Core Ultra 5 125H (Meteor Lake) — NPU 3720 (VPUX37XX)
+- **Software:** OpenVINO 2025.4, ONNX Runtime 1.24.4, NNCF 3.1.0
+- **Datasets:** OGB benchmark graphs (`ogbn-arxiv`, `ogbn-proteins`, `ogbn-products`). Inputs are padded to fixed shapes for NPU static-shape compilation.
+- **Precision:** FP32 (baseline) and INT8 (post-training quantization via NNCF for native NPU mode)
+- **Measurement:** 100 inference iterations after 5 warmup runs; mean, std, and P95 latency reported
 
 ---
-*Son Güncelleme: 2 Mayıs 2026*
+
+## 3. Analytical Models
+
+### Roofline Performance Model
+Compares the NPU's peak compute throughput and memory bandwidth limits against the model's actual performance. Used to prove why GNNs hit the "Memory Wall" bottleneck.
+
+### Latency Breakdown
+Decomposes total inference time into three main components:
+1. **Compute:** Pure kernel execution time.
+2. **DMA:** Data transfer time between CPU and NPU.
+3. **Dispatch:** Kernel launch and scheduling overhead.
+
+---
+
+*Last updated: 1 June 2026*
