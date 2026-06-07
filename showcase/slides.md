@@ -159,15 +159,16 @@ layout: default
 
 ---
 layout: default
+class: compact-slide
 ---
 
 ## Dense vs. Sparse Dataflow
 ### Visual Comparison
 
-<div class="grid grid-cols-2 gap-3 items-stretch mt-1">
-<div class="flex flex-col justify-center">
+<div class="grid grid-cols-2 gap-4 items-center mt-0">
+<div class="flex flex-col justify-center items-center">
 
-```mermaid {scale: 0.95}
+```mermaid {scale: 0.75}
 %%{init: {"theme": "base", "themeVariables": {"titleColor": "#1e293b", "textColor": "#1e293b", "primaryTextColor": "#1e293b", "background": "#ffffff"}}}%%
 graph TB
   subgraph Dense[CNN Dataflow]
@@ -179,9 +180,9 @@ graph TB
   style Dense fill:#f0fdf4,stroke:#86efac,stroke-width:1px
 ```
 </div>
-<div class="flex flex-col justify-center">
+<div class="flex flex-col justify-center items-center">
 
-```mermaid {scale: 0.95}
+```mermaid {scale: 0.75}
 %%{init: {"theme": "base", "themeVariables": {"titleColor": "#1e293b", "textColor": "#1e293b", "primaryTextColor": "#1e293b", "background": "#ffffff"}}}%%
 graph TB
   subgraph Sparse[GNN Dataflow]
@@ -507,23 +508,24 @@ layout: default
 
 ---
 layout: default
+class: compact-slide
 ---
 
 ## Why Do GNNs Struggle on Consumer NPUs?
 ### Architectural Bottlenecks &amp; Failure Modes
 
-<div class="grid grid-cols-2 gap-3 mt-1">
+<div class="grid grid-cols-2 gap-4 mt-0">
   <div class="flex flex-col gap-2">
-    <div class="glass-panel highlight-box-warning" style="padding:0.5rem 0.75rem">
-      <h3 class="font-semibold text-rose" style="font-size:0.8rem; margin-bottom:0.25rem">Key Bottlenecks</h3>
+    <div class="glass-panel highlight-box-warning" style="padding:0.4rem 0.6rem">
+      <h3 class="font-semibold text-rose" style="font-size:0.8rem; margin-bottom:0.2rem">Key Bottlenecks</h3>
       <ul class="text-xs" style="margin:0">
         <li><strong>1. Memory Wall:</strong> Memory-bound (0.1–10 FLOP/byte); 2–4× more Gather/Scatter ops than vision — NPU streaming-dataflow stalls.</li>
         <li><strong>2. Compiler Fusion:</strong> Indirect indexing blocks static flow optimization; fewer fusion passes on GNN subgraphs.</li>
         <li><strong>3. Operator Coverage:</strong> MPNN: <code>index_add_</code> unsupported → 100% CPU fallback.</li>
       </ul>
     </div>
-    <div class="glass-panel" style="padding:0.5rem 0.75rem">
-      <h3 class="font-semibold text-blue" style="font-size:0.8rem; margin-bottom:0.25rem">Silent Failure Modes</h3>
+    <div class="glass-panel" style="padding:0.4rem 0.6rem">
+      <h3 class="font-semibold text-blue" style="font-size:0.8rem; margin-bottom:0.2rem">Silent Failure Modes</h3>
       <ul class="text-xs" style="margin:0">
         <li><strong>Silent Fallback:</strong> MobileNetV2, ResNet50, BERT-Tiny INT8 silently run on CPU — misleading "NPU" latencies.</li>
         <li><strong>Compilation Rejection:</strong> GAT, GATv2, EfficientNet-B0 fail INT8 lowering entirely.</li>
@@ -534,11 +536,11 @@ layout: default
 
   <div class="grid grid-cols-2 gap-2 items-start">
     <div class="flex flex-col items-center">
-      <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" style="max-height:155px; width:100%; object-fit:contain;" />
+      <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" style="max-height:130px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 4: CPU fallback</span>
     </div>
     <div class="flex flex-col items-center">
-      <img src="./public/figures/fig3_operator_breakdown.svg" style="max-height:155px; width:100%; object-fit:contain;" />
+      <img src="./public/figures/fig3_operator_breakdown.svg" style="max-height:130px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 3: Operators</span>
     </div>
   </div>
