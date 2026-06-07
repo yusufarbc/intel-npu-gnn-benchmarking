@@ -34,22 +34,22 @@ M.~Yan, L.~Deng, X.~Hu, L.~Liang, Y.~Feng, X.~Ye, Z.~Zhang, D.~Fan, and Y.~Xie,
   Feb 2020, pp. 15--29.
 
 \bibitem{9858684}
-K.~Kiningham, P.~Levis, and C.~Ré, ``Grip: A graph neural network accelerator
-  architecture,'' \emph{IEEE Transactions on Computers}, vol.~72, no.~4, pp.
-  914--925, April 2023.
+K.~Kiningham, P.~Levis, and C.~R{\'{e}}, ``Grip: A graph neural network
+  accelerator architecture,'' \emph{IEEE Transactions on Computers}, vol.~72,
+  no.~4, pp. 914--925, April 2023.
 
 \bibitem{lam2024_meteorlake_npu}
 T.~Lam, ``Meteor lake npu architecture deep dive,'' Intel Community Blog, 2024,
   available: https://community.intel.com.
 
-\bibitem{intel_meteorlake_hotchips_2023}
-I.~Corporation, ``Intel core ultra processor: Meteor lake architecture,'' Hot
-  Chips 2023 Presentation, August 2023, available: https://www.intel.com.
-
 \bibitem{intel_core_ultra_npu}
-------, ``Intel ai boost: Npu architecture for core ultra processors,'' Intel
-  Architecture Documentation, 2023, available:
+{Intel Corporation}, ``Intel ai boost: Npu architecture for core ultra
+  processors,'' Intel Architecture Documentation, 2023, available:
   https://www.intel.com/content/www/us/en/products/docs/processors/core-ultra/ai-boost-npu.html.
+
+\bibitem{intel_meteorlake_hotchips_2023}
+------, ``Intel core ultra processor: Meteor lake architecture,'' Hot Chips
+  2023 Presentation, August 2023, available: https://www.intel.com.
 
 \bibitem{openvino_npu_docs}
 ------, ``Openvino npu plugin documentation,'' OpenVINO Documentation, 2024,
@@ -58,7 +58,6 @@ I.~Corporation, ``Intel core ultra processor: Meteor lake architecture,'' Hot
 \bibitem{mlperf_inference}
 V.~J. Reddi \emph{et~al.}, ``Mlperf inference benchmark,'' \emph{arXiv preprint
   arXiv:1911.02549}, 2020.
-
 
 \bibitem{kipf2017gcn}
 \BIBentryALTinterwordspacing
@@ -70,9 +69,9 @@ T.~N. Kipf and M.~Welling, ``Semi-supervised classification with graph
 
 \bibitem{velickovic2018graph}
 \BIBentryALTinterwordspacing
-P.~Veličković, G.~Cucurull, A.~Casanova, A.~Romero, P.~Liò, and Y.~Bengio,
-  ``Graph attention networks,'' in \emph{International Conference on Learning
-  Representations}, 2018. [Online]. Available:
+P.~Veli{\v{c}}kovi{\'{c}}, G.~Cucurull, A.~Casanova, A.~Romero, P.~Li{\`{o}},
+  and Y.~Bengio, ``Graph attention networks,'' in \emph{International
+  Conference on Learning Representations}, 2018. [Online]. Available:
   \url{https://openreview.net/forum?id=rJXMpikCZ}
 \BIBentrySTDinterwordspacing
 
@@ -132,9 +131,12 @@ J.~Gilmer, S.~S. Schoenholz, P.~F. Riley, O.~Vinyals, and G.~E. Dahl, ``Neural
 \BIBentrySTDinterwordspacing
 
 \bibitem{he2016resnet}
+\BIBentryALTinterwordspacing
 K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
   recognition,'' in \emph{Proceedings of the IEEE Conference on Computer Vision
-  and Pattern Recognition (CVPR)}, 2016, pp. 770--778.
+  and Pattern Recognition (CVPR)}, 2016, pp. 770--778. [Online]. Available:
+  \url{https://arxiv.org/abs/1512.03385}
+\BIBentrySTDinterwordspacing
 
 \bibitem{sandler2018mobilenetv2}
 M.~Sandler, A.~Howard, M.~Zhu, A.~Zhmoginov, and L.-C. Chen, ``Mobilenetv2:
@@ -180,16 +182,13 @@ W.~Niu, J.~Guan, Y.~Wang, G.~Agrawal, and B.~Ren, ``Dnnfusion: accelerating
   \url{https://doi.org/10.1145/3453483.3454083}
 \BIBentrySTDinterwordspacing
 
-\bibitem{intel_socwatch_guide}
-I.~Corporation, ``Intel soc watch for windows os: User guide,'' Intel Software
-  Documentation, 2026, version 2026.2. Available:
-  https://www.intel.com/content/www/us/en/developer/topic-technology/open/socwatch/overview.html.
-
 \bibitem{Bayraktar2026}
-C.~Bayraktar, ``Beyond GNNs: a methodological benchmark of feature efficiency
-  for link prediction in sparse developer networks,''
-  \emph{Knowledge and Information Systems}, vol.~68, no.~1, p.~135, 2026.
-  [Online]. Available: \url{https://doi.org/10.1007/s10115-026-02765-7}
+\BIBentryALTinterwordspacing
+C.~Bayraktar, ``Beyond gnns: a methodological benchmark of feature efficiency
+  for link prediction in sparse developer networks,'' \emph{Knowledge and
+  Information Systems}, vol.~68, no.~1, p. 135, Apr 2026. [Online]. Available:
+  \url{https://doi.org/10.1007/s10115-026-02765-7}
+\BIBentrySTDinterwordspacing
 
 \bibitem{SINGH202371}
 \BIBentryALTinterwordspacing
