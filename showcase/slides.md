@@ -417,6 +417,7 @@ layout: default
 
 ---
 layout: default
+class: compact-slide
 ---
 
 ## Scaling &amp; Density Behavior on NPU
@@ -434,13 +435,13 @@ layout: default
     </div>
   </div>
 
-  <div class="grid grid-cols-2 gap-2 items-start">
-    <div class="flex flex-col items-center">
-      <img src="./public/figures/fig6_scaling.svg" style="max-height:160px; width:100%; object-fit:contain;" />
+  <div class="flex flex-col gap-2 justify-center items-center h-full">
+    <div class="flex flex-col items-center w-full">
+      <img src="./public/figures/fig6_scaling.svg" style="max-height:170px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 6: Scaling</span>
     </div>
-    <div class="flex flex-col items-center">
-      <img src="./public/figures/fig7_density_vs_latency.svg" style="max-height:160px; width:100%; object-fit:contain;" />
+    <div class="flex flex-col items-center w-full">
+      <img src="./public/figures/fig7_density_vs_latency.svg" style="max-height:170px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 7: Density</span>
     </div>
   </div>
@@ -536,11 +537,11 @@ class: compact-slide
 
   <div class="flex flex-col gap-3 justify-center items-center h-full">
     <div class="flex flex-col items-center w-full">
-      <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" style="max-height:130px; width:100%; object-fit:contain;" />
+      <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" style="max-height:150px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 4: CPU fallback</span>
     </div>
     <div class="flex flex-col items-center w-full">
-      <img src="./public/figures/fig3_operator_breakdown.svg" style="max-height:130px; width:100%; object-fit:contain;" />
+      <img src="./public/figures/fig3_operator_breakdown.svg" style="max-height:150px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 3: Operators</span>
     </div>
   </div>
