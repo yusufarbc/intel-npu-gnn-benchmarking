@@ -46,7 +46,7 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
   </div>
 </div>
 
-<Glossary :terms="['npu', 'igpu', 'meteor-lake', 'soc']" />
+<Glossary :terms="['npu', 'igpu', 'meteor-lake', 'soc', 'lpe-core']" />
 
 ---
 layout: default
@@ -155,7 +155,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['openvino', 'operator-fusion', 'cpu-fallback', 'scatter-gather']" />
+<Glossary :terms="['openvino', 'operator-fusion', 'cpu-fallback', 'scatter-gather', 'ort', 'ptq', 'dynamic-quantization']" />
 
 ---
 layout: default
@@ -229,7 +229,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['socwatch', 'warm-up', 'lpddr5x', 'xe-lpg']" />
+<Glossary :terms="['socwatch', 'warm-up', 'lpddr5x', 'xe-lpg', 'lpe-core', 'pmt']" />
 
 ---
 layout: default
@@ -298,7 +298,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['sparse-graph', 'dense-graph', 'adjacency-matrix', 'ogb']" />
+<Glossary :terms="['sparse-graph', 'dense-graph', 'adjacency-matrix', 'ogb', 'gcn', 'gat', 'sgc', 'gin', 'graphsage', 'mpnn', 'appnp', 'bert', 'resnet', 'mobilenet']" />
 
 ---
 layout: default
@@ -329,7 +329,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['npu', 'igpu', 'memory-bound', 'vit']" />
+<Glossary :terms="['npu', 'igpu', 'memory-bound', 'vit', 'tdp', 'dvfs', 'resnet', 'mobilenet', 'graphsage']" />
 
 ---
 layout: default
@@ -356,7 +356,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['int8', 'regression', 'cpu-fallback', 'static-shape', 'scatter-gather']" />
+<Glossary :terms="['int8', 'regression', 'cpu-fallback', 'static-shape', 'scatter-gather', 'dynamic-quantization', 'ptq', 'sgc', 'gat', 'graphsage', 'mobilenet', 'resnet', 'bert']" />
 
 ---
 layout: default
@@ -413,7 +413,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['compute-bound', 'memory-bound', 'intensity', 'roofline', 'lpddr5x']" />
+<Glossary :terms="['compute-bound', 'memory-bound', 'intensity', 'roofline', 'lpddr5x', 'flops', 'dram']" />
 
 ---
 layout: default
@@ -446,7 +446,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['sparse-graph', 'adjacency-matrix', 'spmm', 'static-shape', 'memory-bound', 'onnx']" />
+<Glossary :terms="['sparse-graph', 'adjacency-matrix', 'spmm', 'static-shape', 'memory-bound', 'onnx', 'ort']" />
 
 ---
 layout: default
@@ -504,7 +504,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['socwatch', 'throughput-watt']" />
+<Glossary :terms="['socwatch', 'throughput-watt', 'pmt', 'dram', 'gcn', 'mpnn']" />
 
 ---
 layout: default
@@ -534,19 +534,19 @@ class: compact-slide
     </div>
   </div>
 
-  <div class="grid grid-cols-2 gap-2 items-start">
-    <div class="flex flex-col items-center">
+  <div class="flex flex-col gap-3 justify-center items-center h-full">
+    <div class="flex flex-col items-center w-full">
       <img src="./public/figures/fig4_cpu_fallback_heatmap.svg" style="max-height:130px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 4: CPU fallback</span>
     </div>
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col items-center w-full">
       <img src="./public/figures/fig3_operator_breakdown.svg" style="max-height:130px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 3: Operators</span>
     </div>
   </div>
 </div>
 
-<Glossary :terms="['memory-bound', 'operator-fusion', 'cpu-fallback', 'spmm', 'scatter-gather', 'int8']" />
+<Glossary :terms="['memory-bound', 'operator-fusion', 'cpu-fallback', 'spmm', 'scatter-gather', 'int8', 'dram', 'gat', 'mpnn', 'mobilenet', 'resnet', 'bert']" />
 
 ---
 layout: default
@@ -572,7 +572,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['socwatch', 'warm-up', 'onnx']" />
+<Glossary :terms="['socwatch', 'warm-up', 'onnx', 'bootstrap', 'pmt', 'thermal-throttling', 'dvfs', 'etw']" />
 
 ---
 layout: default
@@ -664,7 +664,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['openvino', 'gnn', 'npu']" />
+<Glossary :terms="['openvino', 'gnn', 'npu', 'foveros']" />
 
 ---
 layout: default

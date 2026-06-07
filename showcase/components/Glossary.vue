@@ -170,6 +170,98 @@ const glossary = {
   'xe-lpg': {
     title: 'Xe-LPG',
     desc: 'Intel\'s integrated GPU microarchitecture in Meteor Lake (7 Xe-cores). Its larger cache and higher bandwidth vs NPU explain its consistently lower GNN latency.'
+  },
+  'tdp': {
+    title: 'TDP (Thermal Design Power)',
+    desc: 'The maximum amount of heat a computer chip (like CPU, GPU, or NPU) is designed to dissipate under workload, serving as a proxy for power draw limits (e.g., 15W/28W for Meteor Lake).'
+  },
+  'ort': {
+    title: 'ONNX Runtime (ORT)',
+    desc: 'An open-source cross-platform engine designed to run machine learning models efficiently. ONNX Runtime traces and quantization APIs were used for model execution.'
+  },
+  'bootstrap': {
+    title: 'Bootstrap Resampling',
+    desc: 'A non-parametric statistical method estimating the distribution of sample statistics (like mean latency or 95% confidence intervals) by repeatedly resampling the observed metrics with replacement.'
+  },
+  'foveros': {
+    title: 'Foveros 3D Packaging',
+    desc: 'Intel\'s proprietary 3D face-to-face silicon integration technology, used in Meteor Lake to connect disaggregated CPU, GPU, SoC, and NPU tiles onto a base die.'
+  },
+  'pmt': {
+    title: 'PMT (Platform Monitoring Technology)',
+    desc: 'Intel\'s hardware telemetry technology providing low-level access to system energy, temperature, and performance counters (used by SoCWatch).'
+  },
+  'dvfs': {
+    title: 'DVFS (Dynamic Voltage and Frequency Scaling)',
+    desc: 'A power management technique in modern processors that adjusts frequency and voltage dynamically based on workload and temperature, affecting run-to-run latency consistency.'
+  },
+  'ptq': {
+    title: 'PTQ (Post-Training Quantization)',
+    desc: 'A static quantization method converting weights and activations to INT8 using a fixed calibration dataset before deployment.'
+  },
+  'dynamic-quantization': {
+    title: 'Dynamic Quantization',
+    desc: 'An optimization method where activation scale factors are computed dynamically at runtime, removing calibration dataset requirements but introducing runtime overhead.'
+  },
+  'lpe-core': {
+    title: 'LPE-core (Low Power Efficient Core)',
+    desc: 'Low Power Efficient CPU cores located on the Meteor Lake SoC tile designed to handle background tasks with minimal energy consumption.'
+  },
+  'thermal-throttling': {
+    title: 'Thermal Throttling',
+    desc: 'A hardware protection mechanism that reduces clock speed when temperature thresholds are exceeded, potentially introducing latency variances during long benchmarking runs.'
+  },
+  'sgc': {
+    title: 'SGC (Simple Graph Convolution)',
+    desc: 'A simplified GNN architecture that removes non-linearities and collapses consecutive weight matrices, highlighting the runtime dispatch overhead when quantized.'
+  },
+  'gcn': {
+    title: 'GCN (Graph Convolutional Network)',
+    desc: 'A semi-supervised spectral GNN architecture approximating first-order graph spectral convolutions via localized neighborhood averaging.'
+  },
+  'gat': {
+    title: 'GAT (Graph Attention Network)',
+    desc: 'An attentional GNN that computes dynamic edge weights via self-attention over node neighborhoods, which often fails INT8 NPU compilation due to irregular attention graphs.'
+  },
+  'flops': {
+    title: 'FLOPs / FLOPS',
+    desc: 'Floating Point Operations (or per Second), measuring the theoretical computational complexity of a model or the processing throughput of a backend.'
+  },
+  'dram': {
+    title: 'DRAM (Dynamic RAM)',
+    desc: 'Main system memory. High latency and memory bandwidth limitations of DRAM form the primary bottleneck for sparse, irregular GNN workloads.'
+  },
+  'appnp': {
+    title: 'APPNP (Approximate Personalized Propagation of Neural Predictions)',
+    desc: 'A GNN propagation model based on personalized PageRank, decoupling feature transformation from propagation to achieve scalability.'
+  },
+  'gin': {
+    title: 'GIN (Graph Isomorphic Network)',
+    desc: 'An expressive spatial GNN designed to model graph isomorphism and achieve the same discriminative power as the Weisfeiler-Lehman (1-WL) graph test.'
+  },
+  'graphsage': {
+    title: 'GraphSAGE (Sample and Aggregate)',
+    desc: 'A spatial GNN framework that aggregates node features from a fixed-size sampled local neighborhood rather than the full neighborhood.'
+  },
+  'mpnn': {
+    title: 'MPNN (Message Passing Neural Network)',
+    desc: 'A general GNN framework that generalizes various models using message creation, aggregation, and node update phases.'
+  },
+  'bert': {
+    title: 'BERT (Bidirectional Encoder Representations from Transformers)',
+    desc: 'A transformer-based NLP model. The paper evaluates BERT-Tiny to benchmark attention patterns on the NPU and CPU.'
+  },
+  'resnet': {
+    title: 'ResNet50',
+    desc: 'A deep 50-layer convolutional neural network leveraging residual shortcuts, serving as a dense baseline for spatial streaming comparisons.'
+  },
+  'mobilenet': {
+    title: 'MobileNetV2',
+    desc: 'A lightweight CNN architecture optimized for edge devices utilizing inverted residual blocks and linear bottlenecks.'
+  },
+  'etw': {
+    title: 'ETW (Event Tracing for Windows)',
+    desc: 'A kernel-level tracing facility provided by Windows, used by Intel SoCWatch to capture low-level platform events.'
   }
 }
 
