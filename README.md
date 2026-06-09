@@ -25,6 +25,8 @@ A comprehensive benchmarking framework for evaluating Graph Neural Network (GNN)
 - **Accompanying Paper:** LaTeX source for IEEE conference submission
 - **Interactive Presentation:** Web-based Slidev presentation ([live demo](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/))
 
+[![Demo Videosu](https://img.youtube.com/vi/TfHA9jQoUB0/0.jpg)](https://youtu.be/TfHA9jQoUB0)
+
 ## Project Structure
 
 | Directory | Description |
