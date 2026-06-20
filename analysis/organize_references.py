@@ -1,15 +1,11 @@
-#!/usr/bin/env python3
 """
-organize_references.py
-======================
-Organizes paper/references/ directory for public release:
-  1. Deletes scratch / personal / AI-chat files
-  2. Renames .md files to "NN - AuthorYEAR - Title.md" format
+Organizes paper/references/ directory:
+  1. Deletes scratch / personal files
+  2. Renames .md files to "NN - AuthorYEAR - Title.md"
   3. Rewrites paper/references/index.md
-  4. Generates docs/references.md (categorized reference list with abstracts)
+  4. Generates docs/references.md
 
-Run from the repo root:
-    python analysis/organize_references.py [--dry-run]
+Run: python analysis/organize_references.py [--dry-run]
 """
 
 import os
@@ -19,55 +15,36 @@ import shutil
 import argparse
 from pathlib import Path
 
-# Force stdout/stderr to UTF-8 for Windows console support
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 if hasattr(sys.stderr, 'reconfigure'):
     sys.stderr.reconfigure(encoding='utf-8')
 
 # ---------------------------------------------------------------------------
-# Configuration
-# ---------------------------------------------------------------------------
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REFS_DIR  = REPO_ROOT / "paper" / "references"
 DOCS_DIR  = REPO_ROOT / "docs"
 
-# Files / patterns to DELETE (not academic references)
+# Non-academic files to remove
 JUNK_FILES = {
-    "claude.txt",
-    "deepseek.txt",
-    "geminiv1.txt",
-    "geminiv2.txt",
-    "grok.txt",
-    "kimi.txt",
-    "perplexity.txt",
-    "son.txt",
     "topic.txt",
     "gnn.txt",
     "list.txt",
     "regular-list.txt",
-    "references",            # extensionless file
+    "references",
     "pdf_processor.py",
     "list_pdf_hashes.py",
     "GNN_NPU_Literatur_Tarama_Rehberi.docx",
     "GNN_NPU_Literatur_Tarama_Rehberi.txt",
     "Intel NPU'da GNN Performans Analizi.docx",
     "Intel NPU'da GNN Performans Analizi.txt",
-    "academic-sources-summary.md",  # will be replaced by docs/references.md
-    # Intel PowerPoint — not an academic paper
+    "academic-sources-summary.md",
     "23 - Corporate PowerPoint Template Use IntelOne Fonts For All Text  (General Employee Usage).md",
     "23 - Corporate PowerPoint Template Use IntelOne Fonts For All Text  (General Employee Usage).pdf",
 }
 
 # ---------------------------------------------------------------------------
-# Canonical reference mapping
-# Derived from references.bib + actual MD file content inspection
-# Format: (new_number, author_year_slug, full_title)
-# ---------------------------------------------------------------------------
-
 CANONICAL = [
-    # ── GNN Architectures (models used in benchmark) ──────────────────────
     (1,  "Kipf2017",       "Semi-Supervised Classification with Graph Convolutional Networks"),
     (2,  "Velickovic2018", "Graph Attention Networks"),
     (3,  "Brody2022",      "How Attentive are Graph Attention Networks (GATv2)"),
@@ -77,7 +54,6 @@ CANONICAL = [
     (7,  "Gasteiger2019",  "Predict then Propagate - Graph Neural Networks meet Personalized PageRank (APPNP)"),
     (8,  "Gilmer2017",     "Neural Message Passing for Quantum Chemistry (MPNN)"),
     (9,  "Dwivedi2021",    "A Generalization of Transformer Networks to Graphs (GraphTransformer)"),
-    # ── Dense Baseline Models ─────────────────────────────────────────────
     (10, "He2016",         "Deep Residual Learning for Image Recognition (ResNet)"),
     (11, "Sandler2018",    "MobileNetV2 Inverted Residuals and Linear Bottlenecks"),
     (12, "Tan2019",        "EfficientNet Rethinking Model Scaling for Convolutional Neural Networks"),
@@ -397,10 +373,6 @@ Key references on accelerator design and performance characterization for GNNs.
 | [50] | Dhar et al., *Roadmap for Edge AI: A Dagstuhl Perspective*, 2022 | Commun. ACM | Edge AI research roadmap |
 | [53] | Han et al., *EIE: Efficient Inference Engine on Compressed DNNs*, 2016 | ISCA 2016 | Sparse inference engine; NPU comparison context |
 | [56] | Bayraktar, *Beyond GNNs: Feature Efficiency for Link Prediction*, 2026 | KAIS 2026 | Challenges automatic GNN preference on sparse graphs |
-
----
-
-*Last updated: 1 June 2026 — Generated from `paper/references.bib` (1,179 entries).*
 """
 
 

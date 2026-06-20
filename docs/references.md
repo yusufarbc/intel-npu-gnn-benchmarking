@@ -1,15 +1,10 @@
 # Reference Library
 
-Comprehensive list of all papers and technical reports referenced in
-*Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs*.
-Each entry includes a brief annotation explaining its relevance to the benchmark.
-
-> BibTeX source: [`paper/references.bib`](../paper/references.bib)  
-> Full text (where available): `paper/references/` directory
+Papers and technical reports referenced in the benchmark. BibTeX source: [`paper/references.bib`](../paper/references.bib).
 
 ---
 
-## 1. GNN Architectures (Models Benchmarked)
+## 1. GNN Architectures (Benchmarked Models)
 
 These are the nine GNN architectures evaluated on the Intel Core Ultra NPU.
 
@@ -146,7 +141,3 @@ Key references on accelerator design and performance characterization for GNNs.
 | [50] | Dhar et al., *Roadmap for Edge AI: A Dagstuhl Perspective*, 2022 | Commun. ACM | Edge AI research roadmap |
 | [53] | Han et al., *EIE: Efficient Inference Engine on Compressed DNNs*, 2016 | ISCA 2016 | Sparse inference engine; NPU comparison context |
 | [56] | Bayraktar, *Beyond GNNs: Feature Efficiency for Link Prediction*, 2026 | KAIS 2026 | Challenges automatic GNN preference on sparse graphs |
-
----
-
-*Last updated: 1 June 2026 — Generated from `paper/references.bib` (1,179 entries).*

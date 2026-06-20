@@ -8,7 +8,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{subcaption}
 \usepackage[table]{colortbl}
 
@@ -48,6 +48,10 @@ farukacar@karabuk.edu.tr}
 }
 
 \maketitle
+\makeatletter
+\def\@oddfoot{\hfil\normalfont\thepage\hfil}
+\def\@evenfoot{\hfil\normalfont\thepage\hfil}
+\makeatother
 
 \begin{abstract}
 Neural Processing Units (NPUs) in client SoCs target low-power inference, but their performance on sparse Graph Neural Networks (GNNs) remains underexplored. We benchmark 14 GNN, CNN, and transformer models across the CPU, iGPU, and NPU of an Intel Core Ultra platform using OpenVINO and three Open Graph Benchmark datasets. The NPU accelerates dense vision models (MobileNetV2: 1.90\,ms, 4.5--11.4$\times$ speedup) but yields negligible gains for memory-bound GNNs. NPU INT8 quantization causes compilation failures in three architectures and a 2.2$\times$ latency regression for SGC. CPU and GPU backends operate within a 9--12.5\,W power range, with INT8 providing at most an 18\% energy reduction. This performance gap stems from a mismatch between the NPU's streaming-dataflow design and the irregular memory accesses of GNNs. We recommend the iGPU for GNNs and the NPU for FP32 vision models. The suite is available at \url{https://yusufarbc.github.io/intel-npu-gnn-benchmarking/}.
@@ -320,6 +324,10 @@ Custom GNN accelerators like HyGCN \cite{9065592} ($10^{3}\times$ over CPU), EnG
 This study benchmarks GNN inference on the Intel Meteor Lake NPU using OpenVINO 2024.1 across 14 models and three OGB datasets. The NPU accelerates dense vision tasks (4.5--11.4$\times$ speedup) but yields no benefit for memory-bound GNNs, where CPU, iGPU, and NPU operate within a 9--12.5\,W power envelope. INT8 quantization on the NPU results in silent CPU fallback for vision models, compilation failures for attentional architectures, and a 2.2$\times$ latency regression for SGC.
 This performance gap stems from an architectural mismatch: the NPU's streaming-dataflow design and static-shape compilation favor dense, regular operations, whereas GNNs are limited by irregular memory accesses where precision reduction does not decrease DRAM traffic.
 We recommend deploying dense vision models to the NPU at FP32 and using the iGPU for GNN workloads, while verifying CPU fallback ratios for quantized models. The benchmarking suite is available at \url{https://yusufarbc.github.io/intel-npu-gnn-benchmarking/}.
+
+\section*{Acknowledgment}
+
+The authors used AI-based tools to assist with English language editing and minor implementation details. These tools were used solely for linguistic refinement and limited implementation support. They did not contribute to the scientific ideas, experimental design, results, or conclusions of this work, which were developed entirely by the authors.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

@@ -5,10 +5,9 @@
 [![OpenVINO 2025.4](https://img.shields.io/badge/OpenVINO-2025.4-0071C5.svg)](https://docs.openvino.ai)
 [![Slides](https://img.shields.io/badge/Slides-Live%20Demo-blueviolet)](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/)
 
-A comprehensive benchmarking framework for evaluating Graph Neural Network (GNN) inference on **Intel Core Ultra (Meteor Lake) NPUs**, comparing against CPU and integrated GPU (iGPU) backends under OpenVINO.
+A benchmarking framework for evaluating Graph Neural Network (GNN) inference on **Intel Core Ultra (Meteor Lake) NPUs**, comparing against CPU and integrated GPU (iGPU) backends under OpenVINO.
 
-> 📄 **Paper:** *Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis* — Yusuf Talha Arabacı, Emrullah Demiral, Ömer Faruk Acar (Karabük University)  
-> 🎯 **Key Finding:** The NPU delivers strong FP32 throughput for dense vision models (MobileNetV2: 1.97ms, ResNet50: 3.92ms), but GNN workloads show limited NPU advantage due to irregular memory access patterns and sparse operator coverage.
+> **Paper:** *Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis* — Arabacı, Demiral, Acar (Karabük University)
 
 ![Latency comparison across CPU, iGPU, and NPU for all 14 models](results/figures/fig1_latency_comparison.png)
 
@@ -16,14 +15,11 @@ A comprehensive benchmarking framework for evaluating Graph Neural Network (GNN)
 
 ## Key Features
 
-- **14 Models:** 9 GNNs (GCN, GAT, GATv2, GIN, GraphSAGE, SGC, APPNP, GraphTransformer, MPNN) + 5 dense baselines (ResNet50, MobileNetV2, EfficientNet-B0, ViT-Tiny, BERT-Tiny)
-- **3 Hardware Backends:** CPU, integrated GPU (Xe-LPG), and NPU (Intel AI Boost)
-- **3 Real-World Datasets:** ogbn-arxiv, ogbn-proteins, ogbn-products from the Open Graph Benchmark
-- **INT8 Quantization Analysis:** FP32 vs INT8 speedup across all models and devices
-- **Operator Profiling:** Per-operator CPU fallback detection and ONNX operator composition analysis
-- **Publication-Ready Figures:** 8 IEEE-format figures (PNG + SVG, 300 DPI)
-- **Accompanying Paper:** LaTeX source for IEEE conference submission
-- **Interactive Presentation:** Web-based Slidev presentation ([live demo](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/))
+- **14 models:** 9 GNNs (GCN, GAT, GATv2, GIN, GraphSAGE, SGC, APPNP, GraphTransformer, MPNN) + 5 dense baselines (ResNet50, MobileNetV2, EfficientNet-B0, ViT-Tiny, BERT-Tiny)
+- **3 backends:** CPU, integrated GPU (Xe-LPG), NPU (Intel AI Boost)
+- **3 datasets:** ogbn-arxiv, ogbn-proteins, ogbn-products (Open Graph Benchmark)
+- **INT8 quantization analysis** across all models and devices
+- **Operator-level CPU fallback** detection and ONNX operator composition profiling
 
 [![Demo Videosu](https://img.youtube.com/vi/TfHA9jQoUB0/0.jpg)](https://youtu.be/TfHA9jQoUB0)
 

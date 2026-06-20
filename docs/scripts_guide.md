@@ -37,7 +37,3 @@ Parses ONNX Runtime profiling JSON traces to extract per-operator timing data.
 
 ### `analysis/plot_config.py`
 Centralizes IEEE-compatible matplotlib styling (`savefig_ieee`, `IEEE_COLORS`, figure dimensions).
-
----
-
-*Last updated: 1 June 2026*

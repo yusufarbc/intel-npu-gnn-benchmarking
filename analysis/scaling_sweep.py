@@ -122,7 +122,7 @@ def run_scaling(cfg: ScalingConfig) -> Path:
     ax2.legend(fontsize=7, framealpha=0.9)
     ax2.grid(True, alpha=0.3, linestyle='--', linewidth=0.4)
 
-    fig.suptitle('REQUIRED FIGURE 6: Scaling Characteristics\n(O(N) vs O(E) behavior analysis)',
+    fig.suptitle('Scaling Characteristics: Latency vs Graph Size',
                  fontsize=10, y=1.02)
 
     plt.tight_layout()

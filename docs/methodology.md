@@ -1,27 +1,19 @@
-# Methodology — NPU GNN Performance Characterization
+# Methodology
 
-This document details the scientific analysis methodology applied to characterize Graph Neural Network (GNN) inference on the Intel Core Ultra NPU architecture.
+Analysis methodology for characterizing GNN inference on the Intel Core Ultra NPU.
 
-## 1. Core Performance Metrics
-
-Beyond standard latency measurements, the following metrics are used to understand hardware–software interaction:
+## 1. Core Metrics
 
 ### Fusion Gain Ratio (FGR)
-Measures the real speedup effect of compiler-level operator fusion optimizations.
-
 $$FGR = \frac{Latency_{Baseline}}{Latency_{Optimized}}$$
 
-- **FGR > 1:** Optimization is beneficial — fusion reduces execution time.
-- **FGR < 1:** "Fusion Overhead Paradox" — the optimization overhead exceeds its gains.
+- FGR > 1: optimization reduces execution time.
+- FGR < 1: optimization overhead exceeds gains.
 
 ### Compilation Efficiency Index (CEI)
-Represents the ratio of model compilation time to the performance improvement it provides.
-
 $$CEI = \frac{Compilation\_Time}{Latency\_Reduction}$$
 
 ### Arithmetic Intensity (AI)
-Determines whether models are compute-bound or memory-bound.
-
 $$AI = \frac{Total\_FLOPs}{Total\_Memory\_Transfer\_Bytes}$$
 
 ---
@@ -46,7 +38,3 @@ Decomposes total inference time into three main components:
 1. **Compute:** Pure kernel execution time.
 2. **DMA:** Data transfer time between CPU and NPU.
 3. **Dispatch:** Kernel launch and scheduling overhead.
-
----
-
-*Last updated: 1 June 2026*

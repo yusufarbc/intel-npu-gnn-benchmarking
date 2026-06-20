@@ -1,10 +1,8 @@
 # Model Guide — NPU GNN Benchmarking
 
-This document describes the Graph Neural Networks (GNNs) and baseline models used in the Intel Core Ultra NPU benchmark study.
+GNNs and baseline models evaluated in the Intel Core Ultra NPU benchmark.
 
 ## 1. Graph Neural Networks (GNNs)
-
-These models were selected to measure NPU performance on sparse data structures and irregular memory access patterns.
 
 | Model | Architecture | Selection Rationale |
 | :--- | :--- | :--- |
@@ -50,10 +48,6 @@ Several architecture-specific incompatibilities were discovered during benchmark
 
 1. **Negative Post-Shift Quantization Error:** Some GNN INT8 models (e.g., `APPNP_int8`) produce extreme scaling factors during NNCF quantization. The NPU hardware compiler rejects these with: `postShift is not supported`. This is a hardware limitation — not a model bug.
 
-2. **Intel Graphics Compiler (IGC) Crashes:** The shared IGC compiler can produce fatal memory segmentation errors (`intersects with V37`) when processing certain INT8 GNN graphs. The pipeline includes GPU bypass mechanisms to prevent full-process crashes.
+- **Intel Graphics Compiler (IGC) Crashes:** The shared IGC compiler can produce memory segmentation errors when processing certain INT8 GNN graphs. GPU bypass mechanisms prevent full-process crashes.
 
-> **Academic Note:** These failures are valuable research findings demonstrating current limitations of the Intel Core Ultra NPU software stack for sparse GNN workloads, rather than simple bugs.
-
----
-
-*Last updated: 1 June 2026*
+These failures reflect current limitations of the Intel Core Ultra NPU software stack for sparse GNN workloads, not bugs in the models themselves.
