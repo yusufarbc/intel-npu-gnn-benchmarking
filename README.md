@@ -21,8 +21,6 @@ A benchmarking framework for evaluating Graph Neural Network (GNN) inference on 
 - **INT8 quantization analysis** across all models and devices
 - **Operator-level CPU fallback** detection and ONNX operator composition profiling
 
-[![Demo Videosu](https://img.youtube.com/vi/TfHA9jQoUB0/0.jpg)](https://youtu.be/TfHA9jQoUB0)
-
 ## Project Structure
 
 | Directory | Description |
@@ -143,20 +141,6 @@ python analysis/density_sweep.py --devices CPU,GPU,NPU
 - INT8 quantization **degrades NPU latency** for most GNNs (SGC INT8 is 2× slower than FP32 on NPU)
 - Attention-based GNNs (GAT, GATv2) **fail INT8 compilation entirely** due to unsupported scatter/gather operator patterns
 - Graph density shows **no correlation** with NPU latency — static-shape compilation fixes execution time regardless of actual edge count
-
-## Citation
-
-If you use this benchmark in your research, please cite:
-
-```bibtex
-@software{arabaci2026npu,
-  author    = {Arabac{\i}, Yusuf Talha},
-  title     = {Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs},
-  year      = {2026},
-  url       = {https://github.com/yusufarbc/intel-npu-gnn-benchmarking},
-  license   = {MIT}
-}
-```
 
 ## License
 
