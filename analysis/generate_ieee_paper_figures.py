@@ -86,13 +86,17 @@ def export(fig: mpl.figure.Figure, stem: str, *, tight: bool = False) -> None:
     """Write the same final-size artwork to results and paper directories."""
     RESULTS.mkdir(parents=True, exist_ok=True)
     PAPER.mkdir(parents=True, exist_ok=True)
-    metadata = {"Creator": "generate_ieee_paper_figures.py"}
+    creator = "generate_ieee_paper_figures.py"
     outputs = []
     crop = {"bbox_inches": "tight", "pad_inches": 0.02} if tight else {}
     for suffix, kwargs in (
         (".png", {"dpi": 600}),
-        (".svg", {"metadata": metadata}),
-        (".pdf", {"metadata": metadata}),
+        (".svg", {"metadata": {"Creator": creator, "Date": None}}),
+        (".pdf", {"metadata": {
+            "Creator": creator,
+            "CreationDate": None,
+            "ModDate": None,
+        }}),
     ):
         output = RESULTS / f"{stem}{suffix}"
         fig.savefig(output, facecolor="white", **crop, **kwargs)
@@ -317,6 +321,47 @@ def figure_6_density() -> None:
     export(fig, "fig7_density_vs_latency")
 
 
+def figure_7_scaling() -> None:
+    data = pd.read_csv(ROOT / "results" / "scaling_sweep" / "scaling_sweep.csv")
+    data["num_nodes"] = pd.to_numeric(data["num_nodes"], errors="coerce")
+    data["o_mean_ms"] = pd.to_numeric(data["o_mean_ms"], errors="coerce")
+    data["o_std_ms"] = pd.to_numeric(data["o_std_ms"], errors="coerce")
+    data = data.dropna(subset=["num_nodes", "o_mean_ms"]).sort_values("num_nodes")
+
+    nodes = data["num_nodes"].to_numpy(dtype=float)
+    latency = data["o_mean_ms"].to_numpy(dtype=float)
+    deviation = data["o_std_ms"].fillna(0).to_numpy(dtype=float)
+
+    fig, ax = plt.subplots(figsize=(3.5, 2.55))
+    fig.subplots_adjust(left=0.18, right=0.98, bottom=0.22, top=0.96)
+    ax.errorbar(
+        nodes,
+        latency,
+        yerr=deviation,
+        marker="o",
+        markersize=4.2,
+        linewidth=1.2,
+        capsize=2,
+        color=COLORS["NPU"],
+        label="APPNP FP32",
+    )
+    ax.set_xscale("log", base=2)
+    ax.xaxis.set_major_locator(mpl.ticker.FixedLocator(nodes))
+    node_labels = [
+        f"{int(node / 1024)}k" if node >= 1024 else str(int(node))
+        for node in nodes
+    ]
+    ax.xaxis.set_major_formatter(mpl.ticker.FixedFormatter(node_labels))
+    ax.xaxis.set_minor_formatter(mpl.ticker.NullFormatter())
+    ax.set_xlabel("Number of nodes (7 edges/node)")
+    ax.set_ylabel("NPU latency (ms)")
+    ax.set_ylim(bottom=0)
+    ax.legend(loc="upper left", frameon=False, handlelength=1.0,
+              handletextpad=0.4, borderaxespad=0.2)
+    finish_axis(ax)
+    export(fig, "fig6_scaling")
+
+
 def main() -> None:
     figure_1_latency()
     figure_2_int8_heatmap()
@@ -324,7 +369,8 @@ def main() -> None:
     figure_4_optimization()
     figure_5_roofline()
     figure_6_density()
-    print("Generated IEEE-size PNG/SVG/PDF versions for paper Figures 1-6.")
+    figure_7_scaling()
+    print("Generated IEEE-size PNG/SVG/PDF versions for paper Figures 1-7.")
 
 
 if __name__ == "__main__":

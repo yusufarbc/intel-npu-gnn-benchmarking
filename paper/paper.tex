@@ -83,7 +83,7 @@ We develop a reproducible benchmarking suite evaluating 14 models across three O
     \item Analysis of operator-level CPU fallbacks and density-scaling behavior under static-shape NPU compilation on a client platform.
 \end{itemize}
 
-\section{Background and Related Work}
+\section{Background}
 
 \subsection{GNN Computation and Acceleration Landscape}
 Graph Neural Network architectures compute node representations via iterative neighborhood aggregation. Across spectral \cite{kipf2017gcn, pmlr-v97-wu19e}, spatial \cite{10.5555/3294771.3294869, xu2018how}, attentional \cite{velickovic2018graph, brody2022how, shi2020masked}, and propagation-based \cite{gasteiger2019appnp, pmlr-v70-gilmer17a} models, a central computational primitive is sparse matrix--dense matrix multiplication (SpMM), combined with nonlinear feature transformations. These operations exhibit irregular memory access patterns and poor spatial locality, stressing memory bandwidth and on-chip caches \cite{9161360, 9218751, 10.1145/3477141}.
@@ -262,8 +262,8 @@ Fig.~\ref{fig:fig5b} presents a throughput-intensity roofline. GNNs cluster in t
     \label{fig:fig5b}
 \end{figure}
 
-\subsection{Graph Density, Scaling, and Static-Shape Compilation}
-Figs.~\ref{fig:fig7} and~\ref{fig:fig6} analyze NPU latency versus graph density (6.9--451.7\,edges/node) and size. Within the evaluated sweep, NPU latency has no detectable correlation with graph density ($r=-0.00$, $p=0.993$) or node count. This observation is consistent with the toolchain's static-shape compilation, under which the execution plan processes a fixed-size representation. CPU and iGPU latencies scale with input size, whereas the evaluated NPU path shows more nearly constant latency; the experiment does not isolate static shapes as the sole cause.
+\subsection{Graph Density, Size Scaling, and Static-Shape Compilation}
+Figs.~\ref{fig:fig7} and~\ref{fig:fig6} separate two effects. Across the three OGB datasets (6.9--451.7\,edges/node), NPU latency has no detectable correlation with graph density ($r=-0.00$, $p=0.993$). In the APPNP FP32 size sweep at a fixed density of 7\,edges/node, however, NPU latency increases from 5.92\,ms at 512 nodes to 36.03\,ms at 8192 nodes (6.1$\times$ latency for 16$\times$ as many nodes). Each point is a separately compiled fixed-shape graph, so this experiment characterizes size scaling across compiled shapes rather than dynamic-shape execution within one compiled model.
 
 \begin{figure}[htbp]
     \centering
@@ -274,8 +274,8 @@ Figs.~\ref{fig:fig7} and~\ref{fig:fig6} analyze NPU latency versus graph density
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\columnwidth]{fig6_scaling.png}
-    \caption{Scaling characteristics across models on NPU. Nearly constant latency across the evaluated fixed-shape inputs is consistent with static-shape compilation.}
+    \includegraphics[width=\columnwidth]{fig6_scaling.pdf}
+    \caption{APPNP FP32 latency scaling on NPU at a fixed density of 7 edges/node. Error bars show run-to-run standard deviation; each point represents a separately compiled fixed-shape graph.}
     \label{fig:fig6}
 \end{figure}
 
