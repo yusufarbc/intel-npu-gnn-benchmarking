@@ -32,8 +32,8 @@
 <table width="100%">
   <thead>
     <tr>
-      <th width="50%">Dense FP32 highlights</th>
-      <th width="50%">Sparse GNN and INT8 highlights</th>
+      <th> Dense FP32 highlights</th>
+      <th> Sparse GNN and INT8 highlights</th>
     </tr>
   </thead>
   <tbody>
@@ -71,12 +71,7 @@ This repository is the interactive companion to the paper and virtual poster pre
 |---|---|
 | [Interactive poster](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/) | Screen-shareable presentation for the Zoom poster session |
 | [Camera-ready paper](paper/paper.pdf) | Complete methodology, analysis, limitations, and references |
-| [LaTeX source](paper/paper.tex) | Auditable manuscript source |
-| [Maintained dependencies](requirements.txt) | Current environment for new benchmark runs |
 | [Benchmark notebook](npu_gnn_benchmarking.ipynb) | End-to-end experiment and figure pipeline |
-| [Aggregated results](results/figures/) | CSV summaries and publication figures |
-| [Methodology notes](docs/methodology.md) | Short experimental reference |
-| [Citation metadata](CITATION.cff) | Preferred repository citation |
 
 For a poster discussion, begin with the interactive poster. Use the notebook, CSV files, and analysis scripts as supporting evidence when a visitor asks about implementation or reproducibility.
 
