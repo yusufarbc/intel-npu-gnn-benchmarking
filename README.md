@@ -1,15 +1,39 @@
 # Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis
 
-**Graph neural network inference on a power-constrained Intel Meteor Lake client platform.**
+**A reproducible characterization of GNN, CNN, and transformer inference on a power-constrained Intel Meteor Lake client platform.**
 
 [![IEEE HPEC 2026](https://img.shields.io/badge/IEEE%20HPEC-2026-00629B.svg)](https://ieee-hpec.org/)
 [![Interactive poster](https://img.shields.io/badge/Interactive%20poster-GitHub%20Pages-7B2CBF.svg)](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/)
 [![Paper](https://img.shields.io/badge/Paper-camera--ready-B31B1B.svg)](paper/paper.pdf)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2EA44F.svg)](LICENSE)
 
-> **Main finding:** Intel's NPU substantially accelerates regular FP32 vision workloads, but the iGPU is generally the better accelerator for the sparse and irregular GNN workloads evaluated here. INT8 is not automatically faster and can trigger regression, CPU execution, or compilation failure.
+## The study in 30 seconds
 
-![FP32 latency across CPU, iGPU, and NPU](results/figures/fig1_latency_comparison.svg)
+| Challenge | Approach | Experiment | Main outcome |
+|---|---|---|---|
+| Client NPUs are designed around regular tensor execution, while GNNs combine sparse matrix operations, Gather/Scatter, and indirect memory access. | Export the same workloads to ONNX and measure end-to-end inference across the CPU, Arc iGPU, and AI Boost NPU through OpenVINO. | **14 models** × **3 OGB datasets** × **3 backends**, with FP32/INT8 variants, provider tracing, and selected package-power measurements. | The **NPU leads on supported dense FP32 models**; the **iGPU generally leads the evaluated GNNs**. INT8 must be validated per model. |
+
+> **Takeaway:** accelerator availability is not the same as accelerator execution. A requested NPU configuration may regress, partially execute on the CPU, execute entirely on the CPU, or fail compilation.
+
+### Key measurements
+
+<p align="center">
+  <img src="results/figures/fig1_latency_comparison.svg" width="49%" alt="FP32 latency comparison across the CPU, iGPU, and NPU" />
+  <img src="results/figures/fig2_int8_speedup_heatmap.svg" width="49%" alt="INT8 speedup over FP32 across models and devices" />
+</p>
+
+| Dense FP32 highlights | Sparse GNN and INT8 highlights |
+|---|---|
+| **MobileNetV2:** 1.90 ms on NPU, **4.5x** vs. CPU<br>**ResNet50:** 3.94 ms on NPU, **8.0x** vs. CPU<br>**ViT-Tiny:** 9.10 ms on NPU, **11.4x** vs. CPU | **GraphTransformer:** 6.03 ms iGPU vs. 10.72 ms NPU<br>**SGC INT8 on NPU:** 173.90 ms, **2.2x slower** than FP32<br>**GAT/GATv2 INT8:** NPU compilation failed |
+
+### Deployment decision guide
+
+| Workload or objective | Recommended starting point | Required verification |
+|---|---|---|
+| Supported, regular FP32 vision model | **NPU** | Confirm native NPU assignment and measure latency |
+| Sparse GNN represented by this benchmark | **iGPU** | Compare against CPU and NPU on the target graph |
+| INT8 deployment | **No universal winner** | Measure FP32 and INT8; inspect compilation and provider traces |
+| Energy-sensitive inference | **Model-specific evaluation** | Measure energy per inference; do not infer isolated NPU power from package telemetry |
 
 > In raw CSV files and previously generated chart legends, OpenVINO's device identifier `GPU` denotes the integrated Arc **iGPU**—not a discrete GPU. Regenerated figures use `iGPU` as the display label.
 
@@ -22,7 +46,7 @@ This repository is the interactive companion to the paper and virtual poster pre
 | [Interactive poster](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/) | Screen-shareable presentation for the Zoom poster session |
 | [Camera-ready paper](paper/paper.pdf) | Complete methodology, analysis, limitations, and references |
 | [LaTeX source](paper/paper.tex) | Auditable manuscript source |
-| [Paper core dependencies](paper/requirements-core.txt) | Core OpenVINO/ONNX Runtime versions reported in the paper |
+| [Maintained dependencies](requirements.txt) | Current environment for new benchmark runs |
 | [Benchmark notebook](npu_gnn_benchmarking.ipynb) | End-to-end experiment and figure pipeline |
 | [Aggregated results](results/figures/) | CSV summaries and publication figures |
 | [Methodology notes](docs/methodology.md) | Short experimental reference |
@@ -65,7 +89,7 @@ The accepted paper reports **OpenVINO 2024.1** and **ONNX Runtime 1.18**. These 
 
 The actively maintained [`requirements.txt`](requirements.txt) may advance after publication. It supports new benchmark runs, but compiler behavior and operator coverage can change between releases. A run with a newer environment is a **new measurement**, not a bit-for-bit reproduction of the paper. Record the OpenVINO version, ONNX Runtime version, NPU driver, firmware, and hardware SKU whenever reporting new results.
 
-[`paper/requirements-core.txt`](paper/requirements-core.txt) records the exact core runtime versions stated in the paper. It is intentionally not presented as a complete historical environment lock because versions for every transitive notebook dependency were not reported in the manuscript.
+The historical core versions are recorded in the camera-ready paper, but the original experiment did not preserve a complete lockfile for every transitive notebook dependency. The root [`requirements.txt`](requirements.txt) therefore represents the maintained environment for new runs rather than a bit-for-bit reconstruction of the 2024.1/1.18 software stack.
 
 ## Quick start
 

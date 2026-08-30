@@ -8,11 +8,13 @@ LaTeX source for the accepted IEEE HPEC 2026 paper.
 |------|-------------|
 | `paper.tex` | Main LaTeX manuscript (6 sections: Introduction, Background, Methodology, Results, Discussion, Conclusion) |
 | `references.bib` | BibTeX bibliography |
-| `requirements-core.txt` | Core OpenVINO and ONNX Runtime versions reported in the paper |
+| [`../requirements.txt`](../requirements.txt) | Maintained dependencies for new runs; see the versioning note below |
 | `figures/` | Publication figures (PNG + SVG, IEEE format) |
 | `paper.pdf` | Compiled PDF (camera-ready) |
 | `IEEEtran.cls` | IEEE conference template class file |
 | `CAMERA_READY_CHECKLIST.md` | Verified requirements, exact CMT metadata, and remaining account-dependent submission steps |
+
+The published measurements use OpenVINO 2024.1 and ONNX Runtime 1.18. The root `requirements.txt` tracks a newer maintained environment, so results produced with it are new measurements rather than a bit-for-bit reproduction of the paper.
 
 ## Structure
 
