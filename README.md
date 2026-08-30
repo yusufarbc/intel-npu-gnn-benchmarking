@@ -23,12 +23,6 @@
 
 <p align="center"><em>FP32 latency across the CPU, integrated GPU (iGPU), and NPU. Lower is better.</em></p>
 
-<p align="center">
-  <img src="results/figures/fig2_int8_speedup_heatmap.svg" width="100%" alt="INT8 speedup over FP32 across models and devices" />
-</p>
-
-<p align="center"><em>INT8 speedup over FP32. Values below 1.0 indicate a latency regression.</em></p>
-
 <table width="100%">
   <thead>
     <tr>
