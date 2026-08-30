@@ -9,8 +9,15 @@
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{flushend}
-\usepackage[hidelinks]{hyperref}
+\usepackage{url}
 \usepackage[table]{colortbl}
+
+\pdfinfo{
+  /Title (Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis)
+  /Author (Yusuf Talha ARABACI; Emrullah DEMIRAL; Omer Faruk ACAR)
+  /Subject (IEEE HPEC 2026 camera-ready paper)
+  /Keywords (NPU, GNN, Intel Core Ultra, Meteor Lake, OpenVINO, quantization, benchmarking, edge inference)
+}
 
 \graphicspath{{figures/}}
 
@@ -333,7 +340,7 @@ Across 14 models and three OGB datasets, the Meteor Lake NPU accelerates dense F
 
 \section*{Acknowledgment}
 
-The authors disclose the use of Anthropic Claude 3.5 Sonnet and OpenAI ChatGPT GPT-4o during preparation of this manuscript. Claude 3.5 Sonnet and ChatGPT GPT-4o assisted with initial code scaffolding for the evaluation scripts described in Section~III and with language editing in Sections~I, II, IV, and~V. OpenAI Codex (GPT-5) assisted with a revision draft addressing reviewer comments in Sections~I--V, including terminology, methodological clarification, figure captions, and presentation. The authors subsequently reviewed and revised all AI-assisted material. All research questions, experimental design, measurements on physical hardware, results, interpretations, and conclusions are the authors' work, and the authors take responsibility for the complete manuscript.
+The authors disclose the use of Anthropic Claude 3.5 Sonnet and OpenAI ChatGPT GPT-4o during preparation of this manuscript. Claude 3.5 Sonnet and ChatGPT GPT-4o assisted with initial code scaffolding for the evaluation scripts described in Section~III and with language editing in Sections~I, II, IV, and~V. OpenAI Codex (GPT-5) assisted with a revision draft addressing reviewer comments in Sections~I--V, including terminology, methodological clarification, figure captions, and presentation. The authors subsequently reviewed and revised all AI-assisted material. No AI system generated experimental data, numerical results, or figures. All research questions, experimental design, measurements on physical hardware, results, interpretations, and conclusions are the authors' work, and the authors take responsibility for the complete manuscript.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

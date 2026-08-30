@@ -12,6 +12,7 @@ LaTeX source for the accepted IEEE HPEC 2026 paper.
 | `figures/` | Publication figures (PNG + SVG, IEEE format) |
 | `paper.pdf` | Compiled PDF (camera-ready) |
 | `IEEEtran.cls` | IEEE conference template class file |
+| `CAMERA_READY_CHECKLIST.md` | Verified requirements, exact CMT metadata, and remaining account-dependent submission steps |
 
 ## Structure
 

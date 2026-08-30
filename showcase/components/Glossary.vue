@@ -300,10 +300,13 @@ const activeTerms = computed(() => {
 
 <style scoped>
 .glossary-wrapper {
-  position: absolute;
+  /* Keep the interactive control above full-slide figures/tables and make
+     Slidev's browser and PDF renderers place it consistently on every page. */
+  position: fixed;
   bottom: 0.65rem;
   right: 5.5rem; /* Position next to the page number (which is at right: 2rem) */
-  z-index: 1000;
+  z-index: 2147483647;
+  isolation: isolate;
 }
 
 .glossary-btn {
