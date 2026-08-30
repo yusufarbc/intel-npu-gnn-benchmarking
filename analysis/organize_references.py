@@ -228,7 +228,7 @@ REFERENCES_MD = """\
 # Reference Library
 
 Comprehensive list of all papers and technical reports referenced in
-*Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs*.
+*Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis*.
 Each entry includes a brief annotation explaining its relevance to the benchmark.
 
 > BibTeX source: [`paper/references.bib`](../paper/references.bib)  
@@ -260,8 +260,8 @@ Five dense vision/NLP models used to contrast NPU behavior on its intended workl
 
 | # | Citation | Venue | Role |
 |---|----------|-------|------|
-| [10] | He et al., *Deep Residual Learning for Image Recognition*, 2016 | CVPR 2016 | **ResNet-50** — CNN NPU performance ceiling (3.92ms) |
-| [11] | Sandler et al., *MobileNetV2: Inverted Residuals and Linear Bottlenecks*, 2018 | CVPR 2018 | **MobileNetV2** — best NPU latency (1.97ms) |
+| [10] | He et al., *Deep Residual Learning for Image Recognition*, 2016 | CVPR 2016 | **ResNet-50** — dense NPU baseline (3.94 ms mean) |
+| [11] | Sandler et al., *MobileNetV2: Inverted Residuals and Linear Bottlenecks*, 2018 | CVPR 2018 | **MobileNetV2** — best NPU latency (1.90 ms mean) |
 | [12] | Tan & Le, *EfficientNet: Rethinking Model Scaling*, 2019 | ICML 2019 | **EfficientNet-B0** — INT8 compilation fails on NPU |
 | [13] | Dosovitskiy et al., *An Image is Worth 16×16 Words: ViT*, 2021 | ICLR 2021 | **ViT-Tiny** — Vision Transformer; INT8 fails |
 | [14] | Turc et al., *Well-Read Students Learn Better (BERT-Tiny)*, 2019 | arXiv | **BERT-Tiny** — NLP Transformer; demonstrates Fusion Overhead Paradox |
@@ -334,7 +334,7 @@ Key references on accelerator design and performance characterization for GNNs.
 
 | # | Citation | Venue | Relevance |
 |---|----------|-------|-----------|
-| [34] | Jacob et al., *Quantization and Training of NNs for Integer-Arithmetic Inference*, 2018 | CVPR 2018 | Foundation for INT8 PTQ (used via NNCF) |
+| [34] | Jacob et al., *Quantization and Training of NNs for Integer-Arithmetic Inference*, 2018 | CVPR 2018 | Foundation for integer-only inference; this repository uses ONNX Runtime dynamic quantization |
 
 ---
 

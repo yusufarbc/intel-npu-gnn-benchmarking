@@ -1,41 +1,71 @@
-# Showcase — Academic Presentation Slides
+# Interactive HPEC Poster
 
-Interactive, web-based presentation slides for the conference presentation of the paper: **"Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs"**.
+This directory contains two Slidev presentations for the paper **“Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis.”**
 
-Built using [Slidev](https://sli.dev/) with a custom academic light theme.
+| Source | Role |
+|---|---|
+| [`poster.md`](poster.md) | Six-slide HPEC virtual poster deployed to GitHub Pages |
+| [`slides.md`](slides.md) | Longer technical deck for extended discussion |
 
-## Features
+The public poster is available at:
 
-- **Academic Light Theme**: Clean, high-contrast typography and layout matching standard scientific presentation styles (`style.css`).
-- **Interactive Term Notes**: A global glossary helper (`components/Glossary.vue`) displaying definitions of hardware, software, and graph theory terms directly on the slides.
-- **Persistent Footers**: Slide numbers and paper citation info (`global-bottom.vue`) visible on all content slides.
-- **Embedded Architecture Blueprints & Charts**: High-quality architecture diagrams and performance figures matching the paper.
+<https://yusufarbc.github.io/intel-npu-gnn-benchmarking/>
 
-## Running Locally
+## Why the deployed version has six slides
 
-To run the presentation in development mode locally:
+HPEC recommends four to six slides for a virtual poster. The short deck is organized around the conversation visitors are most likely to have:
 
-1. Navigate to the `showcase/` directory:
-   ```bash
-   cd showcase
-   ```
+1. Central result
+2. Challenge and motivation
+3. Experimental setup
+4. FP32 latency result
+5. INT8 and device-assignment exceptions
+6. Deployment guidance and limitations
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+The repository and paper provide the deeper material. During the Zoom poster session, screen-share the GitHub Pages tab and open the linked repository only when someone asks for implementation details, raw results, or reproduction instructions.
 
-3. Start the local development server:
-   ```bash
-   npm run dev
-   ```
+## Run locally
 
-The presentation will be available at `http://localhost:3030`.
+Install Node.js 20 or later, then:
 
-## Building and Deployment
+```bash
+cd showcase
+npm ci
+npm run dev
+```
 
-The slides are automatically compiled and deployed to **GitHub Pages** on every push to the `main` branch via the GitHub Action workflow:
+The poster will be served at <http://localhost:3030>.
 
-- Workflow file: `.github/workflows/deploy.yml`
-- Production build command: `npm run build`
-- Target environment: GitHub Pages
+To open the full technical deck instead:
+
+```bash
+npm run dev:full
+```
+
+## Build or export
+
+```bash
+# Build the six-slide poster
+npm run build
+
+# Export the poster for offline backup
+npm run export
+
+# Build or export the longer technical deck
+npm run build:full
+npm run export:full
+```
+
+Keep an exported PDF available during the conference in case GitHub Pages or the Zoom connection is unreliable.
+
+## Deployment
+
+The workflow at [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) builds `poster.md` and deploys it to GitHub Pages on every push to `main`.
+
+Before presenting, verify that:
+
+- the GitHub Pages link opens in a private/incognito browser window;
+- the QR code resolves to the repository;
+- all charts remain readable at typical Zoom screen-share resolution;
+- the title, author order, software versions, and headline values match the camera-ready paper;
+- an offline export is available.

@@ -18,11 +18,11 @@ results/
 ├── figures/                # Publication figures (png + svg)
 │   ├── master_results.csv        # Merged latency across all models
 │   ├── unified_summary.csv       # Clean model names summary
-│   ├── comparison_table.csv      # Npu vs cpu/gpu speedup table
+│   ├── comparison_table.csv      # NPU vs. CPU/iGPU speedup table
 │   ├── fig1_latency_comparison.*  # Cross-architectural latency
 │   ├── fig2_int8_speedup_heatmap.* # Int8 quantization impact
 │   ├── fig3_operator_breakdown.*  # Onnx operator composition
-│   ├── fig4_cpu_fallback_heatmap.* # Per-operator cpu fallback
+│   ├── fig4_cpu_fallback_heatmap.* # Legacy diagnostic; not used in camera-ready paper
 │   ├── fig5a_opt_speedup.*       # Optimization speedup by device
 │   ├── fig5b_roofline.*          # Computational efficiency
 │   ├── fig7_density_vs_latency.* # Graph density vs npu latency
@@ -34,5 +34,7 @@ results/
 ## Notes
 
 - Per-model directories are named after the model (e.g., `gcn/`, `gat/`, `resnet50/`).
-- Results are excluded from git tracking due to size.
+- Aggregated CSV files and publication figures are versioned. Large generated models, downloaded datasets, and some raw runtime artifacts may be excluded because of size.
+- OpenVINO records the integrated graphics device as `GPU`; paper-facing text calls it **iGPU**.
+- The nearly uniform CPU-fallback heatmap is retained for diagnostic provenance but was replaced by an exception table in the camera-ready manuscript.
 - To regenerate all results, run the jupyter notebook end-to-end.

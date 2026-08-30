@@ -131,8 +131,8 @@ L 296.000844 21.935625
 " clip-path="url(#p8e34c1f1d7)" style="fill: none; stroke: #cccccc; stroke-linecap: round"/>
      </g>
      <g id="text_2">
-      <!-- GPU -->
-      <g style="fill: #262626" transform="translate(284.082172 324.369219) scale(0.11 -0.11)">
+       <!-- iGPU -->
+       <g style="fill: #262626" transform="translate(282.860248 324.369219) scale(0.11 -0.11)">
        <defs>
         <path id="ArialMT-47" d="M 2638 1797 
 L 2638 2334 
@@ -167,9 +167,10 @@ L 2638 1797
 z
 " transform="scale(0.015625)"/>
        </defs>
-       <use xlink:href="#ArialMT-47"/>
-       <use xlink:href="#ArialMT-50" transform="translate(77.783203 0)"/>
-       <use xlink:href="#ArialMT-55" transform="translate(144.482422 0)"/>
+        <use xlink:href="#ArialMT-69"/>
+        <use xlink:href="#ArialMT-47" transform="translate(22.216797 0)"/>
+        <use xlink:href="#ArialMT-50" transform="translate(100 0)"/>
+        <use xlink:href="#ArialMT-55" transform="translate(166.699219 0)"/>
       </g>
      </g>
     </g>

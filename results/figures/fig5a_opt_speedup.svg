@@ -2581,11 +2581,15 @@ z
 " style="fill: #e69f00; stroke: #ffffff; stroke-linejoin: miter"/>
     </g>
     <g id="text_36">
-     <!-- GPU -->
-     <g style="fill: #262626" transform="translate(76.85875 182.954093) scale(0.08 -0.08)">
-      <use xlink:href="#ArialMT-47"/>
-      <use xlink:href="#ArialMT-50" transform="translate(77.783203 0)"/>
-      <use xlink:href="#ArialMT-55" transform="translate(144.482422 0)"/>
+     <!-- iGPU -->
+     <g style="fill: #262626" transform="translate(75.970078 182.954093) scale(0.08 -0.08)">
+      <defs>
+       <path id="ArialMT-69" d="M 425 3934 L 425 4581 L 988 4581 L 988 3934 L 425 3934 z M 425 0 L 425 3319 L 988 3319 L 988 0 L 425 0 z" transform="scale(0.015625)"/>
+      </defs>
+      <use xlink:href="#ArialMT-69"/>
+      <use xlink:href="#ArialMT-47" transform="translate(22.216797 0)"/>
+      <use xlink:href="#ArialMT-50" transform="translate(100 0)"/>
+      <use xlink:href="#ArialMT-55" transform="translate(166.699219 0)"/>
      </g>
     </g>
     <g id="patch_82">

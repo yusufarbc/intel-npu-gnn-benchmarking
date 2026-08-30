@@ -22,14 +22,15 @@ abstract: >
   of a Core Ultra 5 125H platform running OpenVINO, across three Open Graph Benchmark datasets
   (ogbn-arxiv, ogbn-proteins, ogbn-products). The NPU delivers strong FP32 performance for dense vision
   models (MobileNetV2: 1.90 ms, ResNet50: 3.94 ms, ViT-Tiny: 9.10 ms, 4.5-11.4x over CPU), but offers
-  negligible to negative returns for GNN workloads—the iGPU consistently delivers the lowest GNN
-  latency across all tested architectures. For most GNNs, NPU latency remains within 6% of CPU; SGC
-  INT8 exhibits a 2.2x regression over FP32 (173.90 ms vs. 78.59 ms), MPNN falls back entirely to CPU,
+  negligible to negative returns for GNN workloads—the iGPU delivers the lowest latency for most
+  evaluated GNN architectures. For most GNNs, NPU latency remains close to CPU; SGC
+  INT8 exhibits a 2.2x regression over FP32 (173.90 ms vs. 78.59 ms), the requested MPNN NPU
+  configuration executes on CPU,
   and three architectures (GAT, GATv2, EfficientNet-B0) fail INT8 compilation. NPU power isolation
-  was unavailable through the SoCWatch PMT interface; CPU and GPU measurements show comparable package
+  was unavailable through the SoCWatch PMT interface; CPU and iGPU measurements show comparable package
   power (9.1-12.5 W), with INT8 offering at best 18% energy reduction on CPU. These findings indicate
-  that while the Meteor Lake NPU is a capable accelerator for dense vision inference, the current
-  OpenVINO toolchain and hardware architecture are not yet mature for sparse graph workloads—particularly
+  that while the Meteor Lake NPU is a capable accelerator for supported dense vision inference, the
+  evaluated OpenVINO 2024.1 path has important limitations for sparse graph workloads, particularly
   under quantization. The benchmarking suite and processed artifacts are released at
   https://yusufarbc.github.io/intel-npu-gnn-benchmarking/.
 version: "1.0.0"

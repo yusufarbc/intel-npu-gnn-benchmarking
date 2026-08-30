@@ -1,0 +1,6 @@
+# Core inference versions reported in the accepted IEEE HPEC 2026 paper.
+# This records the paper-facing runtime versions; it is not a complete
+# environment lock for every notebook dependency.
+openvino==2024.1.0
+onnxruntime==1.18.0
+onnxruntime-openvino==1.18.0

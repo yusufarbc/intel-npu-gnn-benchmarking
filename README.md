@@ -1,151 +1,210 @@
-# Benchmarking GNN Inference Bottlenecks on Intel Core Ultra NPUs
+# Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Python ≥ 3.10](https://img.shields.io/badge/Python-%E2%89%A53.10-blue.svg)](https://python.org)
-[![OpenVINO 2025.4](https://img.shields.io/badge/OpenVINO-2025.4-0071C5.svg)](https://docs.openvino.ai)
-[![Slides](https://img.shields.io/badge/Slides-Live%20Demo-blueviolet)](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/)
+**Graph neural network inference on a power-constrained Intel Meteor Lake client platform.**
 
-A benchmarking framework for evaluating Graph Neural Network (GNN) inference on **Intel Core Ultra (Meteor Lake) NPUs**, comparing against CPU and integrated GPU (iGPU) backends under OpenVINO.
+[![IEEE HPEC 2026](https://img.shields.io/badge/IEEE%20HPEC-2026-00629B.svg)](https://ieee-hpec.org/)
+[![Interactive poster](https://img.shields.io/badge/Interactive%20poster-GitHub%20Pages-7B2CBF.svg)](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/)
+[![Paper](https://img.shields.io/badge/Paper-camera--ready-B31B1B.svg)](paper/paper.pdf)
+[![License: MIT](https://img.shields.io/badge/License-MIT-2EA44F.svg)](LICENSE)
 
-> **Paper:** *Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis* — Arabacı, Demiral, Acar (Karabük University)
+> **Main finding:** Intel's NPU substantially accelerates regular FP32 vision workloads, but the iGPU is generally the better accelerator for the sparse and irregular GNN workloads evaluated here. INT8 is not automatically faster and can trigger regression, CPU execution, or compilation failure.
 
-![Latency comparison across CPU, iGPU, and NPU for all 14 models](results/figures/fig1_latency_comparison.png)
+![FP32 latency across CPU, iGPU, and NPU](results/figures/fig1_latency_comparison.svg)
 
----
+> In raw CSV files and previously generated chart legends, OpenVINO's device identifier `GPU` denotes the integrated Arc **iGPU**—not a discrete GPU. Regenerated figures use `iGPU` as the display label.
 
-## Key Features
+## Conference poster
 
-- **14 models:** 9 GNNs (GCN, GAT, GATv2, GIN, GraphSAGE, SGC, APPNP, GraphTransformer, MPNN) + 5 dense baselines (ResNet50, MobileNetV2, EfficientNet-B0, ViT-Tiny, BERT-Tiny)
-- **3 backends:** CPU, integrated GPU (Xe-LPG), NPU (Intel AI Boost)
-- **3 datasets:** ogbn-arxiv, ogbn-proteins, ogbn-products (Open Graph Benchmark)
-- **INT8 quantization analysis** across all models and devices
-- **Operator-level CPU fallback** detection and ONNX operator composition profiling
+This repository is the interactive companion to the paper and virtual poster presented in the **IEEE HPEC 2026 Graph Analytics and Network Science / Application Benchmarking poster session**.
 
-## Project Structure
+| Start here | Purpose |
+|---|---|
+| [Interactive poster](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/) | Screen-shareable presentation for the Zoom poster session |
+| [Camera-ready paper](paper/paper.pdf) | Complete methodology, analysis, limitations, and references |
+| [LaTeX source](paper/paper.tex) | Auditable manuscript source |
+| [Paper core dependencies](paper/requirements-core.txt) | Core OpenVINO/ONNX Runtime versions reported in the paper |
+| [Benchmark notebook](npu_gnn_benchmarking.ipynb) | End-to-end experiment and figure pipeline |
+| [Aggregated results](results/figures/) | CSV summaries and publication figures |
+| [Methodology notes](docs/methodology.md) | Short experimental reference |
+| [Citation metadata](CITATION.cff) | Preferred repository citation |
 
-| Directory | Description |
-|-----------|-------------|
-| `analysis/` | Python scripts for benchmarking, profiling, and analysis |
-| `data/` | OGB graph datasets (excluded from git — downloaded automatically) |
-| `docs/` | Technical documentation and methodology guides |
-| `models/` | Pre-exported ONNX models (excluded from git — regenerate with `model_prep.py`) |
-| `paper/` | LaTeX paper source and compiled PDF |
-| `results/` | Benchmark outputs, CSV matrices, and publication figures |
-| `showcase/` | Interactive Slidev presentation source and assets |
+For a poster discussion, begin with the interactive poster. Use the notebook, CSV files, and analysis scripts as supporting evidence when a visitor asks about implementation or reproducibility.
 
-## Hardware Requirements
+## Results at a glance
 
-This project requires an **Intel Core Ultra (Meteor Lake)** system:
+The reported values are means across the three evaluated OGB datasets.
 
-| Component | Spec Used |
-|-----------|-----------|
-| **CPU** | Intel Core Ultra 5 125H |
-| **NPU** | Intel AI Boost (NPU 3720, VPUX37XX) |
-| **iGPU** | Intel Arc Graphics (Xe-LPG) |
-| **OS** | Windows 11 (NPU driver required) |
+| Finding | Evidence | Practical implication |
+|---|---:|---|
+| Dense FP32 inference benefits from NPU execution | MobileNetV2: **1.90 ms, 4.5x vs. CPU**; ResNet50: **3.94 ms, 8.0x**; ViT-Tiny: **9.10 ms, 11.4x** | Use the NPU for supported, regular dense models when latency is the priority |
+| The NPU provides little GNN latency benefit | GraphTransformer: **10.72 ms NPU**, **10.69 ms CPU**, **6.03 ms iGPU** | Prefer the iGPU for the evaluated GNN workloads |
+| INT8 can regress on the NPU | SGC: **78.59 ms FP32** versus **173.90 ms INT8** | Benchmark both precisions; do not assume INT8 is faster |
+| Device requests do not guarantee native execution | MPNN executed on CPU in the requested NPU configuration; several INT8 graphs did not compile | Inspect execution-provider traces before reporting accelerator results |
+| Energy gains are model-dependent | CPU INT8 reduced GCN energy by **18.4%** but increased MPNN energy by **59%** | Treat quantization as a model-specific systems decision |
 
-> **Note:** Benchmarks can be run in CPU-only mode on any x86 system. NPU and iGPU results require an Intel Core Ultra platform with OpenVINO drivers.
+The study evaluates **nine GNNs and five dense baselines**, **three Open Graph Benchmark datasets**, and the **CPU, integrated GPU (iGPU), and NPU** in an Intel Core Ultra 5 125H system.
 
-## Requirements
+## Experimental scope
 
-| Dependency | Version | Purpose |
-|-----------|---------|---------|
-| **Python** | ≥ 3.10 | Runtime |
-| **OpenVINO** | 2025.4.1 | NPU/GPU/CPU inference backend |
-| **ONNX Runtime** | 1.24.4 | Model execution with OpenVINO EP |
-| **PyTorch** | 2.11.0 | GNN model definition and export |
-| **Intel SoCWatch** | — | Energy/power profiling (optional) |
+| Dimension | Evaluated configuration |
+|---|---|
+| Processor | Intel Core Ultra 5 125H (Meteor Lake, 28 W client platform) |
+| Accelerators | Intel Arc iGPU (Xe-LPG) and Intel AI Boost NPU 3720 |
+| Memory and OS | 16 GB LPDDR5x, Windows 11 |
+| GNN models | GCN, GAT, GATv2, GIN, GraphSAGE, SGC, APPNP, GraphTransformer, MPNN |
+| Dense baselines | ResNet50, MobileNetV2, EfficientNet-B0, ViT-Tiny, BERT-Tiny |
+| Graph datasets | ogbn-arxiv, ogbn-products, ogbn-proteins |
+| Timing protocol | Batch size 1; 5 warm-ups; 100 timed iterations; 3 independent runs |
+| Measurements | Latency, derived throughput, INT8/FP32 speedup, provider assignment, graph optimization, and selected package-power measurements |
 
-> **SoCWatch** is optional. The notebook auto-detects it. Set `SOCWATCH_ENABLED = False` in the first notebook cell to disable energy profiling and halve benchmark runtime.
+Latency includes execution-provider dispatch and required host-device transfers after warm-up. Dataset loading, preprocessing, model conversion, and one-time graph compilation are outside the timed region.
 
-## Installation
+## Software environment
+
+The accepted paper reports **OpenVINO 2024.1** and **ONNX Runtime 1.18**. These are the authoritative versions for interpreting every published number in this repository.
+
+The actively maintained [`requirements.txt`](requirements.txt) may advance after publication. It supports new benchmark runs, but compiler behavior and operator coverage can change between releases. A run with a newer environment is a **new measurement**, not a bit-for-bit reproduction of the paper. Record the OpenVINO version, ONNX Runtime version, NPU driver, firmware, and hardware SKU whenever reporting new results.
+
+[`paper/requirements-core.txt`](paper/requirements-core.txt) records the exact core runtime versions stated in the paper. It is intentionally not presented as a complete historical environment lock because versions for every transitive notebook dependency were not reported in the manuscript.
+
+## Quick start
+
+### 1. Clone and create an environment
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/yusufarbc/intel-npu-gnn-benchmarking.git
 cd intel-npu-gnn-benchmarking
 
-# 2. Create and activate a virtual environment
 python -m venv .venv
-.venv\Scripts\activate   # Windows
-# source .venv/bin/activate  # Linux/macOS
-
-# 3. Install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
 ```
 
-## Usage — Reproducing the Paper Results
+Activate it on Windows:
 
-> **⚠️ Hardware requirement:** NPU and iGPU benchmarks require an **Intel Core Ultra (Meteor Lake)** processor. CPU-only results can be reproduced on any modern x86 system.
+```powershell
+.venv\Scripts\Activate.ps1
+```
 
-### Step-by-step
+Or on Linux/macOS:
 
 ```bash
-# Activate environment
-.venv\Scripts\activate
+source .venv/bin/activate
+```
 
-# Launch Jupyter
+### 2. Install the maintained development dependencies
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+### 3. Run the notebook
+
+```bash
 jupyter notebook npu_gnn_benchmarking.ipynb
 ```
 
-### Notebook Cells Overview
+Run the cells from top to bottom. The notebook downloads OGB datasets, prepares ONNX models when needed, checks available OpenVINO devices, executes the benchmark matrix, and regenerates the aggregated tables and figures. Treat results from this maintained environment as a new experiment unless the paper's core versions are restored.
 
-Run cells **sequentially** from top to bottom:
+> NPU and iGPU measurements require a compatible Intel Core Ultra system with working OpenVINO drivers. CPU-only execution is available on other x86 systems, but it does not reproduce the paper's cross-device comparison.
 
-| Stage | Cells | Description |
-|-------|-------|-------------|
-| **Config** | Cell 1 | Edit model list, devices, iterations, SoCWatch toggle |
-| **Stage 0** | Cells 2–4 | Imports, helper functions |
-| **Stage 0-B** | Cell 5 | ⚡ **Auto-downloads OGB datasets & generates ONNX models** (if missing) |
-| **Stage 1-A/B/C** | Cells 6–9 | Dataset metadata, model inventory, hardware health check |
-| **Stage 2** | Cells 10–13 | **Unified batch benchmark** — all models × datasets × devices × precisions |
-| **Stage 3-A/B/C** | Cells 14–17 | Merge results, comparison tables, summary statistics |
-| **Stage 4** | Cells 18–39 | 8 publication-ready figures (PNG + SVG) |
+## Benchmark workflow
 
-> ⚡ **Datasets and models are downloaded/generated automatically** by Stage 0-B. No manual download needed.  
-> ⏱️ Full benchmark run (14 models × 3 datasets × 3 devices × 2 precisions) takes **2–4 hours** with SoCWatch enabled.
-
-### Outputs
-
-All generated artifacts are saved to:
-
-```
-results/
-├── figures/                     # Publication figures (PNG + SVG, 300 DPI)
-├── master_results.csv           # Full latency matrix
-├── unified_summary.csv          # Aggregated per-model summaries
-├── comparison_table.csv         # Cross-device comparison table
-└── summary_stats.csv            # Statistical summaries
+```text
+OGB datasets + model definitions
+              |
+              v
+       FP32 ONNX export
+              |
+              +----> dynamic INT8 quantization
+              |
+              v
+ CPU / iGPU / NPU execution with provider tracing
+              |
+              v
+ latency + throughput + fallback + power summaries
+              |
+              v
+       publication figures and CSV tables
 ```
 
-### Standalone Scripts
+The default full matrix covers 14 models x 3 datasets x 3 devices x 2 precisions where compilation succeeds. A complete run can take several hours. Set `SOCWATCH_ENABLED = False` in the notebook when package-power collection is unnecessary.
 
-Individual analysis scripts can also be run directly:
+## Standalone analysis commands
 
 ```bash
-# Generate ONNX models (FP32 + INT8 quantized)
+# Export FP32 models and create available INT8 variants
 python analysis/model_prep.py
 
-# Run scalability analysis for a specific configuration
+# Run one model/device scalability experiment
 python analysis/scalability_analyzer.py --model GCN --device NPU --iterations 100
 
-# Sweep graph density
+# Sweep graph density across devices
 python analysis/density_sweep.py --devices CPU,GPU,NPU
 ```
 
-## Key Findings
+The command-line interface uses OpenVINO's device name `GPU`; the paper and prose call this device the **iGPU** to distinguish it from a discrete GPU.
 
-- The NPU delivers strong FP32 performance for dense vision models (MobileNetV2: **1.97ms**, ResNet50: **3.92ms**)
-- GNN workloads show **limited NPU advantage** (within 15% of CPU latency on average)
-- INT8 quantization **degrades NPU latency** for most GNNs (SGC INT8 is 2× slower than FP32 on NPU)
-- Attention-based GNNs (GAT, GATv2) **fail INT8 compilation entirely** due to unsupported scatter/gather operator patterns
-- Graph density shows **no correlation** with NPU latency — static-shape compilation fixes execution time regardless of actual edge count
+## Results and artifacts
+
+| Path | Contents |
+|---|---|
+| [`results/figures/master_results.csv`](results/figures/master_results.csv) | Merged latency measurements |
+| [`results/figures/unified_summary.csv`](results/figures/unified_summary.csv) | Per-model/device/precision summaries |
+| [`results/figures/comparison_table.csv`](results/figures/comparison_table.csv) | Cross-device speedups |
+| [`results/figures/summary_stats.csv`](results/figures/summary_stats.csv) | Statistical summaries |
+| [`results/figures/`](results/figures/) | PNG and SVG figures |
+| [`analysis/`](analysis/) | Benchmarking, profiling, and plotting code |
+| [`docs/`](docs/) | Methodology and implementation notes |
+| [`showcase/`](showcase/) | Slidev source for the interactive poster |
+
+Large generated models, downloaded datasets, and some raw runtime artifacts may be excluded from version control. The notebook regenerates them.
+
+## Interpretation boundaries
+
+- Results characterize one Intel Core Ultra 5 125H system, not every Meteor Lake or later-generation NPU.
+- The selected GNNs are established systems-research workloads; the suite does not cover large graph transformers, temporal graphs, heterogeneous graphs, or recommendation systems.
+- FP32 and INT8 are the evaluated precisions, not a claim that the hardware supports only those formats.
+- NPU power could not be isolated with the available telemetry. Reported energy comparisons cover selected CPU and iGPU configurations and include background package activity.
+- Compilation failure, CPU execution, and successful native NPU execution are different outcomes and are reported separately.
+- Quantized-model accuracy is outside this performance-characterization study.
+
+## Repository structure
+
+```text
+.
+|-- analysis/                 Benchmark, profiling, and plotting modules
+|-- data/                     Dataset documentation and local downloads
+|-- docs/                     Methodology and technical notes
+|-- models/                   Model-generation documentation and local exports
+|-- paper/                    IEEE LaTeX source, bibliography, and paper PDF
+|-- results/                  Aggregated data, figures, and runtime artifacts
+|-- showcase/                 Slidev interactive-poster source
+|-- npu_gnn_benchmarking.ipynb
+|-- requirements.txt
+`-- CITATION.cff
+```
+
+## Citation
+
+If you use the benchmark suite or results, cite the paper and repository metadata in [`CITATION.cff`](CITATION.cff):
+
+```bibtex
+@inproceedings{arabaci2026gnnnpu,
+  title     = {Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis},
+  author    = {Arabaci, Yusuf Talha and Demiral, Emrullah and Acar, Omer Faruk},
+  booktitle = {2026 IEEE High Performance Extreme Computing Conference (HPEC)},
+  year      = {2026}
+}
+```
+
+## Authors
+
+- Yusuf Talha Arabacı — Karabük University
+- Emrullah Demiral — Karabük University
+- Ömer Faruk Acar — Karabük University
+
+Questions and reproducibility reports are welcome through [GitHub Issues](https://github.com/yusufarbc/intel-npu-gnn-benchmarking/issues).
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
-
----
-
-*Developed by Yusuf Talha Arabacı — Karabük University*
+Released under the [MIT License](LICENSE).

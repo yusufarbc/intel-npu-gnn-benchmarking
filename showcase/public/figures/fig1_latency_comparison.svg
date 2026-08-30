@@ -1690,8 +1690,8 @@ L 701.676094 188.988489
 L 701.676094 21.935625 
 " style="fill: none; stroke: #cccccc; stroke-width: 1.25; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
-   <g id="text_22">
-    <!-- Figure 1: Latency Comparison - NPU vs GPU vs CPU (FP32) -->
+   <g id="text_22" style="display:none">
+    <!-- Figure 1: Latency Comparison - NPU vs iGPU vs CPU (FP32) -->
     <g style="fill: #262626" transform="translate(213.286406 15.935625) scale(0.12 -0.12)">
      <defs>
       <path id="ArialMT-46" d="M 525 0 
@@ -1887,6 +1887,7 @@ z
      <use xlink:href="#ArialMT-29" transform="translate(2678.613281 0)"/>
     </g>
    </g>
+   <text x="354.438047" y="15.935625" text-anchor="middle" style="fill:#262626;font-family:Arial,sans-serif;font-size:12px">Figure 1: Latency Comparison - NPU vs iGPU vs CPU (FP32)</text>
    <g id="legend_1">
     <g id="patch_46">
      <path d="M 58.012344 77.415156 
@@ -1926,11 +1927,12 @@ z
 " style="fill: #e69f00; stroke: #ffffff; stroke-linejoin: miter"/>
     </g>
     <g id="text_24">
-     <!-- GPU -->
-     <g style="fill: #262626" transform="translate(91.012344 55.269063) scale(0.11 -0.11)">
-      <use xlink:href="#ArialMT-47"/>
-      <use xlink:href="#ArialMT-50" transform="translate(77.783203 0)"/>
-      <use xlink:href="#ArialMT-55" transform="translate(144.482422 0)"/>
+     <!-- iGPU -->
+     <g style="fill: #262626" transform="translate(89.79042 55.269063) scale(0.11 -0.11)">
+      <use xlink:href="#ArialMT-69"/>
+      <use xlink:href="#ArialMT-47" transform="translate(22.216797 0)"/>
+      <use xlink:href="#ArialMT-50" transform="translate(100 0)"/>
+      <use xlink:href="#ArialMT-55" transform="translate(166.699219 0)"/>
      </g>
     </g>
     <g id="patch_49">

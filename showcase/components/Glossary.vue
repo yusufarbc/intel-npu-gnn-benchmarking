@@ -25,7 +25,7 @@ const glossary = {
   },
   'soc': {
     title: 'SoC (System on Chip)',
-    desc: 'An integrated circuit design that combines all core computing blocks (CPU, GPU, NPU, memory controller, media engine) onto a single silicon chip.'
+    desc: 'An integrated circuit design that combines all core computing blocks (CPU, iGPU, NPU, memory controller, media engine) into one package or tightly integrated platform.'
   },
   'compute-bound': {
     title: 'Compute Bound',
@@ -93,7 +93,7 @@ const glossary = {
   },
   'cpu-fallback': {
     title: 'CPU Fallback',
-    desc: 'A compiler mechanism where unsupported operators in a model compiled for NPU or GPU are dynamically and silently routed to the CPU, severely degrading latency.'
+    desc: 'A compiler mechanism where unsupported operators requested for an accelerator such as the NPU or iGPU execute on the CPU; this can change the meaning and latency of a device comparison.'
   },
   'ir-conversion': {
     title: 'IR Conversion',
@@ -129,7 +129,7 @@ const glossary = {
   },
   'socwatch': {
     title: 'SoCWatch',
-    desc: 'Intel\'s low-level system profiling tool that reads hardware telemetry (via PMT) to monitor package, CPU, and GPU power usage (mW/mJ). NPU power rail counters are not defined in Meteor Lake PMT, so NPU energy cannot be measured via this interface.'
+    desc: 'Intel\'s low-level system profiling tool that reads hardware telemetry (via PMT) to monitor package, CPU, and iGPU power usage (mW/mJ). The evaluated Meteor Lake PMT interface did not expose an isolated NPU power rail.'
   },
   'throughput-watt': {
     title: 'Throughput per Watt',
@@ -169,11 +169,11 @@ const glossary = {
   },
   'xe-lpg': {
     title: 'Xe-LPG',
-    desc: 'Intel\'s integrated GPU microarchitecture in Meteor Lake (7 Xe-cores). Its larger cache and higher bandwidth vs NPU explain its consistently lower GNN latency.'
+    desc: 'Intel\'s integrated GPU microarchitecture in the evaluated Meteor Lake system (7 Xe-cores). Its memory system and measured optimization behavior are plausible contributors to its lower latency on the tested GNNs, but the experiment does not isolate one cause.'
   },
   'tdp': {
     title: 'TDP (Thermal Design Power)',
-    desc: 'The maximum amount of heat a computer chip (like CPU, GPU, or NPU) is designed to dissipate under workload, serving as a proxy for power draw limits (e.g., 15W/28W for Meteor Lake).'
+    desc: 'A thermal-design target for a processor platform; it is not the same as directly measured CPU, iGPU, or NPU power during a benchmark.'
   },
   'ort': {
     title: 'ONNX Runtime (ORT)',
@@ -185,7 +185,7 @@ const glossary = {
   },
   'foveros': {
     title: 'Foveros 3D Packaging',
-    desc: 'Intel\'s proprietary 3D face-to-face silicon integration technology, used in Meteor Lake to connect disaggregated CPU, GPU, SoC, and NPU tiles onto a base die.'
+    desc: 'Intel\'s 3D packaging technology, used in Meteor Lake to integrate compute, graphics, SoC, and I/O tiles.'
   },
   'pmt': {
     title: 'PMT (Platform Monitoring Technology)',

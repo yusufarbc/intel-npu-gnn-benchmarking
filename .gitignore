@@ -37,6 +37,9 @@ __pypackages__/
 # Dataset snapshots
 data/ogbn_*/
 
+# Local documentation notes (not published with the repository)
+docs/
+
 # ONNX models (large binary files — regenerate with: python analysis/model_prep.py)
 models/*.onnx
 models/*.onnx.data
@@ -99,4 +102,3 @@ showcase/dist/
 # OS
 .DS_Store
 Thumbs.db
-
