@@ -7,10 +7,8 @@ year="2020",
 publisher="Springer International Publishing",
 address="Cham",
 pages="39--41",
-abstract="The attention mechanism has been successfully used in many sequence-based tasks such as machine translation [Bahdanau et al., 2015, Gehring et al., 2017, Vaswani et al., 2017], machine reading [Cheng et al., 2016], and so on. Compared with GCN which treats all neighbors of a node equally, the attention mechanism could assign different attention score to each neighbor, thus identifying more important neighbors. It is intuitive to incorporate the attention mechanism into the propagation steps of Graph Neural Networks. In this chapter, we will talk about two variants: GAT and GAAN.",
 isbn="978-3-031-01587-8",
 doi="10.1007/978-3-031-01587-8_7",
-url="https://doi.org/10.1007/978-3-031-01587-8_7"
 }
 
 @article{Zhang2022,
@@ -26,10 +24,8 @@ day={01},
 volume={54},
 number={4},
 pages={2645-2656},
-abstract={Graph convolutional networks (GCNs), as an extension of classic convolutional neural networks (CNNs) in graph processing, have achieved good results in completing semi-supervised learning tasks. Traditional GCNs usually use fixed graph to complete various semi-supervised classification tasks, such as chemical molecules and social networks. Graph is an important basis for the classification of GCNs model, and its quality has a large impact on the performance of the model. For low-quality input graph, the classification results of the GCNs model are often not ideal. In order to improve the classification effect of GCNs model, we propose a graph learning method to generate high-quality topological graph, which is more suitable for GCNs model classification. We use the correlation between the data to generate a data similarity matrix, and apply Laplacian rank constraint to similarity matrix, so that the number of connected components of the topological graph is consistent with the number of categories of the original data. Experimental results on 10 real datasets show that our method is better than the comparison method in classification effect.},
 issn={1573-773X},
 doi={10.1007/s11063-020-10404-7},
-url={https://doi.org/10.1007/s11063-020-10404-7}
 }
 
 @inproceedings{
@@ -38,7 +34,6 @@ title={Graph Attention Networks},
 author={Petar Veli{\v{c}}kovi{\'{c}} and Guillem Cucurull and Arantxa Casanova and Adriana Romero and Pietro Li{\`{o}} and Yoshua Bengio},
 booktitle={International Conference on Learning Representations},
 year={2018},
-url={https://openreview.net/forum?id=rJXMpikCZ},
 }
 
 @inproceedings{10.5555/3294771.3294869,
@@ -48,7 +43,6 @@ year = {2017},
 isbn = {9781510860964},
 publisher = {Curran Associates Inc.},
 address = {Red Hook, NY, USA},
-abstract = {Low-dimensional embeddings of nodes in large graphs have proved extremely useful in a variety of prediction tasks, from content recommendation to identifying protein functions. However, most existing approaches require that all nodes in the graph are present during training of the embeddings; these previous approaches are inherently transductive and do not naturally generalize to unseen nodes. Here we present GraphSAGE, a general inductive framework that leverages node feature information (e.g., text attributes) to efficiently generate node embeddings for previously unseen data. Instead of training individual embeddings for each node, we learn a function that generates embeddings by sampling and aggregating features from a node's local neighborhood. Our algorithm outperforms strong baselines on three inductive node-classification benchmarks: we classify the category of unseen nodes in evolving information graphs based on citation and Reddit post data, and we show that our algorithm generalizes to completely unseen graphs using a multi-graph dataset of protein-protein interactions.},
 booktitle = {Proceedings of the 31st International Conference on Neural Information Processing Systems},
 pages = {1025–1035},
 numpages = {11},
@@ -62,8 +56,6 @@ title={How Powerful are Graph Neural Networks?},
 author={Keyulu Xu and Weihua Hu and Jure Leskovec and Stefanie Jegelka},
 booktitle={International Conference on Learning Representations},
 year={2019},
-abstract = {Graph Neural Networks (GNNs) are an effective framework for representation learning of graphs. GNNs follow a neighborhood aggregation scheme, where the representation vector of a node is computed by recursively aggregating and transforming representation vectors of its neighboring nodes. Many GNN variants have been proposed and have achieved state-of-the-art results on both node and graph classification tasks. However, despite GNNs revolutionizing graph representation learning, there is limited understanding of their representational properties and limitations. Here, we present a theoretical framework for analyzing the expressive power of GNNs to capture different graph structures. Our results characterize the discriminative power of popular GNN variants, such as Graph Convolutional Networks and GraphSAGE, and show that they cannot learn to distinguish certain simple graph structures. We then develop a simple architecture that is provably the most expressive among the class of GNNs and is as powerful as the Weisfeiler-Lehman graph isomorphism test. We empirically validate our theoretical findings on a number of graph classification benchmarks, and demonstrate that our model achieves state-of-the-art performance.},
-url={https://openreview.net/forum?id=ryGs6iA5Km},
 }
 
 @inproceedings{pmlr-v97-wu19e,
@@ -77,9 +69,6 @@ url={https://openreview.net/forum?id=ryGs6iA5Km},
   series = 	 {Proceedings of Machine Learning Research},
   month = 	 {09--15 Jun},
   publisher =    {PMLR},
-  pdf = 	 {http://proceedings.mlr.press/v97/wu19e/wu19e.pdf},
-  url = 	 {https://proceedings.mlr.press/v97/wu19e.html},
-  abstract = 	 {Graph Convolutional Networks (GCNs) and their variants have experienced significant attention and have become the de facto methods for learning graph representations. GCNs derive inspiration primarily from recent deep learning approaches, and as a result, may inherit unnecessary complexity and redundant computation. In this paper, we reduce this excess complexity through successively removing nonlinearities and collapsing weight matrices between consecutive layers. We theoretically analyze the resulting linear model and show that it corresponds to a fixed low-pass filter followed by a linear classifier. Notably, our experimental evaluation demonstrates that these simplifications do not negatively impact accuracy in many downstream applications. Moreover, the resulting model scales to larger datasets, is naturally interpretable, and yields up to two orders of magnitude speedup over FastGCN.}
 }
 
 
@@ -94,9 +83,6 @@ url={https://openreview.net/forum?id=ryGs6iA5Km},
   series = 	 {Proceedings of Machine Learning Research},
   month = 	 {06--11 Aug},
   publisher =    {PMLR},
-  pdf = 	 {http://proceedings.mlr.press/v70/gilmer17a/gilmer17a.pdf},
-  url = 	 {https://proceedings.mlr.press/v70/gilmer17a.html},
-  abstract = 	 {Supervised learning on molecules has incredible potential to be useful in chemistry, drug discovery, and materials science. Luckily, several promising and closely related neural network models invariant to molecular symmetries have already been described in the literature. These models learn a message passing algorithm and aggregation procedure to compute a function of their entire input graph. At this point, the next step is to find a particularly effective variant of this general approach and apply it to chemical prediction benchmarks until we either solve them or reach the limits of the approach. In this paper, we reformulate existing models into a single common framework we call Message Passing Neural Networks (MPNNs) and explore additional novel variations within this framework. Using MPNNs we demonstrate state of the art results on an important molecular property prediction benchmark; these results are strong enough that we believe future work should focus on datasets with larger molecules or more accurate ground truth labels.}
 }
 
 @inproceedings{
@@ -105,12 +91,6 @@ title={How Attentive are Graph Attention Networks? },
 author={Shaked Brody and Uri Alon and Eran Yahav},
 booktitle={International Conference on Learning Representations},
 year={2022},
-url={https://openreview.net/forum?id=F72ximsx7C1},
-abstract = {Graph Attention Networks (GATs) are one of the most popular GNN architectures and are considered as the state-of-the-art architecture for representation learning with graphs. In GAT, every node attends to its neighbors given its own representation as the query.
-However, in this paper we show that GAT computes a very limited kind of attention: the ranking of the attention scores is unconditioned on the query node. We formally define this restricted kind of attention as static attention and distinguish it from a strictly more expressive dynamic attention.
-Because GATs use a static attention mechanism, there are simple graph problems that GAT cannot express: in a controlled problem, we show that static attention hinders GAT from even fitting the training data. 
-To remove this limitation, we introduce a simple fix by modifying the order of operations and propose GATv2: a dynamic graph attention variant that is strictly more expressive than GAT. We perform an extensive evaluation and show that GATv2 outperforms GAT across 12 OGB and other benchmarks while we match their parametric costs. 
-Our code is available at https://github.com/tech-srl/how_attentive_are_gats . GATv2 is available as part of the PyTorch Geometric library, the Deep Graph Library, and the TensorFlow GNN library.}
 }
 
 @inproceedings{10.5555/3618408.3619718,
@@ -118,7 +98,6 @@ author = {Shirzad, Hamed and Velingker, Ameya and Venkatachalam, Balaji and Suth
 title = {EXPHORMER: sparse transformers for graphs},
 year = {2023},
 publisher = {JMLR.org},
-abstract = {Graph transformers have emerged as a promising architecture for a variety of graph learning and representation tasks. Despite their successes, though, it remains challenging to scale graph transformers to large graphs while maintaining accuracy competitive with message-passing networks. In this paper, we introduce EXPHORMER, a framework for building powerful and scalable graph transformers. EXPHORMER consists of a sparse attention mechanism based on two mechanisms: virtual global nodes and expander graphs, whose mathematical characteristics, such as spectral expansion, pseduorandomness, and sparsity, yield graph transformers with complexity only linear in the size of the graph, while allowing us to prove desirable theoretical properties of the resulting transformer models. We show that incorporating EXPHORMER into the recently-proposed GraphGPS framework produces models with competitive empirical results on a wide variety of graph datasets, including state-of-the-art results on three datasets. We also show that EXPHORMER can scale to datasets on larger graphs than shown in previous graph transformer architectures. Codes can be found at https://github.com/hamed1375/Exphormer.},
 booktitle = {Proceedings of the 40th International Conference on Machine Learning},
 articleno = {1310},
 numpages = {20},
@@ -132,8 +111,6 @@ title={Where Did the Gap Go? Reassessing the Long-Range Graph Benchmark},
 author={Jan T{\"o}nshoff and Martin Ritzert and Eran Rosenbluth and Martin Grohe},
 booktitle={The Second Learning on Graphs Conference},
 year={2023},
-url={https://openreview.net/forum?id=rIUjwxc5lj},
-abstract = {The recent Long-Range Graph Benchmark (LRGB, Dwivedi et al. 2022) introduced a set of graph learning tasks strongly dependent on long-range interaction between vertices. Empirical evidence suggests that on these tasks Graph Transformers significantly outperform Message Passing GNNs (MPGNNs). In this paper, we carefully reevaluate multiple MPGNN baselines as well as the Graph Transformer GPS (Rampášek et al. 2022) on LRGB. Through a rigorous empirical analysis, we demonstrate that the reported performance gap is overestimated due to suboptimal hyperparameter choices. It is noteworthy that across multiple datasets the performance gap completely vanishes after basic hyperparameter optimization. In addition, we discuss the impact of lacking feature normalization for LRGB's vision datasets and highlight a spurious implementation of LRGB's link prediction metric. The principal aim of our paper is to establish a higher standard of empirical rigor within the graph machine learning community.}
 }
 
 @inproceedings{
@@ -142,8 +119,6 @@ title={Graph-less Neural Networks: Teaching Old {MLP}s New Tricks Via Distillati
 author={Shichang Zhang and Yozen Liu and Yizhou Sun and Neil Shah},
 booktitle={International Conference on Learning Representations},
 year={2022},
-url={https://openreview.net/forum?id=4p6_5HBWPCw},
-abstract = {Graph Neural Networks (GNNs) are popular for graph machine learning and have shown great results on wide node classification tasks. Yet, they are less popular for practical deployments in the industry owing to their scalability challenges incurred by data dependency. Namely, GNN inference depends on neighbor nodes multiple hops away from the target, and fetching them burdens latency-constrained applications. Existing inference acceleration methods like pruning and quantization can speed up GNNs by reducing Multiplication-and-ACcumulation (MAC) operations, but the improvements are limited given the data dependency is not resolved. Conversely, multi-layer perceptrons (MLPs) have no graph dependency and infer much faster than GNNs, even though they are less accurate than GNNs for node classification in general. Motivated by these complementary strengths and weaknesses, we bring GNNs and MLPs together via knowledge distillation (KD). Our work shows that the performance of MLPs can be improved by large margins with GNN KD. We call the distilled MLPs Graph-less Neural Networks (GLNNs) as they have no inference graph dependency. We show that GLNNs with competitive accuracy infer faster than GNNs by 146X-273X and faster than other acceleration methods by 14X-27X. Under a production setting involving both transductive and inductive predictions across 7 datasets, GLNN accuracies improve over stand-alone MLPs by 12.36\% on average and match GNNs on 6\/7 datasets. Comprehensive analysis shows when and why GLNNs can achieve competitive accuracies to GNNs and suggests GLNN as a handy choice for latency-constrained applications. }
 }
 
 @inproceedings{
@@ -152,8 +127,6 @@ title={GraphSAINT: Graph Sampling Based Inductive Learning Method},
 author={Hanqing Zeng and Hongkuan Zhou and Ajitesh Srivastava and Rajgopal Kannan and Viktor Prasanna},
 booktitle={International Conference on Learning Representations},
 year={2020},
-url={https://openreview.net/forum?id=BJe8pkHFwS},
-abstract = {Graph Convolutional Networks (GCNs) are powerful models for learning representations of attributed graphs. To scale GCNs to large graphs, state-of-the-art methods use various layer sampling techniques to alleviate the "neighbor explosion" problem during minibatch training. We propose GraphSAINT, a graph sampling based inductive learning method that improves training efficiency and accuracy in a fundamentally different way. By changing perspective, GraphSAINT constructs minibatches by sampling the training graph, rather than the nodes or edges across GCN layers. Each iteration, a complete GCN is built from the properly sampled subgraph. Thus, we ensure fixed number of well-connected nodes in all layers. We further propose normalization technique to eliminate bias, and sampling algorithms for variance reduction. Importantly, we can decouple the sampling from the forward and backward propagation, and extend GraphSAINT with many architecture variants (e.g., graph attention, jumping connection).  GraphSAINT demonstrates superior performance in both accuracy and training time on five large graphs, and achieves new state-of-the-art F1 scores for PPI (0.995) and Reddit (0.970). }
 }
 
 @inproceedings{10.1145/3394486.3403192,
@@ -163,9 +136,7 @@ year = {2020},
 isbn = {9781450379984},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3394486.3403192},
 doi = {10.1145/3394486.3403192},
-abstract = {Sampling methods (e.g., node-wise, layer-wise, or subgraph) has become an indispensable strategy to speed up training large-scale Graph Neural Networks (GNNs). However, existing sampling methods are mostly based on the graph structural information and ignore the dynamicity of optimization, which leads to high variance in estimating the stochastic gradients. The high variance issue can be very pronounced in extremely large graphs, where it results in slow convergence and poor generalization. In this paper, we theoretically analyze the variance of sampling methods and show that, due to the composite structure of empirical risk, the variance of any sampling method can be decomposed intoembedding approximation variance in the forward stage andstochastic gradient variance in the backward stage that necessities mitigating both types of variance to obtain faster convergence rate. We propose a decoupled variance reduction strategy that employs (approximate) gradient information to adaptively sample nodes with minimal variance, and explicitly reduces the variance introduced by embedding approximation. We show theoretically and empirically that the proposed method, even with smaller mini-batch sizes, enjoys a faster convergence rate and entails a better generalization compared to the existing methods.},
 booktitle = {Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery \& Data Mining},
 pages = {1393–1403},
 numpages = {11},
@@ -181,23 +152,7 @@ author={Josephine Thomas and Alice Moallemy-Oureh and Silvia Beddar-Wiesing and 
 journal={Transactions on Machine Learning Research},
 issn={2835-8856},
 year={2023},
-url={https://openreview.net/forum?id=h4BYtZ79uy},
 note={},
-abstract = {Graphs are ubiquitous in nature and can therefore serve as models for many practical but also
-theoretical problems. For this purpose, they can be defined as many different types which
-suitably reflect the individual contexts of the represented problem. To address cutting-edge
-problems based on graph data, the research field of Graph Neural Networks (GNNs) has
-emerged. Despite the field’s youth and the speed at which new models are developed, many
-recent surveys have been published to keep track of them. Nevertheless, it has not yet
-been gathered which GNN can process what kind of graph types. In this survey, we give a
-detailed overview of already existing GNNs and, unlike previous surveys, categorize them
-according to their ability to handle different graph types and properties. We consider GNNs
-operating on static and dynamic graphs of different structural constitutions, with or without
-node or edge attributes. Moreover, we distinguish between GNN models for discrete-time or
-continuous-time dynamic graphs and group the models according to their architecture. We
-find that there are still graph types that are not or only rarely covered by existing GNN
-models. We point out where models are missing and give potential reasons for their absence.
-Submission Length: Long submission (more than 12 pages of main content)}
 }
 
 
@@ -206,8 +161,6 @@ Submission Length: Long submission (more than 12 pages of main content)}
   author    = {Tailor, Shyam A. and Opolka, Felix and Lio, Pietro and Lane, Nicholas Donald},
   booktitle = {International Conference on Learning Representations},
   year      = {2022},
-  url       = {https://mlanthology.org/iclr/2022/tailor2022iclr-we/},
-  abstract = {Common wisdom in the graph neural network (GNN) community dictates that anisotropic models---in which messages sent between nodes are a function of both the source and target node---are required to achieve state-of-the-art performance. Benchmarks to date have demonstrated that these models perform better than comparable isotropic models---where messages are a function of the source node only. In this work we provide empirical evidence challenging this narrative: we propose an isotropic GNN, which we call Efficient Graph Convolution (EGC), that consistently outperforms comparable anisotropic models, including the popular GAT or PNA architectures by using spatially-varying adaptive filters. In addition to raising important questions for the GNN community, our work has significant real-world implications for efficiency. EGC achieves higher model accuracy, with lower memory consumption and latency, along with characteristics suited to accelerator implementation, while being a drop-in replacement for existing architectures. As an isotropic model, it requires memory proportional to the number of vertices in the graph in contrast, anisotropic models require memory proportional to the number of edges. We demonstrate that EGC outperforms existing approaches across 6 large and diverse benchmark datasets, and conclude by discussing questions that our work raise for the community going forward. Code and pretrained models for our experiments are provided at https://github.com/shyam196/egc.}
 }
 
 @inproceedings{10.1145/3534540.3534691,
@@ -217,9 +170,7 @@ year = {2022},
 isbn = {9781450393843},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3534540.3534691},
 doi = {10.1145/3534540.3534691},
-abstract = {In this paper, we present DynaGraph, a system that supports dynamic Graph Neural Networks (GNNs) efficiently. Based on the observation that existing proposals for dynamic GNN architectures combine techniques for structural and temporal information encoding independently, DynaGraph proposes novel techniques that enable cross optimizations across these tasks. It uses cached message passing and timestep fusion to significantly reduce the overhead associated with dynamic GNN processing. It further proposes a simple distributed data-parallel dynamic graph processing strategy that enables scalable dynamic GNN computation. Our evaluation of DynaGraph on a variety of dynamic GNN architectures and use cases shows a speedup of up to 2.7X compared to existing state-of-the-art frameworks.},
 booktitle = {Proceedings of the 5th ACM SIGMOD Joint International Workshop on Graph Data Management Experiences \& Systems (GRADES) and Network Data Analytics (NDA)},
 articleno = {6},
 numpages = {10},
@@ -237,9 +188,7 @@ address = {New York, NY, USA},
 volume = {58},
 number = {11},
 issn = {0360-0300},
-url = {https://doi.org/10.1145/3805796},
 doi = {10.1145/3805796},
-abstract = {Graph neural networks (GNNs) are emerging for machine learning research on graph-structured data. GNNs achieve state-of-the-art performance on many tasks, but they face scalability challenges when it comes to real-world applications that have numerous data and strict latency requirements. Many studies have been conducted on how to accelerate GNNs in an effort to address these challenges. These acceleration techniques touch on various aspects of the GNN pipeline, from smart training and inference algorithms to efficient systems and customized hardware. As the amount of research on GNN acceleration has grown rapidly, there lacks a systematic treatment to provide a unified view and address the complexity of relevant works. In this survey, we provide a taxonomy of GNN acceleration, review the existing approaches, and suggest future research directions. Our taxonomic treatment of GNN acceleration connects the existing works and sets the stage for further development in this area.},
 journal = {ACM Comput. Surv.},
 month = apr,
 articleno = {285},
@@ -255,7 +204,6 @@ keywords = {Graph neural networks, model acceleration, hardware acceleration/acc
   volume={},
   number={},
   pages={1-6},
-  abstract={Graph neural networks (GNNs) have been shown to extend the power of machine learning to problems with graph-structured inputs. Recent research has shown that these algorithms can exceed state-of-the-art performance on applications ranging from molecular inference to community detection. We observe that existing execution platforms (including existing machine learning accelerators) are a poor fit for GNNs due to their unique memory access and data movement requirements. We propose, to the best of our knowledge, the first accelerator architecture targeting GNNs. The architecture includes dedicated hardware units to efficiently execute the irregular data movement required for graph computation in GNNs, while also providing high compute throughput required by GNN models. We show that our architecture outperforms existing execution platforms in terms of inference latency on several key GNN benchmarks (e.g., 7.5x higher performance than GPUs and 18x higher performance than CPUs at iso-bandwidth).},
   keywords={Machine learning algorithms;Memory management;Machine learning;Benchmark testing;Throughput;Graph neural networks;Inference algorithms},
   doi={10.1109/DAC18072.2020.9218751},
   ISSN={0738-100X},
@@ -270,7 +218,6 @@ keywords = {Graph neural networks, model acceleration, hardware acceleration/acc
   volume={70},
   number={9},
   pages={1511-1525},
-  abstract={Graph neural networks (GNNs) emerge as a powerful approach to process non-euclidean data structures and have been proved powerful in various application domains such as social networks and e-commerce. While such graph data maintained in real-world systems can be extremely large and sparse, thus employing GNNs to deal with them requires substantial computational and memory overhead, which induces considerable energy and resource cost on CPUs and GPUs. In this article, we present a specialized accelerator architecture, EnGN, to enable high-throughput and energy-efficient processing of large-scale GNNs. The proposed EnGN is designed to accelerate the three key stages of GNN propagation, which is abstracted as common computing patterns shared by typical GNNs. To support the key stages simultaneously, we propose the ring-edge-reduce(RER) dataflow that tames the poor locality of sparsely-and-randomly connected vertices, and the RER PE-array to practice RER dataflow. In addition, we utilize a graph tiling strategy to fit large graphs into EnGN and make good use of the hierarchical on-chip buffers through adaptive computation reordering and tile scheduling. Overall, EnGN achieves performance speedup by 1802.9X, 19.75X, and 2.97X and energy efficiency by 1326.35X, 304.43X, and 6.2X on average compared to CPU, GPU, and a state-of-the-art GCN accelerator HyGCN, respectively.},
   keywords={Neural networks;Hardware;System-on-chip;Task analysis;Feature extraction;Memory management;Graph neural network;accelerator architecture;hardware acceleration},
   doi={10.1109/TC.2020.3014632},
   ISSN={1557-9956},
@@ -284,7 +231,6 @@ year = {2020},
 isbn = {9781713829546},
 publisher = {Curran Associates Inc.},
 address = {Red Hook, NY, USA},
-abstract = {We present the OPEN GRAPH BENCHMARK (OGB), a diverse set of challenging and realistic benchmark datasets to facilitate scalable, robust, and reproducible graph machine learning (ML) research. OGB datasets are large-scale, encompass multiple important graph ML tasks, and cover a diverse range of domains, ranging from social and information networks to biological networks, molecular graphs, source code ASTs, and knowledge graphs. For each dataset, we provide a unified evaluation protocol using meaningful application-specific data splits and evaluation metrics. In addition to building the datasets, we also perform extensive benchmark experiments for each dataset. Our experiments suggest that OGB datasets present significant challenges of scalability to large-scale graphs and out-of-distribution generalization under realistic data splits, indicating fruitful opportunities for future research. Finally, OGB provides an automated end-to-end graph ML pipeline that simplifies and standardizes the process of graph data loading, experimental setup, and model evaluation. OGB will be regularly updated and welcomes inputs from the community.},
 booktitle = {Proceedings of the 34th International Conference on Neural Information Processing Systems},
 articleno = {1855},
 numpages = {16},
@@ -300,7 +246,6 @@ series = {NIPS '20}
   volume={},
   number={},
   pages={452-464},
-  abstract={Training Graph Neural Networks on large graphs is challenging due to the need to store graph data and move them along the memory hierarchy. In this work, we tackle this by effectively compressing graph embedding matrix such that the model training can be fully enabled with on-chip compute and memory resources. Specifically, we leverage the graph homophily property and consider using Tensor-train to represent the graph embedding. This allows nodes with similar neighborhoods to partially share the feature representation.While applying Tensor-train reduces the size of the graph embedding, it imposes several challenges to hardware design. On one hand, utilizing low-rank representation requires the features to be decompressed before being sent to GNN models, which introduces extra computation overhead. On the other hand, the decompressed features might still exceed on-chip memory capacity even with the minibatch setting, causing inefficient off-chip memory access. Thus, we propose the TT-GNN hardware accelerator with a specialized dataflow tailored for on-chip Tensor-train GNN learning. Based on the on-chip memory capacity and training configuration, TT-GNN adaptively breaks down a minibatch into smaller microbatches that can be fitted on-chip. The microbatch composition and scheduling order are designed to maximize data reuse and reduce redundant computations both across and within microbatches. To mitigate TT computation overhead, we further propose a unified algorithm to jointly handle TT decompression during forward propagation and TT gradient derivation during backward propagation. Evaluated on a series of benchmarks, the proposed software-hardware solution is able to outperform existing CPU-GPU training systems on both training performance (1.55~4210×) and energy efficiency (2.83~2254×). We believe TT-GNN introduces a new perspective to address large-scale GNN training and enables possibilities to train GNN models even under a significantly constrained resource budget.CCS CONCEPTS• Computer systems organization → Neural networks; • Hardware → Application specific integrated circuits; • Computing methodologies → Symbolic and algebraic algorithms.},
   keywords={Training;Processor scheduling;Computational modeling;Graph neural networks;Scheduling;System-on-chip;Optimization;Graph Neural Networks;Tensor-train Decomporition;Hardware Accelerator},
   doi={},
   ISSN={},
@@ -315,7 +260,6 @@ series = {NIPS '20}
   volume={},
   number={},
   pages={15-29},
-  abstract={Inspired by the great success of neural networks, graph convolutional neural networks (GCNs) are proposed to analyze graph data. GCNs mainly include two phases with distinct execution patterns. The Aggregation phase, behaves as graph processing, showing a dynamic and irregular execution pattern. The Combination phase, acts more like the neural networks, presenting a static and regular execution pattern. The hybrid execution patterns of GCNs require a design that alleviates irregularity and exploits regularity. Moreover, to achieve higher performance and energy efficiency, the design needs to leverage the high intra-vertex parallelism in Aggregation phase, the highly reusable inter-vertex data in Combination phase, and the opportunity to fuse phase-by-phase execution introduced by the new features of GCNs. However, existing architectures fail to address these demands. In this work, we first characterize the hybrid execution patterns of GCNs on Intel Xeon CPU. Guided by the characterization, we design a GCN accelerator, HyGCN, using a hybrid architecture to efficiently perform GCNs. Specifically, first, we build a new programming model to exploit the fine-grained parallelism for our hardware design. Second, we propose a hardware design with two efficient processing engines to alleviate the irregularity of Aggregation phase and leverage the regularity of Combination phase. Besides, these engines can exploit various parallelism and reuse highly reusable data efficiently. Third, we optimize the overall system via inter-engine pipeline for inter-phase fusion and priority-based off-chip memory access coordination to improve off-chip bandwidth utilization. Compared to the state-of-the-art software framework running on Intel Xeon CPU and NVIDIA V100 GPU, our work achieves on average 1509× speedup with 2500× energy reduction and average 6.5× speedup with 10× energy reduction, respectively.},
   keywords={Computer architecture;Neural networks;Engines;Parallel processing;Aggregates;Fuses;Hardware;Hardware Accelerator, Graph Convolution Neural Network, Graph Processing, Hybrid Execution Pattern},
   doi={10.1109/HPCA47549.2020.00012},
   ISSN={2378-203X},
@@ -330,7 +274,7 @@ series = {NIPS '20}
   volume={72},
   number={4},
   pages={914-925},
-  abstract={We present GRIP, a graph neural network accelerator architecture designed for low-latency inference. Accelerating GNNs is challenging because they combine two distinct types of computation: arithmetic-intensive vertex-centric operations and memory-intensive edge-centric operations. GRIP splits GNN inference into a three edge- and vertex-centric execution phases that can be implemented in hardware. GRIP specializes each unit for the unique computational structure found in each phase. For vertex-centric phases, GRIP uses a high performance matrix multiply engine coupled with a dedicated memory subsystem for weights to improve reuse. For edge-centric phases, GRIP use multiple parallel prefetch and reduction engines to alleviate the irregularity in memory accesses. Finally, GRIP supports several GNN optimizations, including an optimization called vertex-tiling that increases the reuse of weight data. We evaluate GRIP by performing synthesis and place and route for a $28 \;\mathrm{n}\mathrm{m}$   28  n m    implementation capable of executing inference for several widely-used GNN models (GCN, GraphSAGE, G-GCN, and GIN). Across several benchmark graphs, it reduces 99th percentile latency by a geometric mean of $17\times$   17 ×    and $23\times$   23 ×    compared to a CPU and GPU baseline, respectively, while drawing only $5 \;\mathrm{W}$   5  W   .},
+\mathrm{m}$   28  n m    implementation capable of executing inference for several widely-used GNN models (GCN, GraphSAGE, G-GCN, and GIN). Across several benchmark graphs, it reduces 99th percentile latency by a geometric mean of $17\times$   17 ×    and $23\times$   23 ×    compared to a CPU and GPU baseline, respectively, while drawing only $5 \;\mathrm{W}$   5  W   .},
   keywords={Aggregates;Memory management;Bandwidth;Sparse matrices;Programming;Graph neural networks;Computational modeling;Accelerator architectures;neural networks;hardware;system-on-chip;graph neural networks},
   doi={10.1109/TC.2022.3197083},
   ISSN={1557-9956},
@@ -347,9 +291,7 @@ address = {New York, NY, USA},
 volume = {54},
 number = {9},
 issn = {0360-0300},
-url = {https://doi.org/10.1145/3477141},
 doi = {10.1145/3477141},
-abstract = {Graph Neural Networks (GNNs) have exploded onto the machine learning scene in recent years owing to their capability to model and learn from graph-structured data. Such an ability has strong implications in a wide variety of fields whose data are inherently relational, for which conventional neural networks do not perform well. Indeed, as recent reviews can attest, research in the area of GNNs has grown rapidly and has lead to the development of a variety of GNN algorithm variants as well as to the exploration of ground-breaking applications in chemistry, neurology, electronics, or communication networks, among others. At the current stage research, however, the efficient processing of GNNs is still an open challenge for several reasons. Besides of their novelty, GNNs are hard to compute due to their dependence on the input graph, their combination of dense and very sparse operations, or the need to scale to huge graphs in some applications. In this context, this article aims to make two main contributions. On the one hand, a review of the field of GNNs is presented from the perspective of computing. This includes a brief tutorial on the GNN fundamentals, an overview of the evolution of the field in the last decade, and a summary of operations carried out in the multiple phases of different GNN algorithm variants. On the other hand, an in-depth analysis of current software and hardware acceleration schemes is provided, from which a hardware-software, graph-aware, and communication-centric vision for GNN accelerators is distilled.},
 journal = {ACM Comput. Surv.},
 month = oct,
 articleno = {191},
@@ -364,9 +306,7 @@ year = {2017},
 isbn = {9781450348928},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3079856.3080246},
 doi = {10.1145/3079856.3080246},
-abstract = {Many architects believe that major improvements in cost-energy-performance must now come from domain-specific hardware. This paper evaluates a custom ASIC---called a Tensor Processing Unit (TPU) --- deployed in datacenters since 2015 that accelerates the inference phase of neural networks (NN). The heart of the TPU is a 65,536 8-bit MAC matrix multiply unit that offers a peak throughput of 92 TeraOps/second (TOPS) and a large (28 MiB) software-managed on-chip memory. The TPU's deterministic execution model is a better match to the 99th-percentile response-time requirement of our NN applications than are the time-varying optimizations of CPUs and GPUs that help average throughput more than guaranteed latency. The lack of such features helps explain why, despite having myriad MACs and a big memory, the TPU is relatively small and low power. We compare the TPU to a server-class Intel Haswell CPU and an Nvidia K80 GPU, which are contemporaries deployed in the same datacenters. Our workload, written in the high-level TensorFlow framework, uses production NN applications (MLPs, CNNs, and LSTMs) that represent 95\% of our datacenters' NN inference demand. Despite low utilization for some applications, the TPU is on average about 15X -- 30X faster than its contemporary GPU or CPU, with TOPS/Watt about 30X -- 80X higher. Moreover, using the CPU's GDDR5 memory in the TPU would triple achieved TOPS and raise TOPS/Watt to nearly 70X the GPU and 200X the CPU.},
 booktitle = {Proceedings of the 44th Annual International Symposium on Computer Architecture},
 pages = {1–12},
 numpages = {12},
@@ -385,9 +325,7 @@ address = {New York, NY, USA},
 volume = {45},
 number = {2},
 issn = {0163-5964},
-url = {https://doi.org/10.1145/3140659.3080246},
 doi = {10.1145/3140659.3080246},
-abstract = {Many architects believe that major improvements in cost-energy-performance must now come from domain-specific hardware. This paper evaluates a custom ASIC---called a Tensor Processing Unit (TPU) --- deployed in datacenters since 2015 that accelerates the inference phase of neural networks (NN). The heart of the TPU is a 65,536 8-bit MAC matrix multiply unit that offers a peak throughput of 92 TeraOps/second (TOPS) and a large (28 MiB) software-managed on-chip memory. The TPU's deterministic execution model is a better match to the 99th-percentile response-time requirement of our NN applications than are the time-varying optimizations of CPUs and GPUs that help average throughput more than guaranteed latency. The lack of such features helps explain why, despite having myriad MACs and a big memory, the TPU is relatively small and low power. We compare the TPU to a server-class Intel Haswell CPU and an Nvidia K80 GPU, which are contemporaries deployed in the same datacenters. Our workload, written in the high-level TensorFlow framework, uses production NN applications (MLPs, CNNs, and LSTMs) that represent 95\% of our datacenters' NN inference demand. Despite low utilization for some applications, the TPU is on average about 15X -- 30X faster than its contemporary GPU or CPU, with TOPS/Watt about 30X -- 80X higher. Moreover, using the CPU's GDDR5 memory in the TPU would triple achieved TOPS and raise TOPS/Watt to nearly 70X the GPU and 200X the CPU.},
 journal = {SIGARCH Comput. Archit. News},
 month = jun,
 pages = {1–12},
@@ -403,7 +341,6 @@ keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep le
   volume={52},
   number={1},
   pages={127-138},
-  abstract={Eyeriss is an accelerator for state-of-the-art deep convolutional neural networks (CNNs). It optimizes for the energy efficiency of the entire system, including the accelerator chip and off-chip DRAM, for various CNN shapes by reconfiguring the architecture. CNNs are widely used in modern AI systems but also bring challenges on throughput and energy efficiency to the underlying hardware. This is because its computation requires a large amount of data, creating significant data movement from on-chip and off-chip that is more energy-consuming than computation. Minimizing data movement energy cost for any CNN shape, therefore, is the key to high throughput and energy efficiency. Eyeriss achieves these goals by using a proposed processing dataflow, called row stationary (RS), on a spatial architecture with 168 processing elements. RS dataflow reconfigures the computation mapping of a given shape, which optimizes energy efficiency by maximally reusing data locally to reduce expensive data movement, such as DRAM accesses. Compression and data gating are also applied to further improve energy efficiency. Eyeriss processes the convolutional layers at 35 frames/s and 0.0029 DRAM access/multiply and accumulation (MAC) for AlexNet at 278 mW (batch size N = 4), and 0.7 frames/s and 0.0035 DRAM access/MAC for VGG-16 at 236 mW (N = 3).},
   keywords={Shape;Random access memory;Computer architecture;Throughput;Clocks;Neural networks;Hardware;Convolutional neural networks (CNNs);dataflow processing;deep learning;energy-efficient accelerators;spatial architecture},
   doi={10.1109/JSSC.2016.2616357},
   ISSN={1558-173X},
@@ -418,7 +355,6 @@ keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep le
   volume={9},
   number={2},
   pages={292-308},
-  abstract={A recent trend in deep neural network (DNN) development is to extend the reach of deep learning applications to platforms that are more resource and energy-constrained, e.g., mobile devices. These endeavors aim to reduce the DNN model size and improve the hardware processing efficiency and have resulted in DNNs that are much more compact in their structures and/or have high data sparsity. These compact or sparse models are different from the traditional large ones in that there is much more variation in their layer shapes and sizes and often require specialized hardware to exploit sparsity for performance improvement. Therefore, many DNN accelerators designed for large DNNs do not perform well on these models. In this paper, we present Eyeriss v2, a DNN accelerator architecture designed for running compact and sparse DNNs. To deal with the widely varying layer shapes and sizes, it introduces a highly flexible on-chip network, called hierarchical mesh, that can adapt to the different amounts of data reuse and bandwidth requirements of different data types, which improves the utilization of the computation resources. Furthermore, Eyeriss v2 can process sparse data directly in the compressed domain for both weights and activations and therefore is able to improve both processing speed and energy efficiency with sparse models. Overall, with sparse MobileNet, Eyeriss v2 in a 65-nm CMOS process achieves a throughput of 1470.6 inferences/s and 2560.3 inferences/J at a batch size of 1, which is 12.6× faster and 2.5× more energyefficient than the original Eyeriss running MobileNet.},
   keywords={Hardware;Shape;Arrays;Parallel processing;Mobile handsets;Bandwidth;Deep neural network accelerators;deep learning;energy-efficient accelerators;dataflow processing;spatial architecture},
   doi={10.1109/JETCAS.2019.2910232},
   ISSN={2156-3365},
@@ -433,7 +369,6 @@ keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep le
   volume={},
   number={},
   pages={243-254},
-  abstract={State-of-the-art deep neural networks (DNNs) have hundreds of millions of connections and are both computationally and memory intensive, making them difficult to deploy on embedded systems with limited hardware resources and power budgets. While custom hardware helps the computation, fetching weights from DRAM is two orders of magnitude more expensive than ALU operations, and dominates the required power. Previously proposed 'Deep Compression' makes it possible to fit large DNNs (AlexNet and VGGNet) fully in on-chip SRAM. This compression is achieved by pruning the redundant connections and having multiple connections share the same weight. We propose an energy efficient inference engine (EIE) that performs inference on this compressed network model and accelerates the resulting sparse matrix-vector multiplication with weight sharing. Going from DRAM to SRAM gives EIE 120x energy saving, Exploiting sparsity saves 10x, Weight sharing gives 8x, Skipping zero activations from ReLU saves another 3x. Evaluated on nine DNN benchmarks, EIE is 189x and 13x faster when compared to CPU and GPU implementations of the same DNN without compression. EIE has a processing power of 102 GOPS working directly on a compressed network, corresponding to 3 TOPS on an uncompressed network, and processes FC layers of AlexNet at 1.88x104 frames/sec with a power dissipation of only 600mW. It is 24,000x and 3,400x more energy efficient than a CPU and GPU respectively. Compared with DaDianNao, EIE has 2.9x, 19x and 3x better throughput, energy efficiency and area efficiency.},
   keywords={Random access memory;Neural networks;Acceleration;Hardware;System-on-chip;Computational modeling;Sparse matrices;Deep Learning;Model Compression;Hardware Acceleration;Algorithm-Hardware co-Design;ASIC},
   doi={10.1109/ISCA.2016.30},
   ISSN={1063-6897},
@@ -448,7 +383,6 @@ keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep le
   volume={},
   number={},
   pages={1-10},
-  abstract={This paper updates the survey of AI accelerators and processors from past three years. This paper collects and summarizes the current commercial accelerators that have been publicly announced with peak performance and power consumption numbers. The performance and power values are plotted on a scatter graph, and a number of dimensions and observations from the trends on this plot are again discussed and analyzed. Two new trends plots based on accelerator release dates are included in this year's paper, along with the additional trends of some neuromorphic, photonic, and memristor-based inference accelerators.},
   keywords={Program processors;Power demand;Neuromorphics;AI accelerators;Market research;Photonics;Machine learning;GPU;TPU;dataflow;accelerator;embedded inference;computational performance},
   doi={10.1109/HPEC55821.2022.9926331},
   ISSN={2643-1971},
@@ -465,9 +399,7 @@ address = {New York, NY, USA},
 volume = {52},
 number = {1},
 issn = {0146-4833},
-url = {https://doi.org/10.1145/3523230.3523235},
 doi = {10.1145/3523230.3523235},
-abstract = {Based on the collective input of Dagstuhl Seminar (21342), this paper presents a comprehensive discussion on AI methods and capabilities in the context of edge computing, referred as Edge AI. In a nutshell, we envision Edge AI to provide adaptation for data-driven applications, enhance network and radio access, and allow the creation, optimisation, and deployment of distributed AI/ML pipelines with given quality of experience, trust, security and privacy targets. The Edge AI community investigates novel ML methods for the edge computing environment, spanning multiple sub-fields of computer science, engineering and ICT. The goal is to share an envisioned roadmap that can bring together key actors and enablers to further advance the domain of Edge AI.},
 journal = {SIGCOMM Comput. Commun. Rev.},
 month = mar,
 pages = {28–33},
@@ -483,10 +415,8 @@ pages = {71-92},
 year = {2023},
 issn = {2667-3452},
 doi = {https://doi.org/10.1016/j.iotcps.2023.02.004},
-url = {https://www.sciencedirect.com/science/article/pii/S2667345223000196},
 author = {Raghubir Singh and Sukhpal Singh Gill},
 keywords = {Edge AI, Edge computing, Artificial intelligence, Fog computing, Machine learning, Cloud computing},
-abstract = {Artificial Intelligence (AI) at the edge is the utilization of AI in real-world devices. Edge AI refers to the practice of doing AI computations near the users at the network's edge, instead of centralised location like a cloud service provider's data centre. With the latest innovations in AI efficiency, the proliferation of Internet of Things (IoT) devices, and the rise of edge computing, the potential of edge AI has now been unlocked. This study provides a thorough analysis of AI approaches and capabilities as they pertain to edge computing, or Edge AI. Further, a detailed survey of edge computing and its paradigms including transition to Edge AI is presented to explore the background of each variant proposed for implementing Edge Computing. Furthermore, we discussed the Edge AI approach to deploying AI algorithms and models on edge devices, which are typically resource-constrained devices located at the edge of the network. We also presented the technology used in various modern IoT applications, including autonomous vehicles, smart homes, industrial automation, healthcare, and surveillance. Moreover, the discussion of leveraging machine learning algorithms optimized for resource-constrained environments is presented. Finally, important open challenges and potential research directions in the field of edge computing and edge AI have been identified and investigated. We hope that this article will serve as a common goal for a future blueprint that will unite important stakeholders and facilitates to accelerate development in the field of Edge AI.}
 }
 
 @article{2026arXiv260323640T,
@@ -515,7 +445,6 @@ archivePrefix = {arXiv},
   volume={},
   number={},
   pages={1-8},
-  abstract={Neural processing units (NPUs) have become essential in modern client and edge platforms, offering unparalleled efficiency by delivering high throughput at low power. This is critical to improve the TOPS/W of the NPU, leading to longer battery life. While NPUs were initially designed to efficiently execute computer vision (CV) workloads such as CNNs, the rising demand to run transformer-based large language models (LLMs) locally now calls for significant architectural and software adaptation. This paper presents LLM-NPU, a comprehensive software-hardware co-optimization framework that enables scalable, power-efficient LLM deployment on NPUs under tight compute and memory budgets. We present software solutions such as vertical and horizontal operator fusion, quantization-aware weight compression, hybrid key-value (KV) quantization, eviction strategies, and static-shape inference that target memory bottlenecks and compute inefficiencies in LLM execution. On the hardware side, we explore domain-specialized NPU enhancements, including processing-in-memory architectures, extended input channel accumulation, structured sparsity acceleration, GEMM engine optimizations, mixed precision, microscaling format support, and fusion-aware execution pipelines. These co-designed innovations can collectively improve the energy, throughput, and latency of NPUs for LLM workloads.},
   keywords={Technological innovation;Quantization (signal);Large language models;Pipelines;Throughput;Transformers;Software;Hardware;Intelligent systems;Optimization;Energy-efficient inference;on-device AI;weight quantization;KV optimization;operator fusion;processing-in-memory;structured sparsity},
   doi={10.1109/COINS65080.2025.11125797},
   ISSN={2996-5330},
@@ -529,9 +458,7 @@ year = {2025},
 isbn = {9798400706981},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3669940.3707239},
 doi = {10.1145/3669940.3707239},
-abstract = {On-device inference for Large Language Models (LLMs), driven by increasing privacy concerns and advancements of mobile-sized models, has gained significant interest. However, even mobile-sized LLMs (e.g., Gemma-2B) encounter unacceptably high inference latency, often bottlenecked by the prefill stage in tasks like screen UI understanding.We present llm.npu, the first LLM inference system utilizing on-device Neural Processing Unit (NPU) offloading to reduce prefill latency. llm.npu enhances NPU offloading efficiency by re-constructing the prompt and model in three levels: (1) At prompt level, it divides variable-length prompts into multiple fixed-sized chunks while maintaining data dependencies; (2) At tensor level, it identifies and extracts significant outliers to run on the CPU/GPU in parallel with minimal overhead; (3) At block level, it schedules Transformer blocks in an out-of-order manner to the CPU/GPU and NPU based on their hardware affinity and sensitivity to accuracy. Compared to competitive baselines, llm.npu achieves 22.4x faster prefill speed and 30.7x energy savings on average, and up to 32.8x speedup in an end-to-end real-world application. For the first time, llm.npu achieves more than 1,000 tokens/sec prefilling for a billion-sized model.},
 booktitle = {Proceedings of the 30th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 1},
 pages = {445–462},
 numpages = {18},
@@ -564,9 +491,8 @@ year = {2021},
 isbn = {9781450383912},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3453483.3454083},
 doi = {10.1145/3453483.3454083},
-abstract = {Deep Neural Networks (DNNs) have emerged as the core enabler of many major applications on mobile devices. To achieve high accuracy, DNN models have become increasingly deep with hundreds or even thousands of operator layers, leading to high memory and computational requirements for inference. Operator fusion (or kernel/layer fusion) is key optimization in many state-of-the-art DNN execution frameworks, such as TensorFlow, TVM, and MNN, that aim to improve the efficiency of the DNN inference. However, these frameworks usually adopt fusion approaches based on certain patterns that are too restrictive to cover the diversity of operators and layer connections, especially those seen in many extremely deep models. Polyhedral-based loop fusion techniques, on the other hand, work on a low-level view of the computation without operator-level information, and can also miss potential fusion opportunities. To address this challenge, this paper proposes a novel and extensive loop fusion framework called DNNFusion. The basic idea of this work is to work at an operator view of DNNs, but expand fusion opportunities by developing a classification of both individual operators and their combinations. In addition, DNNFusion includes 1) a novel mathematical-property-based graph rewriting framework to reduce evaluation costs and facilitate subsequent operator fusion, 2) an integrated fusion plan generation that leverages the high-level analysis and accurate light-weight profiling, and 3) additional optimizations during fusion code generation. DNNFusion is extensively evaluated on 15 DNN models with varied types of tasks, model sizes, and layer counts. The evaluation results demonstrate that DNNFusion finds up to 8.8 \texttimes{} higher fusion opportunities, outperforms four state-of-the-art DNN execution frameworks with 9.3\texttimes{} speedup. The memory requirement reduction and speedups can enable the execution of many of the target models on mobile devices and even make them part of a real-time application.},
+ higher fusion opportunities, outperforms four state-of-the-art DNN execution frameworks with 9.3\texttimes{} speedup. The memory requirement reduction and speedups can enable the execution of many of the target models on mobile devices and even make them part of a real-time application.},
 booktitle = {Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation},
 pages = {883–898},
 numpages = {16},
@@ -583,7 +509,6 @@ series = {PLDI 2021}
   volume={},
   number={},
   pages={246-250},
-  abstract={Modern machine learning inference workloads run on a diverse array of hardware accelerators—from cloud GPUs to edge NPUs and FPGAs. Operator fusion, which merges multiple graph operations into a single kernel, has proven highly effective on homogeneous platforms but struggles to generalize across devices with different execution and memory models. We propose Unified Operator Fusion (UOF), a framework that introduces a hardware-agnostic intermediate representation alongside a device-aware cost model. UOF performs graph rewrites to identify and evaluate fusion opportunities, then emits optimized fused kernels tailored to each target. We integrate UOF into an open-source inference engine, equipping it with plugin backends for CUDA, multicore C++ and vendor SDKs. Offline profiling collects device compute peaks, memory bandwidths and kernel-launch latencies; these feed into an automated cost evaluator that balances compute, data movement and launch overhead. On ResNet-50 and BERT-small benchmarks across Intel Xeon CPUs, NVIDIA V100 GPUs and a mobile NPU, UOF delivers up to $3.8 \times$ end-to-end speedups over unfused baselines and matches hand-tuned vendor libraries within 5-10\%. An ablation study removing the cost model results in over-fusion and up to \$15 \%$ slowdowns, underscoring the need for hardware-aware decisions. UOF thus offers a unified, extensible fusion strategy that minimizes manual backend engineering while maximizing performance across heterogeneous inference targets.},
   keywords={Performance evaluation;Costs;Three-dimensional displays;Runtime;Computational modeling;Object detection;Hardware;Libraries;Kernel;Optimization;Operator Fusion;Heterogeneous Hardware;Inference Optimization;Graph Rewriting;Kernel Generation},
   doi={10.1109/ICBASE66587.2025.11181270},
   ISSN={},
@@ -606,8 +531,6 @@ series = {PLDI 2021}
   author={Kipf, Thomas N. and Welling, Max},
   booktitle={International Conference on Learning Representations},
   year={2017},
-  url={https://openreview.net/forum?id=SJU4ayYgl},
-  abstract={We present a scalable approach for semi-supervised learning on graph-structured data that is based on an efficient variant of convolutional neural networks which operate directly on graphs. We motivate the choice of our convolutional architecture via a localized first-order approximation of spectral graph convolutions. Our model scales linearly in the number of graph edges and learns hidden layer representations that encode both local graph structure and features of the nodes.}
 }
 
 @inproceedings{gasteiger2019appnp,
@@ -615,8 +538,6 @@ series = {PLDI 2021}
   author={Gasteiger, Johannes and Bojchevski, Aleksandar and G{\"u}nnemann, Stephan},
   booktitle={International Conference on Learning Representations},
   year={2019},
-  url={https://openreview.net/forum?id=H1gL-2A9Ym},
-  abstract={Neural message passing algorithms for semi-supervised classification on graphs have recently achieved great success. However, these methods only consider nodes that are present in the training graph and whose labels are known. We are the first to show that these methods can be effectively combined with a mechanism to propagate labels to unknown nodes. We also show that adding this propagation mechanism leads to significant improvements on several benchmarks.}
 }
 
 @inproceedings{shi2020masked,
@@ -626,7 +547,6 @@ series = {PLDI 2021}
   year={2021},
   pages={1548--1554},
   doi={10.24963/ijcai.2021/214},
-  abstract={Graph neural networks (GNNs) have been widely applied to semi-supervised node classification. However, existing GNNs have two major limitations: (i) they usually rely on neighbor sampling and thus may suffer from the neighbor explosion problem; (ii) they fail to capture the rich information of unlabeled nodes. To address these issues, we propose a unified message passing model (UniMP) that can incorporate both feature and label propagation. UniMP employs a masked label prediction strategy to leverage unlabeled nodes in training, and uses a Transformer-based architecture to propagate information between nodes.}
 }
 
 
@@ -637,7 +557,6 @@ series = {PLDI 2021}
   year={2018},
   pages={4510--4520},
   doi={10.1109/CVPR.2018.00474},
-  abstract={In this paper we describe a new mobile architecture, MobileNetV2, that improves the state of the art performance of mobile models on multiple tasks and benchmarks. Our architecture is based on an inverted residual structure where the input and output of the residual block are thin bottleneck layers opposite to traditional residual models which use expanded representations in the input.}
 }
 
 @inproceedings{tan2019efficientnet,
@@ -646,7 +565,6 @@ series = {PLDI 2021}
   booktitle={Proceedings of the 36th International Conference on Machine Learning},
   year={2019},
   pages={6105--6114},
-  abstract={Convolutional Neural Networks (ConvNets) are commonly developed at a fixed resource budget, and then scaled up for better accuracy if more resources are available. In this paper, we systematically study model scaling and identify that carefully balancing network depth, width, and resolution can lead to better performance. Based on this observation, we propose a new scaling method that uniformly scales all dimensions using a simple yet highly effective compound coefficient.}
 }
 
 @inproceedings{dosovitskiy2020vit,
@@ -654,8 +572,6 @@ series = {PLDI 2021}
   author={Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and Gelly, Sylvain and Uszkoreit, Jakob and Houlsby, Neil},
   booktitle={International Conference on Learning Representations},
   year={2021},
-  url={https://openreview.net/forum?id=YicbFdNTTy},
-  abstract={While the Transformer architecture has become the de-facto standard for natural language processing tasks, its applications to computer vision remain limited. In vision, attention is either applied in conjunction with convolutional networks, or used to replace certain components while keeping their overall structure. We show that this reliance on CNNs is not necessary and a pure transformer applied directly to sequences of image patches can perform very well on image classification tasks.}
 }
 
 @article{turc2019berttiny,
@@ -663,7 +579,6 @@ series = {PLDI 2021}
   author={Turc, Iulia and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
   journal={arXiv preprint arXiv:1908.08962},
   year={2019},
-  abstract={Recent developments in natural language representations have been accompanied by large and expensive models that leverage vast amounts of general-domain text. While these models excel on a variety of tasks, their application to memory- and latency-constrained scenarios is limited. We show that pre-training a small, BERT-based model on large amounts of data can match the performance of a larger model.}
 }
 
 @article{hu2020open,
@@ -673,8 +588,6 @@ series = {PLDI 2021}
   volume={33},
   pages={22118--22133},
   year={2020},
-  url={https://ogb.stanford.edu},
-  abstract={We present the Open Graph Benchmark (OGB), a diverse set of challenging and realistic benchmark datasets to facilitate scalable, robust, and reproducible graph machine learning research.}
 }
 
 @inproceedings{intel_meteorlake_hotchips_2023,
@@ -753,7 +666,6 @@ archivePrefix = {arXiv},
  primaryClass = {cs.LG},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2025arXiv250100636M},
       adsnote = {Provided by the SAO/NASA Astrophysics Data System},
-      abstract = {Layer fusion techniques are critical to improving the inference efficiency of deep neural networks (DNN) for deployment. Fusion aims to lower inference costs by reducing data transactions between an accelerator's on-chip buffer and DRAM. This is accomplished by grouped execution of multiple operations like convolution and activations together into single execution units - fusion groups. However, on-chip buffer capacity limits fusion group size and optimizing fusion on whole DNNs requires partitioning into multiple fusion groups. Finding the optimal groups is a complex problem where the presence of invalid solutions hampers traditional search algorithms and demands robust approaches. In this paper we incorporate Explainable AI, specifically Graph Explanation Techniques (GET), into layer fusion. Given an invalid fusion group, we identify the operations most responsible for group invalidity, then use this knowledge to recursively split the original fusion group via a greedy tree-based algorithm to minimize DRAM access. We pair our scheme with common algorithms and optimize DNNs on two types of layer fusion: Line-Buffer Depth First (LBDF) and Branch Requirement Reduction (BRR). Experiments demonstrate the efficacy of our scheme on several popular and classical convolutional neural networks like ResNets and MobileNets. Our scheme achieves over 20% DRAM Access reduction on EfficientNet-B3.}
 }
 
 @inproceedings{10.1145/3779212.3790164,
@@ -763,9 +675,8 @@ year = {2026},
 isbn = {9798400723599},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3779212.3790164},
 doi = {10.1145/3779212.3790164},
-abstract = {The increasing size and complexity of modern deep neural networks (DNNs) pose significant challenges for on-device inference on mobile GPUs, with limited memory and computational resources. Existing DNN acceleration frameworks primarily deploy a weight preloading strategy, where all model parameters are loaded into memory before execution on mobile GPUs. We posit that this approach is not adequate for modern DNN workloads that comprise very large model(s) and possibly execution of several distinct models in succession. In this work, we introduce FlashMem, a memory streaming framework designed to efficiently execute large-scale modern DNNs and multi-DNN workloads while minimizing memory consumption and reducing inference latency. Instead of fully preloading weights, FlashMem statically determines model loading schedules and dynamically streams them on demand, leveraging 2.5D texture memory to minimize data transformations and improve execution efficiency. Experimental results on 11 models demonstrate that FlashMem achieves 2.0\texttimes{} to 8.4\texttimes{} memory reduction and 1.7\texttimes{} to 75.0\texttimes{} speedup compared to existing frameworks, enabling efficient execution of large-scale models and multi-DNN support on resource-constrained mobile GPUs.},
+ to 8.4\texttimes{} memory reduction and 1.7\texttimes{} to 75.0\texttimes{} speedup compared to existing frameworks, enabling efficient execution of large-scale models and multi-DNN support on resource-constrained mobile GPUs.},
 booktitle = {Proceedings of the 31st ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 2},
 pages = {783–797},
 numpages = {15},
@@ -790,9 +701,8 @@ year = {2024},
 isbn = {9798400703867},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3620666.3651324},
 doi = {10.1145/3620666.3651324},
-abstract = {Accelerating end-to-end inference of transformer-based large language models (LLMs) is a critical component of AI services in datacenters. However, the diverse compute characteristics of LLMs' end-to-end inference present challenges as previously proposed accelerators only address certain operations or stages (e.g., self-attention, generation stage, etc.). To address the unique challenges of accelerating end-to-end inference, we propose IANUS - Integrated Accelerator based on NPU-PIM Unified Memory System. IANUS is a domain-specific system architecture that combines a Neural Processing Unit (NPU) with a Processing-in-Memory (PIM) to leverage both the NPU's high computation throughput and the PIM's high effective memory bandwidth. In particular, IANUS employs a unified main memory system where the PIM memory is used both for PIM operations and for NPU's main memory. The unified main memory system ensures that memory capacity is efficiently utilized and the movement of shared data between NPU and PIM is minimized. However, it introduces new challenges since normal memory accesses and PIM computations cannot be performed simultaneously. Thus, we propose novel PIM Access Scheduling that manages not only the scheduling of normal memory accesses and PIM computations but also workload mapping across the PIM and the NPU. Our detailed simulation evaluations show that IANUS improves the performance of GPT-2 by 6.2\texttimes{} and 3.2\texttimes{}, on average, compared to the NVIDIA A100 GPU and the state-of-the-art accelerator. As a proof-of-concept, we develop a prototype of IANUS with a commercial PIM, NPU, and an FPGA-based PIM controller to demonstrate the feasibility of IANUS.},
+ and 3.2\texttimes{}, on average, compared to the NVIDIA A100 GPU and the state-of-the-art accelerator. As a proof-of-concept, we develop a prototype of IANUS with a commercial PIM, NPU, and an FPGA-based PIM controller to demonstrate the feasibility of IANUS.},
 booktitle = {Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 3},
 pages = {545–560},
 numpages = {16},
@@ -818,7 +728,6 @@ series = {ASPLOS '24}
   year      = {2018},
   pages     = {2704--2713},
   doi       = {10.1109/CVPR.2018.00286},
-  abstract = {The rising popularity of intelligent mobile devices and the daunting computational cost of deep learning-based models call for efficient and accurate on-device inference schemes. We propose a quantization scheme that allows inference to be carried out using integer-only arithmetic, which can be implemented more efficiently than floating point inference on commonly available integer-only hardware. We also co-design a training procedure to preserve end-to-end model accuracy post quantization. As a result, the proposed quantization scheme improves the tradeoff between accuracy and on-device latency. The improvements are significant even on MobileNets, a model family known for run-time efficiency, and are demonstrated in ImageNet classification and COCO detection on popular CPUs.}
 }
 
 @inproceedings{
@@ -827,8 +736,6 @@ title={Degree-Quant: Quantization-Aware Training for Graph Neural Networks},
 author={Shyam Anil Tailor and Javier Fernandez-Marques and Nicholas Donald Lane},
 booktitle={International Conference on Learning Representations},
 year={2021},
-url={https://openreview.net/forum?id=NSBrFgJAHg},
-abstract = {Graph neural networks (GNNs) have demonstrated strong performance on a wide variety of tasks due to their ability to model non-uniform structured data. Despite their promise, there exists little research exploring methods to make them more efficient at inference time. In this work, we explore the viability of training quantized GNNs, enabling the usage of low precision integer arithmetic during inference. For GNNs seemingly unimportant choices in quantization implementation cause dramatic changes in performance. We identify the sources of error that uniquely arise when attempting to quantize GNNs, and propose an architecturally-agnostic and stable method, Degree-Quant, to improve performance over existing quantization-aware training baselines commonly used on other architectures, such as CNNs. We validate our method on six datasets and show, unlike previous quantization attempts, that models generalize to unseen graphs. Models trained with Degree-Quant for INT8 quantization perform as well as FP32 models in most cases; for INT4 models, we obtain up to 26% gains over the baselines. Our work enables up to 4.7x speedups on CPU when using INT8 arithmetic.}
 }
 
 @inproceedings{10.1145/3397271.3401063,
@@ -838,9 +745,7 @@ year = {2020},
 isbn = {9781450380164},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3397271.3401063},
 doi = {10.1145/3397271.3401063},
-abstract = {Graph Convolution Network (GCN) has become new state-of-the-art for collaborative filtering. Nevertheless, the reasons of its effectiveness for recommendation are not well understood. Existing work that adapts GCN to recommendation lacks thorough ablation analyses on GCN, which is originally designed for graph classification tasks and equipped with many neural network operations. However, we empirically find that the two most common designs in GCNs -- feature transformation and nonlinear activation -- contribute little to the performance of collaborative filtering. Even worse, including them adds to the difficulty of training and degrades recommendation performance.In this work, we aim to simplify the design of GCN to make it more concise and appropriate for recommendation. We propose a new model named LightGCN, including only the most essential component in GCN -- neighborhood aggregation -- for collaborative filtering. Specifically, LightGCN learns user and item embeddings by linearly propagating them on the user-item interaction graph, and uses the weighted sum of the embeddings learned at all layers as the final embedding. Such simple, linear, and neat model is much easier to implement and train, exhibiting substantial improvements (about 16.0\% relative improvement on average) over Neural Graph Collaborative Filtering (NGCF) -- a state-of-the-art GCN-based recommender model -- under exactly the same experimental setting. Further analyses are provided towards the rationality of the simple LightGCN from both analytical and empirical perspectives.},
 booktitle = {Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval},
 pages = {639–648},
 numpages = {10},
@@ -856,9 +761,7 @@ year = {2025},
 isbn = {9798400713293},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3701551.3703536},
 doi = {10.1145/3701551.3703536},
-abstract = {Graph neural networks (GNNs) have demonstrated superior performance in collaborative recommendation through their ability to conduct high-order representation smoothing, effectively capturing structural information within users' interaction patterns. However, existing GNN paradigms face significant challenges in scalability and robustness when handling large-scale, noisy real-world datasets. To address these challenges, we present LightGNN, a lightweight and distillation-based GNN pruning framework designed to substantially reduce model complexity while preserving essential collaboration modeling capabilities. Our LightGNN framework introduces a computationally efficient pruning module that adaptively identifies and removes adverse edges and embedding entries for model compression. The framework is guided by a resource-friendly hierarchical knowledge distillation objective, whose intermediate layer augments the observed graph to maintain performance, particularly in high-rate compression scenarios. Extensive experiments on public datasets demonstrate LightGNN's effectiveness, significantly improving both computational efficiency and recommendation accuracy. Notably, LightGNN achieves an 80\% reduction in edge count and 90\% reduction in embedding entries while maintaining performance comparable to more complex state-of-the-art baselines. The implementation of our LightGNN model is available at the github repository: https://github.com/HKUDS/LightGNN.},
 booktitle = {Proceedings of the Eighteenth ACM International Conference on Web Search and Data Mining},
 pages = {549–558},
 numpages = {10},
@@ -882,7 +785,6 @@ archivePrefix = {arXiv},
  primaryClass = {cs.LG},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2021arXiv211202052W},
       adsnote = {Provided by the SAO/NASA Astrophysics Data System},
-      abstract = {Recently, graph neural networks (GNNs), as the backbone of graph-based machine learning, demonstrate great success in various domains (e.g., e-commerce). However, the performance of GNNs is usually unsatisfactory due to the highly sparse and irregular graph-based operations. To this end, we propose TC-GNN, the first GNN acceleration framework based on GPU Tensor Core Units (TCUs). The core idea is to reconcile the "Sparse" GNN computation with the high-performance "Dense" TCUs. Specifically, we conduct an in-depth analysis of the sparse operations in mainstream GNN computing frameworks. We introduce a novel sparse graph translation technique to facilitate TCU processing of the sparse GNN workload. We implement an effective CUDA core and TCU collaboration design to fully utilize GPU resources. We integrate TC-GNN with the PyTorch framework for high programmability. Rigorous experiments show an average of 1.70X speedup over the state-of-the-art DGL framework across various models and datasets.}
 }
 
 @inproceedings{10046125,
@@ -893,7 +795,6 @@ archivePrefix = {arXiv},
   volume={},
   number={},
   pages={1-15},
-  abstract={Graph neural networks (GNNs) have shown to significantly improve graph analytics. Existing systems for GNN training are primarily designed for homogeneous graphs. In industry, however, most graphs are actually heterogeneous in nature (i.e., having multiple types of nodes and edges). Existing systems train a heterogeneous GNN (HetGNN) as a composition of homogeneous GNN (HomoGNN) and thus suffer from critical limitations such as lack of memory optimization and limited operator parallelism. To address these limitations, we propose HGL - a heterogeneity-aware system for GNN training. At the core of HGL is an intermediate representation, called HIR, which provides a holistic representation for GNNs and enables cross-relation optimization in HetGNN training. We devise tailored optimizations on HIR, including graph stitching, operator fusion and operator bundling. Compared with DGL and PyG, HGL achieves a speedup from 7 to 22 times for training HetGNNs.},
   keywords={Training;Learning systems;Industries;High performance computing;Graphics processing units;Parallel processing;Graph neural networks;Graph Neural Networks;Heterogeneous Graphs;Deep Learning Systems},
   doi={10.1109/SC41404.2022.00077},
   ISSN={2167-4337},
@@ -908,7 +809,6 @@ archivePrefix = {arXiv},
   volume={},
   number={},
   pages={13-23},
-  abstract={Graph Neural Networks (GNNs) have emerged as a promising class of Machine Learning algorithms to train on non-euclidean data. GNNs are widely used in recommender systems, drug discovery, text understanding, and traffic forecasting. Due to the energy efficiency and high-performance capabilities of GPUs, GPUs are a natural choice for accelerating the training of GNNs. Thus, we want to better understand the architectural and system-level implications of training GNNs on GPUs. Presently, there is no benchmark suite available designed to study GNN training workloads. In this work, we address this need by presenting GNNMark, a feature-rich benchmark suite that covers the diversity present in GNN training workloads, datasets, and GNN frameworks. Our benchmark suite consists of GNN workloads that utilize a variety of different graph-based data structures, including homogeneous graphs, dynamic graphs, and heterogeneous graphs commonly used in a number of application domains that we mentioned above. We use this benchmark suite to explore and characterize GNN training behavior on GPUs. We study a variety of aspects of GNN execution, including both compute and memory behavior, highlighting major bottlenecks observed during GNN training. At the system level, we study various aspects, including the scalability of training GNNs across a multi-GPU system, as well as the sparsity of data, encountered during training. The insights derived from our work can be leveraged by both hardware and software developers to improve both the hardware and software performance of GNN training on GPUs.},
   keywords={Training;Machine learning algorithms;Scalability;Software performance;Benchmark testing;Hardware;Graph neural networks;graphs;benchmarks;GNN training;GPUs},
   doi={10.1109/ISPASS51385.2021.00013},
   ISSN={},
@@ -934,7 +834,6 @@ archivePrefix = {arXiv},
   pages        = {13--23},
   publisher    = {{IEEE}},
   year         = {2021},
-  url          = {https://doi.org/10.1109/ISPASS51385.2021.00013},
   doi          = {10.1109/ISPASS51385.2021.00013},
   timestamp    = {Thu, 26 Sep 2024 11:28:10 +0200},
   biburl       = {https://dblp.org/rec/conf/ispass/BaruahSDSMJAUJK21.bib},
@@ -983,7 +882,6 @@ archivePrefix = {arXiv},
   author    = {Veli{\v{c}}kovi{\'{c}}, Petar and Cucurull, Guillem and Casanova, Arantxa and Romero, Adriana and Li{\`{o}}, Pietro and Bengio, Yoshua},
   booktitle = {International Conference on Learning Representations (ICLR)},
   year      = {2018},
-  url       = {https://arxiv.org/abs/1710.10903}
 }
 
 % 3. GraphSAGE — Inductive Representation Learning
@@ -992,7 +890,6 @@ archivePrefix = {arXiv},
   author    = {Hamilton, William L. and Ying, Rex and Leskovec, Jure},
   booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
   year      = {2017},
-  url       = {https://arxiv.org/abs/1706.02216}
 }
 
 % 4. GIN — Graph Isomorphism Network
@@ -1001,7 +898,6 @@ archivePrefix = {arXiv},
   author    = {Xu, Keyulu and Hu, Weihua and Leskovec, Jure and Jegelka, Stefanie},
   booktitle = {International Conference on Learning Representations (ICLR)},
   year      = {2019},
-  url       = {https://arxiv.org/abs/1810.00826}
 }
 
 % 5. SGC — Simple Graph Convolution
@@ -1010,7 +906,6 @@ archivePrefix = {arXiv},
   author    = {Wu, Felix and Souza, Amauri and Zhang, Tianyi and Fifty, Christopher and Yu, Tao and Weinberger, Kilian},
   booktitle = {International Conference on Machine Learning (ICML)},
   year      = {2019},
-  url       = {https://arxiv.org/abs/1902.07153}
 }
 
 % 7. Graph Transformer (Dwivedi & Bresson — en yaygın akademik referans)
@@ -1019,7 +914,6 @@ archivePrefix = {arXiv},
   author  = {Dwivedi, Vijay Prakash and Bresson, Xavier},
   journal = {arXiv preprint arXiv:2012.09699},
   year    = {2021},
-  url     = {https://arxiv.org/abs/2012.09699}
 }
 
 % 8. ResNet50
@@ -1029,7 +923,6 @@ archivePrefix = {arXiv},
   booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
   year      = {2016},
   pages     = {770--778},
-  url       = {https://arxiv.org/abs/1512.03385}
 }
 
 @Article{Bayraktar2026,
@@ -1042,8 +935,7 @@ day={24},
 volume={68},
 number={1},
 pages={135},
-abstract={This study presents a methodological investigation into the performance--efficiency trade-off of using classical feature-based models instead of graph neural networks (GNNs) for link prediction in sparse social networks. The study aims to systematically evaluate the effectiveness of engineered topological features compared to machine learning approaches in the context of GitHub developer collaborations. Using the MUSAE GitHub dataset (37,000 nodes, 289,000 links), we compare traditional machine learning models such as Logistic Regression, Random Forest, and LightGBM with modern GNN architectures such as Graph Convolutional Networks, GraphSAGE, and Graph Attention Networks. Our key finding is that, especially on sparse graphs, the LightGBM model, using rigorously engineered features (Common Neighbours, Jaccard Similarity, Adamic-Adar, Preferential Attachment, Node2Vec similarity), consistently outperforms standard GNN implementations (e.g., 99.3{\%} accuracy and 0.9996 ROC-AUC in the ML community). These results challenge the tendency to automatically favour complex GNNs and provide powerful methodological insight that feature-based learning for sparse networks can deliver both high performance and computational efficiency. The main contribution of this work is to provide a rigorous and data-driven guide for model selection in graph-based learning and to challenge the automatic preference for GNNs in sparse networks. We also implemented a recommendation system prototype that serves as a practical demonstration of the methodological insights obtained.},
+ accuracy and 0.9996 ROC-AUC in the ML community). These results challenge the tendency to automatically favour complex GNNs and provide powerful methodological insight that feature-based learning for sparse networks can deliver both high performance and computational efficiency. The main contribution of this work is to provide a rigorous and data-driven guide for model selection in graph-based learning and to challenge the automatic preference for GNNs in sparse networks. We also implemented a recommendation system prototype that serves as a practical demonstration of the methodological insights obtained.},
 issn={0219-3116},
 doi={10.1007/s10115-026-02765-7},
-url={https://doi.org/10.1007/s10115-026-02765-7}
 }
