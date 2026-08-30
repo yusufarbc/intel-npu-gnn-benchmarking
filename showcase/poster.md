@@ -33,7 +33,7 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
       </div>
     </div>
     <div class="col-span-3 text-center">
-      <img src="./public/qrcode.png" class="w-36 h-36 mx-auto border border-slate-200 rounded-lg" alt="QR code linking to the GitHub repository" />
+      <img src="/qrcode.png" class="w-36 h-36 mx-auto border border-slate-200 rounded-lg" alt="QR code linking to the GitHub repository" />
       <div class="text-xs text-slate-500 mt-2">Paper · code · data · figures</div>
     </div>
   </div>
@@ -92,7 +92,7 @@ layout: default
 
 <div class="grid grid-cols-12 gap-8 mt-5">
   <div class="col-span-5">
-    <img src="./public/meteor-lake-architecture.jpg" class="w-full max-h-80 object-contain rounded-lg border border-slate-200" alt="Intel Meteor Lake platform architecture" />
+    <img src="/meteor-lake-architecture.jpg" class="w-full max-h-80 object-contain rounded-lg border border-slate-200" alt="Intel Meteor Lake platform architecture" />
   </div>
   <div class="col-span-7">
     <table class="w-full text-base">
@@ -128,7 +128,7 @@ layout: default
 
 <div class="grid grid-cols-12 gap-6 mt-3 items-center">
   <div class="col-span-8">
-    <img src="./public/figures/fig1_latency_comparison.svg" class="w-full max-h-96 object-contain" alt="FP32 latency comparison across CPU, iGPU, and NPU" />
+    <img src="/figures/fig1_latency_comparison.svg" class="w-full max-h-96 object-contain" alt="FP32 latency comparison across CPU, iGPU, and NPU" />
   </div>
   <div class="col-span-4 text-lg leading-relaxed">
     <div><strong class="text-emerald-700">MobileNetV2:</strong><br/>1.90 ms on NPU<br/><strong>4.5x vs. CPU</strong></div>
@@ -153,7 +153,7 @@ layout: default
 
 <div class="grid grid-cols-12 gap-7 mt-3 items-center">
   <div class="col-span-7">
-    <img src="./public/figures/fig2_int8_speedup_heatmap.svg" class="w-full max-h-96 object-contain" alt="INT8 speedup heatmap" />
+    <img src="/figures/fig2_int8_speedup_heatmap.svg" class="w-full max-h-96 object-contain" alt="INT8 speedup heatmap" />
     <div class="text-sm text-slate-500 text-center">Speedup below 1.0 means INT8 is slower than FP32.</div>
   </div>
   <div class="col-span-5">
@@ -215,7 +215,7 @@ layout: default
     <span class="text-sm font-normal text-slate-500">github.com/yusufarbc/intel-npu-gnn-benchmarking</span>
   </div>
   <div class="col-span-3 text-center">
-    <img src="./public/qrcode.png" class="w-28 h-28 mx-auto" alt="QR code linking to the GitHub repository" />
+    <img src="/qrcode.png" class="w-28 h-28 mx-auto" alt="QR code linking to the GitHub repository" />
   </div>
 </div>
 

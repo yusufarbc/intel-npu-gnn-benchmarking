@@ -26,7 +26,7 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
     </div>
     <div class="col-span-5 flex justify-center items-center">
       <div class="p-2 bg-white border border-slate-200 rounded-xl shadow-md hover:shadow-lg transition-shadow">
-        <img src="./public/meteor-lake-architecture.jpg" class="max-h-70 object-contain rounded" />
+        <img src="/meteor-lake-architecture.jpg" class="max-h-70 object-contain rounded" />
         <div class="text-center text-xs text-slate-500 mt-2 font-medium">
           Figure 1: Intel Meteor Lake heterogeneous SoC
         </div>
@@ -324,7 +324,7 @@ layout: default
   </div>
   
   <div class="flex flex-col justify-center items-center">
-    <img src="./public/figures/fig1_latency_comparison.svg" class="slide-img" />
+    <img src="/figures/fig1_latency_comparison.svg" class="slide-img" />
     <span class="text-xs text-slate-500 mt-1">Figure 1: Latency across CPU, iGPU, and NPU backends.</span>
   </div>
 </div>
@@ -351,7 +351,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    <img src="./public/figures/fig2_int8_speedup_heatmap.svg" class="slide-img" />
+    <img src="/figures/fig2_int8_speedup_heatmap.svg" class="slide-img" />
     <span class="text-xs text-slate-500 mt-1">Figure 2: INT8 speedup heatmap. Red (&lt; 1.0) = degradation.</span>
   </div>
 </div>
@@ -408,7 +408,7 @@ layout: default
   </div>
 
   <div class="flex flex-col justify-center items-center">
-    <img src="./public/figures/fig5b_roofline.svg" class="slide-img" />
+    <img src="/figures/fig5b_roofline.svg" class="slide-img" />
     <span class="text-xs text-slate-500 mt-1">Figure 5: Throughput vs. arithmetic intensity</span>
   </div>
 </div>
@@ -437,11 +437,11 @@ class: compact-slide
 
   <div class="flex flex-col gap-2 justify-center items-center h-full">
     <div class="flex flex-col items-center w-full">
-      <img src="./public/figures/fig6_scaling.svg" style="max-height:170px; width:100%; object-fit:contain;" />
+      <img src="/figures/fig6_scaling.svg" style="max-height:170px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 6: Scaling</span>
     </div>
     <div class="flex flex-col items-center w-full">
-      <img src="./public/figures/fig7_density_vs_latency.svg" style="max-height:170px; width:100%; object-fit:contain;" />
+      <img src="/figures/fig7_density_vs_latency.svg" style="max-height:170px; width:100%; object-fit:contain;" />
       <span class="text-xs text-slate-500 mt-1 text-center">Fig 7: Density</span>
     </div>
   </div>
@@ -536,7 +536,7 @@ class: compact-slide
   </div>
 
   <div class="flex flex-col justify-center items-center h-full">
-    <img src="./public/figures/fig3_operator_breakdown.svg" style="max-height:280px; width:100%; object-fit:contain;" />
+    <img src="/figures/fig3_operator_breakdown.svg" style="max-height:280px; width:100%; object-fit:contain;" />
     <span class="text-xs text-slate-500 mt-1 text-center">
       ONNX node composition, not execution time. “Other” groups activations, normalization, elementwise arithmetic, and constant/slicing nodes.
     </span>
@@ -680,7 +680,7 @@ layout: default
     </div>
     <div class="mt-4 text-center">
       <div class="text-sm font-semibold text-slate-800">Paper &amp; Data</div>
-      <img src="./public/qrcode.png" class="w-28 h-28 object-contain rounded border border-slate-200 shadow-sm mx-auto mt-2" alt="QR Code - GitHub Repository" />
+      <img src="/qrcode.png" class="w-28 h-28 object-contain rounded border border-slate-200 shadow-sm mx-auto mt-2" alt="QR Code - GitHub Repository" />
       <div class="text-xs text-slate-500 mt-2">
         <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 underline font-medium">
           github.com/yusufarbc/intel-npu-gnn-benchmarking
