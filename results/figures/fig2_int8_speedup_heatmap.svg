@@ -1496,7 +1496,7 @@ z
     </g>
    </g>
    <g id="text_39">
-    <!-- Figure 2: INT8 Speedup over FP32 -->
+    <!-- INT8 Speedup over FP32 -->
     <g style="fill: #262626" transform="translate(202.623969 15.935625) scale(0.12 -0.12)">
      <defs>
       <path id="ArialMT-46" d="M 525 0 

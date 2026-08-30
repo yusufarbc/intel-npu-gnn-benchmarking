@@ -1173,7 +1173,7 @@ z
    </g>
   </g>
   <g id="text_20">
-   <!-- Figure 6: Scaling Characteristics (O(N) vs O(E)) -->
+   <!-- Scaling Characteristics (O(N) vs O(E)) -->
    <g style="fill: #262626" transform="translate(238.204922 15.214531) scale(0.11 -0.11)">
     <defs>
      <path id="ArialMT-46" d="M 525 0 
