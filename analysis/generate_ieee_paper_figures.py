@@ -82,8 +82,8 @@ def finish_axis(ax: mpl.axes.Axes) -> None:
         spine.set_linewidth(0.7)
 
 
-def export(fig: mpl.figure.Figure, stem: str, *, tight: bool = False) -> None:
-    """Write the same final-size artwork to results and paper directories."""
+def export(fig: mpl.figure.Figure, stem: str, *, tight: bool = True) -> None:
+    """Write tightly cropped, final-size artwork to results and paper directories."""
     RESULTS.mkdir(parents=True, exist_ok=True)
     PAPER.mkdir(parents=True, exist_ok=True)
     creator = "generate_ieee_paper_figures.py"
