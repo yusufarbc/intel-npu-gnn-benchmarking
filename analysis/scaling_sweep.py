@@ -15,10 +15,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from analysis.density_sweep import DEFAULT_EDGES_PER_NODE
 from analysis.model_prep import export_gnn_models
 from analysis.plot_config import apply_ieee_style, savefig_ieee, IEEE_COLORS
 from analysis.scalability_analyzer import MultiModelPipeline, ScalabilityConfig
+
+DEFAULT_EDGES_PER_NODE = {
+    "ogbn-arxiv": 7,
+    "ogbn-products": 25,
+    "ogbn-proteins": 452,
+}
 
 apply_ieee_style()
 
