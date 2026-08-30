@@ -82,9 +82,11 @@
 }
 
 .slidev-layout h1 {
-  background: linear-gradient(135deg, var(--color-slate-900) 50%, var(--color-blue) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* Solid text survives Chromium's PDF export path; gradient-clipped text
+     rendered as a dark rectangle in the offline poster backup. */
+  color: var(--color-slate-900);
+  background: none;
+  -webkit-text-fill-color: currentColor;
 }
 
 .slidev-layout h2 {

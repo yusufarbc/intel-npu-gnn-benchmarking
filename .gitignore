@@ -61,6 +61,7 @@ paper/references/*.pdf
 # Large standalone PDFs
 *.pdf
 !paper/paper.pdf
+!showcase/poster-export.pdf
 !paper/figures/*.pdf
 !results/figures/*.pdf
 

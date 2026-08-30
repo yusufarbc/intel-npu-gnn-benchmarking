@@ -78,7 +78,7 @@ class: rq-slide
   <div class="glass-panel">
     <div class="flex items-center gap-3">
       <span class="text-lg font-bold text-rose" style="min-width:2rem">4</span>
-      <div><strong>Key Findings &amp; Bottlenecks</strong> — Why INT8 fails, CPU fallback, comparative landscape</div>
+      <div><strong>Key Findings &amp; Bottlenecks</strong> — INT8 regressions, assignment exceptions, comparative landscape</div>
     </div>
   </div>
   <div class="glass-panel">
@@ -123,8 +123,8 @@ layout: default
       <KaTeX math="Y = A \cdot X" display />
     </div>
     <ul>
-      <li>Memory accesses are dynamic and sparse, disrupting hardware prefetchers.</li>
-      <li><strong>Result:</strong> NPUs stall waiting for DRAM transfers, leaving compute units underutilized.</li>
+      <li>Memory accesses are dynamic and sparse, which can reduce locality and prefetch efficiency.</li>
+      <li><strong>Interpretation:</strong> The measured low arithmetic intensity is consistent with memory-system pressure and underutilized compute; this study does not directly measure NPU stall cycles.</li>
     </ul>
   </div>
 </div>
@@ -146,7 +146,7 @@ layout: default
 
   <div class="highlight-box highlight-box-warning">
     <div class="highlight-box-title">RQ 2: Quantization: Limited and Negative Returns</div>
-    <div class="text-sm">Does INT8 deliver advertised 4× acceleration on NPUs, or does it trigger regressions on sparse GNN workloads?</div>
+    <div class="text-sm">Does INT8 reduce NPU latency consistently, or does it regress for some sparse GNN workloads?</div>
   </div>
 
   <div class="highlight-box highlight-box-success">
@@ -174,7 +174,7 @@ graph TB
   subgraph Dense[CNN Dataflow]
     direction TB
     A[Regular 2D Grid] --> B[Spatial Locality<br/>& SRAM Reuse]
-    B --> C[✓ Compute Bound<br/>High MAC Utilization]
+    B --> C[Higher Measured<br/>Intensity / Throughput]
   end
   style C fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#166534
   style Dense fill:#f0fdf4,stroke:#86efac,stroke-width:1px
@@ -187,8 +187,8 @@ graph TB
 graph TB
   subgraph Sparse[GNN Dataflow]
     direction TB
-    D[Irregular Graph] --> E[Random Pointer-<br/>Chasing / Gather]
-    E --> F[✗ Memory Bound<br/>DRAM Latency Wall]
+    D[Irregular Graph] --> E[Indexed Gather /<br/>Scatter Operations]
+    E --> F[Lower Measured<br/>Intensity / Throughput]
   end
   style F fill:#ffe4e6,stroke:#be123c,stroke-width:2px,color:#991b1b
   style Sparse fill:#fef2f2,stroke:#fca5a5,stroke-width:1px
@@ -370,7 +370,7 @@ layout: default
     <h3 class="font-semibold text-emerald" style="font-size:0.85rem">Structured (ViT-Tiny)</h3>
     <ul>
       <li>Self-attention over fixed 2D grid patches.</li>
-      <li>Static, predictable strides → max fusion.</li>
+      <li>Regular image-patch operator structure.</li>
       <li><strong>NPU speedup:</strong> <span class="text-emerald font-bold">11.4&times; vs CPU</span></li>
     </ul>
   </div>
@@ -379,14 +379,14 @@ layout: default
     <h3 class="font-semibold text-rose" style="font-size:0.85rem">Irregular (GraphTransformer)</h3>
     <ul>
       <li>Attention over dynamic graph neighborhoods.</li>
-      <li>Irregular indices → random DRAM queries.</li>
+      <li>Indexed graph-neighborhood operator structure.</li>
       <li><strong>NPU speedup:</strong> <span class="text-rose font-bold">1.0&times; vs CPU</span></li>
     </ul>
   </div>
 </div>
 
 <div class="glass-panel text-center text-xs mt-1">
-  Despite <strong>30&times; fewer parameters</strong> (0.18M vs 5.7M), GraphTransformer gains no NPU speedup.
+  Despite <strong>30&times; fewer parameters</strong> (0.18M vs 5.7M), GraphTransformer gains no NPU speedup. The contrast is consistent with different operator structures, but does not isolate one cause.
 </div>
 
 <Glossary :terms="['structured-attention', 'irregular-attention', 'vit']" />
@@ -403,7 +403,7 @@ layout: default
     <ul>
       <li><strong>Intensity</strong> <KaTeX math="= \text{FLOPs} / \text{Bytes}" /> — operational density per memory transfer.</li>
       <li><strong>Memory-bound GNNs:</strong> 0.1–10 FLOP/byte — the low arithmetic intensity is consistent with limited benefit from the evaluated NPU path.</li>
-      <li><strong>Compute-bound vision:</strong> CNNs/ViT saturate NPU's MAC arrays in higher intensity zones.</li>
+      <li><strong>Dense vision:</strong> CNNs and ViT occupy higher-intensity, higher-throughput regions, consistent with more effective NPU utilization; this study does not directly measure MAC-array saturation.</li>
     </ul>
   </div>
 
@@ -426,12 +426,12 @@ class: compact-slide
 <div class="grid grid-cols-2 gap-3 mt-1">
   <div>
     <ul class="text-sm">
-      <li><strong>Flat latency across tested inputs:</strong> NPU latency is nearly constant while the exported models use fixed tensor shapes; static-shape compilation is a plausible contributor, not an isolated cause.</li>
+      <li><strong>Across the three OGB inputs:</strong> NPU latency shows no detectable relationship with graph density while the exported models use fixed tensor shapes; static-shape compilation is a plausible contributor, not an isolated cause.</li>
       <li><strong>Density correlation: <KaTeX math="r \approx -0.00" /></strong> — no measured correlation across the tested range (6.9–451.7 edges/node).</li>
       <li><strong>Scope:</strong> This fixed-shape sweep does not establish how the NPU responds to dynamically changing tensor dimensions.</li>
     </ul>
     <div class="highlight-box highlight-box-warning text-xs mt-2">
-      <strong>Key observation:</strong> Under the tested static shapes, NPU latency did not vary with graph density.
+      <strong>Key observation:</strong> Under the tested static shapes, NPU latency had no detectable correlation with graph density.
     </div>
   </div>
 
@@ -453,14 +453,14 @@ class: compact-slide
 layout: default
 ---
 
-## Power Consumption and Throughput per Watt
+## Package Power and Estimated Energy per Inference
 ### SoCWatch Package-Level Telemetry
 
 <div class="grid grid-cols-2 gap-4 mt-2">
   <div>
     <ul>
       <li><strong>Formula:</strong> <KaTeX math="E_{\text{inf}} = P_{\text{package}} \times t_{\text{latency}}" /></li>
-      <li><strong>iGPU:</strong> +7.3% peak power vs CPU, but faster — equal energy/inference.</li>
+      <li><strong>GCN on iGPU:</strong> +7.3% average package power vs. CPU, but lower latency, yielding comparable estimated energy/inference (86.6 vs. 89.9 mJ).</li>
       <li><strong>INT8 on CPU:</strong> GCN −18.4% energy (73.4 vs 89.9 mJ); MPNN +59% (301.1 vs 189.3 mJ).</li>
     </ul>
     <div class="highlight-box highlight-box-info text-xs mt-2">
@@ -505,7 +505,7 @@ layout: default
   </div>
 </div>
 
-<Glossary :terms="['socwatch', 'throughput-watt', 'pmt', 'dram', 'gcn', 'mpnn']" />
+<Glossary :terms="['socwatch', 'pmt', 'dram', 'gcn', 'mpnn']" />
 
 ---
 layout: default
@@ -526,11 +526,10 @@ class: compact-slide
       </ul>
     </div>
     <div class="glass-panel" style="padding:0.4rem 0.6rem">
-      <h3 class="font-semibold text-blue" style="font-size:0.8rem; margin-bottom:0.2rem">Silent Failure Modes</h3>
+      <h3 class="font-semibold text-blue" style="font-size:0.8rem; margin-bottom:0.2rem">Assignment and Compilation Exceptions</h3>
       <ul class="text-xs" style="margin:0">
-        <li><strong>Assignment exceptions:</strong> MPNN NPU FP32 executes on CPU; MobileNetV2 INT8 timing indicates CPU fallback; BERT-Tiny INT8 is partially host-executed.</li>
-        <li><strong>Compilation Rejection:</strong> GAT, GATv2, EfficientNet-B0 fail INT8 lowering entirely.</li>
-        <li><strong>Observed mechanism:</strong> Reducing arithmetic precision did not remove irregular data movement and sometimes added dispatch or quantization overhead.</li>
+        <li><strong>Requested-NPU execution:</strong> MPNN FP32 executes on CPU; MobileNetV2 INT8 timing indicates CPU execution; BERT-Tiny INT8 includes a small host component.</li>
+        <li><strong>Compilation rejection:</strong> GAT, GATv2, and EfficientNet-B0 produce no NPU INT8 executable.</li>
       </ul>
     </div>
   </div>
@@ -564,7 +563,7 @@ layout: default
   <div>
     <ul>
       <li><strong>Energy model:</strong> <KaTeX math="E = P \times t" /> assumes stationary power; background OS activity not isolated.</li>
-      <li><strong>Statistics:</strong> Bootstrap 95% CIs per config; paired hypothesis tests across devices pending.</li>
+      <li><strong>Statistics:</strong> Bootstrap 95% CIs per configuration; paired hypothesis tests across devices were not conducted.</li>
     </ul>
   </div>
 </div>
@@ -587,7 +586,7 @@ layout: default
   </div>
 
   <div class="highlight-box highlight-box-warning">
-    <div class="highlight-box-title">⚠ Caution: GNN Workloads on iGPU (FP32)</div>
+    <div class="highlight-box-title">Evaluated GNNs: Start with iGPU (FP32)</div>
     <div class="text-xs">
       For the evaluated models and OpenVINO 2024.1 stack, begin with the <strong>iGPU</strong> at <strong>FP32</strong>. Re-benchmark and inspect device assignment when the software stack or hardware changes.
     </div>
@@ -608,21 +607,21 @@ layout: default
     <h3 class="text-emerald font-bold" style="font-size:0.8rem">✅ NPU Excels For</h3>
     <ul class="text-xs" style="margin:0">
       <li>Dense vision at <strong>FP32</strong> (4.5–11.4× vs CPU)</li>
-      <li>Structured attention (ViT: 11.4×)</li>
+      <li>ViT-Tiny at <strong>FP32</strong> (11.4× vs CPU)</li>
     </ul>
   </div>
   <div class="glass-panel" style="border-left:3px solid var(--color-rose)">
     <h3 class="text-rose font-bold" style="font-size:0.8rem">❌ NPU Struggles With</h3>
     <ul class="text-xs" style="margin:0">
-      <li>GNNs: CPU parity (±6%), no acceleration</li>
+      <li>Most evaluated GNNs: near CPU parity, with no consistent NPU benefit</li>
       <li>INT8: 0.45–1.21× (SGC: 2.2× regression)</li>
     </ul>
   </div>
   <div class="glass-panel" style="border-left:3px solid var(--color-blue)">
     <h3 class="text-blue font-bold" style="font-size:0.8rem">📊 Best GNN Backend</h3>
     <ul class="text-xs" style="margin:0">
-      <li><strong>iGPU</strong> — lowest GNN latency</li>
-      <li>Power: 9.1–12.5 W; INT8 energy model-dependent</li>
+      <li><strong>iGPU</strong> — lowest latency for most evaluated GNNs</li>
+      <li>Selected CPU/iGPU package power: 9.1–12.5 W; INT8 energy is model-dependent</li>
     </ul>
   </div>
   <div class="glass-panel" style="border-left:3px solid var(--color-amber)">
@@ -647,7 +646,7 @@ layout: default
   <div>
     <ul style="font-size:0.7rem">
       <li><strong>Meteor Lake</strong> — Intel Hot Chips 2023, Foveros 3D packaging</li>
-      <li><strong>GNN Accelerators</strong> — HyGCN (ISPASS 2020), EnGN (ISCA 2020), GRIP (HPCA 2021)</li>
+      <li><strong>GNN Accelerators</strong> — HyGCN (HPCA 2020), EnGN (IEEE TC 2021), GRIP (IEEE TC 2023), TT-GNN (MICRO 2023)</li>
       <li><strong>OpenVINO NPU</strong> — Intel NPU plugin, operator coverage, IR pipeline</li>
       <li><strong>MLPerf Inference</strong> — Standardized benchmark suite</li>
     </ul>
@@ -655,8 +654,8 @@ layout: default
   <div>
     <ul style="font-size:0.7rem">
       <li><strong>OGB Datasets</strong> — Hu et al., NeurIPS 2020</li>
-      <li><strong>Roofline on Edge</strong> — Bi et al., arXiv 2026</li>
-      <li><strong>GNN Architectures</strong> — GCN (Kipf 2017), GAT (2018), GraphSAGE (2017), MPNN (2017)</li>
+      <li><strong>GNN Systems Survey</strong> — Abadal et al., ACM Computing Surveys 2021</li>
+      <li><strong>Quantization</strong> — Jacob et al., CVPR 2018; Degree-Quant, ICLR 2021</li>
     </ul>
   </div>
 </div>

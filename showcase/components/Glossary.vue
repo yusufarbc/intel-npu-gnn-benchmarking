@@ -17,7 +17,7 @@ const glossary = {
   },
   'igpu': {
     title: 'iGPU (Integrated GPU)',
-    desc: 'A graphics processor integrated onto the same silicon die as the CPU. The Intel Arc iGPU (7 Xe-cores) shares the LPDDR5x fabric and often outperforms the NPU on GNNs due to higher memory bandwidth.'
+    desc: 'A graphics processor integrated into the processor package. The evaluated Intel Arc iGPU (7 Xe-cores) shares system memory and recorded the lowest latency for most tested GNNs; memory-system and compiler behavior are plausible contributors, but this study does not isolate one cause.'
   },
   'meteor-lake': {
     title: 'Meteor Lake / Core Ultra',
@@ -37,7 +37,7 @@ const glossary = {
   },
   'stalls': {
     title: 'Stall Cycles',
-    desc: 'CPU or NPU clock cycles wasted while execution units sit idle waiting for data to arrive from main memory (DRAM) due to cache misses.'
+    desc: 'Clock cycles in which an execution unit waits for data or another dependency. This study does not directly measure NPU stall cycles; it reports latency, throughput, arithmetic intensity, and execution assignment.'
   },
   'locality': {
     title: 'Data/Cache Locality',
@@ -69,7 +69,7 @@ const glossary = {
   },
   'irregular-access': {
     title: 'Irregular Memory Access',
-    desc: 'Non-sequential, data-dependent memory read/write strides determined by graph connectivity, which cause cache thrashing and invalidate standard prefetchers.'
+    desc: 'Non-sequential, data-dependent memory reads and writes determined by graph connectivity. Such access patterns can reduce cache locality and prefetch efficiency.'
   },
   'power-law': {
     title: 'Power-Law Distribution',
@@ -109,7 +109,7 @@ const glossary = {
   },
   'regression': {
     title: 'Performance Regression',
-    desc: 'An optimization failure where applying a technique (like INT8 quantization) degrades execution latency, typically due to quantization/dequantization overhead or memory bound limitations (e.g., SGC).'
+    desc: 'A result in which an attempted optimization, such as INT8 quantization, increases latency. Quantization, dispatch, compiler coverage, and data movement are plausible contributors; this benchmark does not isolate a single cause.'
   },
   'intensity': {
     title: 'Arithmetic Intensity',
@@ -117,7 +117,7 @@ const glossary = {
   },
   'structured-attention': {
     title: 'Structured Attention',
-    desc: 'Self-attention calculated over fixed, contiguous grid structures (e.g., Vision Transformers), matching the spatial streaming optimizations of the NPU perfectly.'
+    desc: 'Self-attention calculated over fixed, regular structures such as image patches. This structure is compatible with regular tensor execution, but the benchmark does not isolate the exact cause of the measured device-level performance.'
   },
   'irregular-attention': {
     title: 'Irregular Attention',
@@ -145,7 +145,7 @@ const glossary = {
   },
   'lpddr5x': {
     title: 'LPDDR5x',
-    desc: 'Low-power double data rate 5X DRAM used by Meteor Lake (~120 GB/s peak bandwidth). GNNs are memory-bound by this bandwidth rather than compute capacity.'
+    desc: 'Low-power double data rate 5X DRAM used by the evaluated Meteor Lake platform. The paper uses a 120 GB/s theoretical system-memory reference; it is not a measured NPU-specific bandwidth ceiling.'
   },
   'ogb': {
     title: 'OGB (Open Graph Benchmark)',
@@ -157,15 +157,15 @@ const glossary = {
   },
   'static-shape': {
     title: 'Static-Shape Compilation',
-    desc: 'An ONNX/OpenVINO mode where input tensor dimensions are fixed at compile time. Causes NPU latency to be constant regardless of input graph sparsity (r ≈ -0.00 correlation with edges/node).'
+    desc: 'An ONNX/OpenVINO mode where input tensor dimensions are fixed at compile time. The evaluated density sweep found no detectable density-latency correlation; static-shape compilation is a plausible contributor, not an isolated cause.'
   },
   'scatter-gather': {
     title: 'Scatter / Gather',
-    desc: 'Indexed memory operations reading from or writing to non-contiguous locations. Heavily used by GNN attention/aggregation; unsupported in NPU\'s quantized operator set, causing INT8 failures.'
+    desc: 'Indexed memory operations that read from or write to non-contiguous locations. In this benchmark, dynamic Scatter/Gather patterns were associated with GAT and GATv2 INT8 NPU compilation failures.'
   },
   'vit': {
     title: 'ViT (Vision Transformer)',
-    desc: 'A transformer applied to image patches on a regular 2D grid. ViT-Tiny achieves 11.4× NPU speedup over CPU because its attention patterns are static and predictable.'
+    desc: 'A transformer applied to image patches on a regular 2D grid. ViT-Tiny achieves an 11.4× NPU speedup over CPU in this benchmark; its regular structure is a plausible contributor, but the experiment does not isolate one cause.'
   },
   'xe-lpg': {
     title: 'Xe-LPG',
@@ -221,7 +221,7 @@ const glossary = {
   },
   'gat': {
     title: 'GAT (Graph Attention Network)',
-    desc: 'An attentional GNN that computes dynamic edge weights via self-attention over node neighborhoods, which often fails INT8 NPU compilation due to irregular attention graphs.'
+    desc: 'An attentional GNN that computes dynamic edge weights over node neighborhoods. The evaluated GAT and GATv2 INT8 graphs failed NPU compilation; this result should not be generalized to every GAT implementation or toolchain version.'
   },
   'flops': {
     title: 'FLOPs / FLOPS',
@@ -229,7 +229,7 @@ const glossary = {
   },
   'dram': {
     title: 'DRAM (Dynamic RAM)',
-    desc: 'Main system memory. High latency and memory bandwidth limitations of DRAM form the primary bottleneck for sparse, irregular GNN workloads.'
+    desc: 'Main system memory. Sparse, irregular GNN workloads can be sensitive to memory latency and bandwidth; this study\'s low arithmetic intensity is consistent with memory pressure but does not directly measure DRAM as the sole bottleneck.'
   },
   'appnp': {
     title: 'APPNP (Approximate Personalized Propagation of Neural Predictions)',

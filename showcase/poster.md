@@ -156,7 +156,7 @@ terms: [int8, cpu-fallback, dynamic-quantization, sgc, mpnn]
 
 <div class="grid grid-cols-12 gap-7 mt-3 items-center">
   <div class="col-span-7">
-    <img src="/figures/fig2_int8_speedup_heatmap.svg" class="w-full max-h-96 object-contain" alt="INT8 speedup heatmap" />
+    <img src="/figures/fig2_int8_speedup_heatmap.svg" class="w-full max-h-80 object-contain" alt="INT8 speedup heatmap" />
     <div class="text-sm text-slate-500 text-center">Speedup below 1.0 means INT8 is slower than FP32.</div>
   </div>
   <div class="col-span-5">
@@ -173,7 +173,7 @@ terms: [int8, cpu-fallback, dynamic-quantization, sgc, mpnn]
   </div>
 </div>
 
-<div class="mt-4 text-lg font-semibold text-slate-800 text-center">
+<div class="mt-2 text-lg font-semibold text-slate-800 text-center">
   Always inspect the execution trace: a requested NPU configuration does not prove native NPU execution.
 </div>
 

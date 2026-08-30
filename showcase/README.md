@@ -5,6 +5,7 @@ This directory contains two Slidev presentations for the paper **“Benchmarking
 | Source | Role |
 |---|---|
 | [`poster.md`](poster.md) | Six-slide HPEC virtual poster deployed to GitHub Pages |
+| [`poster-export.pdf`](poster-export.pdf) | Six-slide offline PDF backup for screen sharing |
 | [`slides.md`](slides.md) | Longer technical deck for extended discussion |
 
 The public poster is available at:
