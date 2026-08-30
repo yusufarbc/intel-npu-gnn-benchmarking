@@ -1497,7 +1497,7 @@ z
    </g>
    <g id="text_39">
     <!-- INT8 Speedup over FP32 -->
-    <g style="fill: #262626" transform="translate(202.623969 15.935625) scale(0.12 -0.12)">
+    <g style="fill: #262626" transform="translate(227.968696 15.935625) scale(0.12 -0.12)">
      <defs>
       <path id="ArialMT-46" d="M 525 0 
 L 525 4581 
@@ -1616,38 +1616,28 @@ Q 325 638 269 1209
 z
 " transform="scale(0.015625)"/>
      </defs>
-     <use xlink:href="#ArialMT-46"/>
-     <use xlink:href="#ArialMT-69" transform="translate(61.083984 0)"/>
-     <use xlink:href="#ArialMT-67" transform="translate(83.300781 0)"/>
-     <use xlink:href="#ArialMT-75" transform="translate(138.916016 0)"/>
-     <use xlink:href="#ArialMT-72" transform="translate(194.53125 0)"/>
-     <use xlink:href="#ArialMT-65" transform="translate(227.832031 0)"/>
-     <use xlink:href="#ArialMT-20" transform="translate(283.447266 0)"/>
-     <use xlink:href="#ArialMT-32" transform="translate(311.230469 0)"/>
-     <use xlink:href="#ArialMT-3a" transform="translate(366.845703 0)"/>
-     <use xlink:href="#ArialMT-20" transform="translate(394.628906 0)"/>
-     <use xlink:href="#ArialMT-49" transform="translate(422.412109 0)"/>
-     <use xlink:href="#ArialMT-4e" transform="translate(450.195312 0)"/>
-     <use xlink:href="#ArialMT-54" transform="translate(522.412109 0)"/>
-     <use xlink:href="#ArialMT-38" transform="translate(583.496094 0)"/>
-     <use xlink:href="#ArialMT-20" transform="translate(639.111328 0)"/>
-     <use xlink:href="#ArialMT-53" transform="translate(666.894531 0)"/>
-     <use xlink:href="#ArialMT-70" transform="translate(733.59375 0)"/>
-     <use xlink:href="#ArialMT-65" transform="translate(789.208984 0)"/>
-     <use xlink:href="#ArialMT-65" transform="translate(844.824219 0)"/>
-     <use xlink:href="#ArialMT-64" transform="translate(900.439453 0)"/>
-     <use xlink:href="#ArialMT-75" transform="translate(956.054688 0)"/>
-     <use xlink:href="#ArialMT-70" transform="translate(1011.669922 0)"/>
-     <use xlink:href="#ArialMT-20" transform="translate(1067.285156 0)"/>
-     <use xlink:href="#ArialMT-6f" transform="translate(1095.068359 0)"/>
-     <use xlink:href="#ArialMT-76" transform="translate(1150.683594 0)"/>
-     <use xlink:href="#ArialMT-65" transform="translate(1200.683594 0)"/>
-     <use xlink:href="#ArialMT-72" transform="translate(1256.298828 0)"/>
-     <use xlink:href="#ArialMT-20" transform="translate(1289.599609 0)"/>
-     <use xlink:href="#ArialMT-46" transform="translate(1317.382812 0)"/>
-     <use xlink:href="#ArialMT-50" transform="translate(1378.466797 0)"/>
-     <use xlink:href="#ArialMT-33" transform="translate(1445.166016 0)"/>
-     <use xlink:href="#ArialMT-32" transform="translate(1500.78125 0)"/>
+     <use xlink:href="#ArialMT-49"/>
+     <use xlink:href="#ArialMT-4e" transform="translate(27.783203 0)"/>
+     <use xlink:href="#ArialMT-54" transform="translate(100.000000 0)"/>
+     <use xlink:href="#ArialMT-38" transform="translate(161.083985 0)"/>
+     <use xlink:href="#ArialMT-20" transform="translate(216.699219 0)"/>
+     <use xlink:href="#ArialMT-53" transform="translate(244.482422 0)"/>
+     <use xlink:href="#ArialMT-70" transform="translate(311.181641 0)"/>
+     <use xlink:href="#ArialMT-65" transform="translate(366.796875 0)"/>
+     <use xlink:href="#ArialMT-65" transform="translate(422.412110 0)"/>
+     <use xlink:href="#ArialMT-64" transform="translate(478.027344 0)"/>
+     <use xlink:href="#ArialMT-75" transform="translate(533.642579 0)"/>
+     <use xlink:href="#ArialMT-70" transform="translate(589.257813 0)"/>
+     <use xlink:href="#ArialMT-20" transform="translate(644.873047 0)"/>
+     <use xlink:href="#ArialMT-6f" transform="translate(672.656250 0)"/>
+     <use xlink:href="#ArialMT-76" transform="translate(728.271485 0)"/>
+     <use xlink:href="#ArialMT-65" transform="translate(778.271485 0)"/>
+     <use xlink:href="#ArialMT-72" transform="translate(833.886719 0)"/>
+     <use xlink:href="#ArialMT-20" transform="translate(867.187500 0)"/>
+     <use xlink:href="#ArialMT-46" transform="translate(894.970703 0)"/>
+     <use xlink:href="#ArialMT-50" transform="translate(956.054688 0)"/>
+     <use xlink:href="#ArialMT-33" transform="translate(1022.753907 0)"/>
+     <use xlink:href="#ArialMT-32" transform="translate(1078.369141 0)"/>
     </g>
    </g>
   </g>
