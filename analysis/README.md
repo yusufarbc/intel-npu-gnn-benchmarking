@@ -13,6 +13,7 @@ Python scripts for ONNX model export, benchmarking, profiling, and figure genera
 | `model_prep.py` | Exports PyTorch GNN models to ONNX and applies ONNX Runtime dynamic INT8 quantization |
 | `ort_profile_utils.py` | Utilities for parsing ONNX Runtime profiling JSON traces |
 | `plot_config.py` | Centralised IEEE-compatible matplotlib style (`savefig_ieee`, `IEEE_COLORS`) |
+| `generate_ieee_paper_figures.py` | Regenerates paper Figures 1, 3, and 4 at final 3.5-inch width with 8 pt labels and PNG/SVG/PDF outputs |
 
 ## Usage
 

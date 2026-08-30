@@ -61,6 +61,8 @@ paper/references/*.pdf
 # Large standalone PDFs
 *.pdf
 !paper/paper.pdf
+!paper/figures/*.pdf
+!results/figures/*.pdf
 
 # Testing
 htmlcov/

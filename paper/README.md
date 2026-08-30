@@ -28,6 +28,14 @@ The earlier CPU-fallback heatmap is retained as a diagnostic artifact in `result
 
 ## Compilation
 
+Regenerate the crowded single-column vector figures at their final IEEE print size before compiling:
+
+```bash
+python analysis/generate_ieee_paper_figures.py
+```
+
+This produces matching PNG, SVG, and vector PDF files for paper Figures 1, 3, and 4. The manuscript embeds the PDF variants so 8 pt axis labels are preserved at one-column width.
+
 ```bash
 cd paper
 pdflatex paper.tex

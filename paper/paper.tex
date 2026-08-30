@@ -173,7 +173,7 @@ Conversely, the NPU accelerates dense vision workloads: MobileNetV2 achieves 1.9
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\columnwidth]{fig1_latency_comparison.png}
+    \includegraphics[width=\columnwidth]{fig1_latency_comparison.pdf}
     \caption{FP32 latency comparison across CPU, iGPU, and NPU backends. Error bars indicate per-iteration standard deviation. GNNs show near-parity across backends; dense vision models exhibit significant NPU advantage.}
     \label{fig:fig1}
 \end{figure}
@@ -218,7 +218,7 @@ ViT-Tiny (5.7M parameters) achieves an 11.4$\times$ speedup, whereas GraphTransf
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\columnwidth]{fig3_operator_breakdown.png}
+    \includegraphics[width=\columnwidth]{fig3_operator_breakdown.pdf}
     \caption{ONNX graph-node composition (not execution time). \textit{Other} groups activations, normalization, elementwise arithmetic, and constant/slicing nodes; the key contrast is the larger memory/shape fraction in GNNs.}
     \label{fig:fig3}
 \end{figure}
@@ -250,8 +250,8 @@ Fig.~\ref{fig:fig5b} presents a throughput-intensity roofline. GNNs cluster in t
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\columnwidth]{fig5a_opt_speedup.png}
-    \caption{ORT optimization speedup by device. The iGPU shows larger gains from graph-level optimization for GNNs; NPU optimization returns are uniformly modest.}
+    \includegraphics[width=\columnwidth]{fig5a_opt_speedup.pdf}
+    \caption{ORT optimization speedup by device, averaged across datasets and available precisions for each model. The iGPU shows larger gains from graph-level optimization for GNNs; NPU optimization returns are uniformly modest.}
     \label{fig:fig5a}
 \end{figure}
 

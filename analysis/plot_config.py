@@ -7,7 +7,7 @@ Usage:
     from analysis.plot_config import apply_ieee_style, savefig_ieee, shorten_label
 
 Call  apply_ieee_style()  once at the top of each script, then use
-savefig_ieee(fig, path_without_extension)  to export PNG (300 dpi) + SVG.
+savefig_ieee(fig, path_without_extension)  to export PNG (300 dpi), SVG, and PDF.
 """
 
 from __future__ import annotations
@@ -39,6 +39,9 @@ _IEEE_RC = {
     "ytick.labelsize":     8,
     "legend.fontsize":     8,
     "legend.title_fontsize": 8,
+    "pdf.fonttype":        42,  # Embedded TrueType; avoid non-compliant Type 3
+    "ps.fonttype":         42,
+    "svg.fonttype":        "none",  # Preserve editable vector text
     # Figure
     "figure.dpi":          300,
     "figure.figsize":      (3.5, 3.0),
@@ -68,10 +71,10 @@ def savefig_ieee(
     *,
     dpi: int = 300,
 ) -> None:
-    """Save figure as both PNG (300 dpi) and SVG.
+    """Save a figure as PNG (300 dpi), SVG, and vector PDF.
 
     Notes:
-    - Export is deterministic: exactly `{base}.png` and `{base}.svg`.
+    - Export is deterministic: `{base}.png`, `{base}.svg`, and `{base}.pdf`.
     - Uses `bbox_inches="tight"` to fit IEEE-style layouts.
     """
     base = Path(base_path)
@@ -84,10 +87,12 @@ def savefig_ieee(
     try:
         fig.savefig(base.with_suffix(".png"), dpi=dpi, bbox_inches="tight")
         fig.savefig(base.with_suffix(".svg"), bbox_inches="tight")
+        fig.savefig(base.with_suffix(".pdf"), bbox_inches="tight")
     except Exception as e:
         print(f"Save error for {base}: {e}. Falling back to standard save.")
         fig.savefig(base.with_suffix(".png"), dpi=dpi)
         fig.savefig(base.with_suffix(".svg"))
+        fig.savefig(base.with_suffix(".pdf"))
     finally:
         fig.set_constrained_layout(original_cl)
         gc.collect()
