@@ -34,7 +34,9 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
       </div>
     </div>
     <div class="col-span-3 text-center mb-7">
-      <img src="/qrcode.png" class="w-36 h-36 mx-auto border border-slate-200 rounded-lg" alt="QR code linking to the GitHub repository" />
+      <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" rel="noopener noreferrer">
+        <img src="/qrcode.png" class="w-36 h-36 mx-auto border border-slate-200 rounded-lg hover:shadow-md transition-shadow" alt="QR code linking to the GitHub repository" />
+      </a>
       <div class="text-xs text-slate-500 mt-2">Paper · code · data · figures</div>
     </div>
   </div>
@@ -212,10 +214,14 @@ terms: [npu, igpu, fp32, int8]
 <div class="grid grid-cols-12 gap-6 items-center mt-8 border-t border-slate-200 pt-5">
   <div class="col-span-9 text-xl font-semibold text-slate-800">
     Explore the paper, code, CSV results, and reproduction workflow in the repository.<br/>
-    <span class="text-sm font-normal text-slate-500">github.com/yusufarbc/intel-npu-gnn-benchmarking</span>
+    <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline font-normal text-base inline-block mt-2">
+      https://github.com/yusufarbc/intel-npu-gnn-benchmarking ↗
+    </a>
   </div>
   <div class="col-span-3 text-center">
-    <img src="/qrcode.png" class="w-28 h-28 mx-auto" alt="QR code linking to the GitHub repository" />
+    <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" rel="noopener noreferrer">
+      <img src="/qrcode.png" class="w-28 h-28 mx-auto hover:opacity-90 transition-opacity" alt="QR code linking to the GitHub repository" />
+    </a>
   </div>
 </div>
 
