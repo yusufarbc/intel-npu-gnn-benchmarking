@@ -207,7 +207,7 @@ GATv2             & 13.19 & --- & ---$^{\dagger}$ \\
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\columnwidth]{fig2_int8_speedup_heatmap.png}
+    \includegraphics[width=\columnwidth]{fig2_int8_speedup_heatmap.pdf}
     \caption{INT8 speedup heatmap across models and devices. Values below 1.0 (red) indicate INT8 regression. The iGPU consistently benefits; NPU and CPU show mixed results.}
     \label{fig:fig2}
 \end{figure}
@@ -257,7 +257,7 @@ Fig.~\ref{fig:fig5b} presents a throughput-intensity roofline. GNNs cluster in t
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\columnwidth]{fig5b_roofline.png}
+    \includegraphics[width=\columnwidth]{fig5b_roofline.pdf}
     \caption{Computational efficiency (throughput vs.\ arithmetic intensity). GNNs occupy the memory-bound region (low intensity, low throughput); vision models on NPU achieve higher operational intensity.}
     \label{fig:fig5b}
 \end{figure}
@@ -267,7 +267,7 @@ Figs.~\ref{fig:fig7} and~\ref{fig:fig6} analyze NPU latency versus graph density
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\columnwidth]{fig7_density_vs_latency.png}
+    \includegraphics[width=\columnwidth]{fig7_density_vs_latency.pdf}
     \caption{NPU latency vs.\ graph density. The flat regression line ($r\approx 0$) shows no detectable relationship in the evaluated sweep and is consistent with static-shape compilation.}
     \label{fig:fig7}
 \end{figure}
