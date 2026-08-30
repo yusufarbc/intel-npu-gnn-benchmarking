@@ -1,7 +1,7 @@
 # Maintained development environment.
-# The accepted paper reports OpenVINO 2024.1 and ONNX Runtime 1.18;
-# see paper/requirements-core.txt. Results from this newer stack are new
-# measurements and must not be presented as the archived paper experiment.
+# The accepted paper reports OpenVINO 2024.1 and ONNX Runtime 1.18.
+# Results from this newer stack are new measurements and must not be
+# presented as the archived paper experiment.
 
 # Core inference stack
 onnx==1.21.0

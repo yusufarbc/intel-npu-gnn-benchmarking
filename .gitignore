@@ -37,8 +37,10 @@ __pypackages__/
 # Dataset snapshots
 data/ogbn_*/
 
-# Local documentation notes (not published with the repository)
+# Local documentation notes and review files (not published with the repository)
 docs/
+.committee-conditions
+scratch/
 
 # ONNX models (large binary files — regenerate with: python analysis/model_prep.py)
 models/*.onnx
