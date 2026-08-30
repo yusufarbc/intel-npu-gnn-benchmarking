@@ -29,9 +29,28 @@
 
 <p align="center"><em>INT8 speedup over FP32. Values below 1.0 indicate a latency regression.</em></p>
 
-| Dense FP32 highlights | Sparse GNN and INT8 highlights |
-|---|---|
-| **MobileNetV2:** 1.90 ms on NPU, **4.5x** vs. CPU<br>**ResNet50:** 3.94 ms on NPU, **8.0x** vs. CPU<br>**ViT-Tiny:** 9.10 ms on NPU, **11.4x** vs. CPU | **GraphTransformer:** 6.03 ms iGPU vs. 10.72 ms NPU<br>**SGC INT8 on NPU:** 173.90 ms, **2.2x slower** than FP32<br>**GAT/GATv2 INT8:** NPU compilation failed |
+<table width="100%">
+  <thead>
+    <tr>
+      <th width="50%">Dense FP32 highlights</th>
+      <th width="50%">Sparse GNN and INT8 highlights</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <strong>MobileNetV2:</strong> 1.90 ms on NPU, <strong>4.5x</strong> vs. CPU<br>
+        <strong>ResNet50:</strong> 3.94 ms on NPU, <strong>8.0x</strong> vs. CPU<br>
+        <strong>ViT-Tiny:</strong> 9.10 ms on NPU, <strong>11.4x</strong> vs. CPU
+      </td>
+      <td>
+        <strong>GraphTransformer:</strong> 6.03 ms iGPU vs. 10.72 ms NPU<br>
+        <strong>SGC INT8 on NPU:</strong> 173.90 ms, <strong>2.2x slower</strong> than FP32<br>
+        <strong>GAT/GATv2 INT8:</strong> NPU compilation failed
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ### Deployment decision guide
 
