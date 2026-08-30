@@ -18,9 +18,16 @@
 ### Key measurements
 
 <p align="center">
-  <img src="results/figures/fig1_latency_comparison.svg" width="49%" alt="FP32 latency comparison across the CPU, iGPU, and NPU" />
-  <img src="results/figures/fig2_int8_speedup_heatmap.svg" width="49%" alt="INT8 speedup over FP32 across models and devices" />
+  <img src="results/figures/fig1_latency_comparison.svg" width="100%" alt="FP32 latency comparison across the CPU, iGPU, and NPU" />
 </p>
+
+<p align="center"><em>FP32 latency across the CPU, integrated GPU (iGPU), and NPU. Lower is better.</em></p>
+
+<p align="center">
+  <img src="results/figures/fig2_int8_speedup_heatmap.svg" width="100%" alt="INT8 speedup over FP32 across models and devices" />
+</p>
+
+<p align="center"><em>INT8 speedup over FP32. Values below 1.0 indicate a latency regression.</em></p>
 
 | Dense FP32 highlights | Sparse GNN and INT8 highlights |
 |---|---|
