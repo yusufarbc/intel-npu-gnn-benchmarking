@@ -62,9 +62,6 @@
 | [Interactive poster](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/) | Six-slide visual summary for the IEEE HPEC 2026 poster session |
 | [Camera-ready paper](paper/paper.pdf) | Full methodology, analysis, limitations, and references |
 | [Benchmark notebook](npu_gnn_benchmarking.ipynb) | End-to-end experiment and figure pipeline |
-| [Results and figures](results/figures/) | Aggregated CSV files plus publication-ready PNG/SVG figures |
-| [Methodology notes](docs/methodology.md) | Compact implementation and measurement reference |
-| [Analysis code](analysis/) | Model preparation, profiling, scalability, and plotting modules |
 
 ## Experimental setup
 
