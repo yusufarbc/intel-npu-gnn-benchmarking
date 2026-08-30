@@ -1,6 +1,7 @@
 ---
 theme: default
-layout: default
+layout: poster
+terms: [npu, gnn, igpu, fp32, meteor-lake]
 info: |
   ## Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis
   IEEE HPEC 2026 interactive poster.
@@ -32,7 +33,7 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
         Department of Software Engineering, Karabük University
       </div>
     </div>
-    <div class="col-span-3 text-center">
+    <div class="col-span-3 text-center mb-7">
       <img src="/qrcode.png" class="w-36 h-36 mx-auto border border-slate-200 rounded-lg" alt="QR code linking to the GitHub repository" />
       <div class="text-xs text-slate-500 mt-2">Paper · code · data · figures</div>
     </div>
@@ -46,7 +47,8 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
 -->
 
 ---
-layout: default
+layout: poster
+terms: [npu, gnn, spmm, scatter-gather, memory-bound]
 ---
 
 ## Why sparse GNNs challenge dense accelerators
@@ -76,8 +78,6 @@ layout: default
   Research question: when does a client NPU provide real end-to-end benefit rather than nominal device availability?
 </div>
 
-<Glossary :terms="['npu', 'gnn', 'spmm', 'scatter-gather', 'memory-bound']" />
-
 <!--
 [Sources]
 - paper/paper.tex, Sections I and II.
@@ -85,10 +85,11 @@ layout: default
 -->
 
 ---
-layout: default
+layout: poster
+terms: [igpu, ogb, openvino, warm-up, socwatch]
 ---
 
-## We measured latency, device assignment, and selected package power
+## Measurement setup and protocol
 
 <div class="grid grid-cols-12 gap-8 mt-5">
   <div class="col-span-5">
@@ -112,8 +113,6 @@ layout: default
   Timed latency includes provider dispatch and required host-device transfers after warm-up. Loading, preprocessing, conversion, and one-time compilation are excluded.
 </div>
 
-<Glossary :terms="['igpu', 'ogb', 'openvino', 'warm-up', 'socwatch']" />
-
 <!--
 [Sources]
 - paper/paper.tex, Section III and Tables I-II.
@@ -121,7 +120,8 @@ layout: default
 -->
 
 ---
-layout: default
+layout: poster
+terms: [npu, igpu, fp32, mobilenet, vit]
 ---
 
 ## Dense models benefit; the iGPU leads the evaluated GNNs
@@ -146,7 +146,8 @@ layout: default
 -->
 
 ---
-layout: default
+layout: poster
+terms: [int8, cpu-fallback, dynamic-quantization, sgc, mpnn]
 ---
 
 ## INT8 is a compatibility decision, not a guaranteed speedup
@@ -174,8 +175,6 @@ layout: default
   Always inspect the execution trace: a requested NPU configuration does not prove native NPU execution.
 </div>
 
-<Glossary :terms="['int8', 'cpu-fallback', 'dynamic-quantization', 'sgc', 'mpnn']" />
-
 <!--
 [Sources]
 - paper/paper.tex, Sections IV-B and IV-D, Table III, and Table IV.
@@ -183,7 +182,8 @@ layout: default
 -->
 
 ---
-layout: default
+layout: poster
+terms: [npu, igpu, fp32, int8]
 ---
 
 ## Deployment guidance—and the boundary of the evidence
@@ -218,8 +218,6 @@ layout: default
     <img src="/qrcode.png" class="w-28 h-28 mx-auto" alt="QR code linking to the GitHub repository" />
   </div>
 </div>
-
-<Glossary :terms="['npu', 'igpu', 'fp32', 'int8']" />
 
 <!--
 [Sources]
