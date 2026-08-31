@@ -118,7 +118,7 @@ terms: [igpu, ogb, openvino, warm-up, socwatch]
 <!--
 [Sources]
 - paper/paper.tex, Section III and Tables I-II.
-- Intel, Meteor Lake Hot Chips 2023, DOI 10.1109/HCS59258.2023.10254710.
+- Gomes et al., Meteor Lake and Arrow Lake, IEEE Hot Chips 34, 2022, DOI 10.1109/HCS55958.2022.9895532.
 -->
 
 ---

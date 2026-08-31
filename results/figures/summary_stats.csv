@@ -90,5 +90,5 @@ energy,SGC,CPU_fp32_mJ,
 energy,vit-tiny,NPU_fp32_mJ,
 energy,vit-tiny,GPU_fp32_mJ,
 energy,vit-tiny,CPU_fp32_mJ,
-density_latency_correlation,all,pearson_r,0.5313916051879922
-density_latency_correlation,all,p_value,0.6433385745918315
+density_latency_correlation,all,pearson_r,0.00640432680751105
+density_latency_correlation,all,p_value,0.969134277688845

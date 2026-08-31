@@ -426,12 +426,12 @@ class: compact-slide
 <div class="grid grid-cols-2 gap-3 mt-1">
   <div>
     <ul class="text-sm">
-      <li><strong>Across the three OGB inputs:</strong> NPU latency shows no detectable relationship with graph density while the exported models use fixed tensor shapes; static-shape compilation is a plausible contributor, not an isolated cause.</li>
+      <li><strong>Across the three OGB inputs:</strong> NPU latency shows no detectable density relationship (Pearson r = 0.006, p = 0.969; n = 39) while the exported models use fixed tensor shapes; static-shape compilation is a plausible contributor, not an isolated cause.</li>
       <li><strong>Density correlation: <KaTeX math="r \approx -0.00" /></strong> — no measured correlation across the tested range (6.9–451.7 edges/node).</li>
       <li><strong>Scope:</strong> This fixed-shape sweep does not establish how the NPU responds to dynamically changing tensor dimensions.</li>
     </ul>
     <div class="highlight-box highlight-box-warning text-xs mt-2">
-      <strong>Key observation:</strong> Under the tested static shapes, NPU latency had no detectable correlation with graph density.
+      <strong>Key observation:</strong> Under the tested static shapes, NPU latency had no detectable correlation with graph density (Pearson r = 0.006, p = 0.969; n = 39).
     </div>
   </div>
 
@@ -645,7 +645,7 @@ layout: default
 <div class="grid grid-cols-2 gap-4 mt-2">
   <div>
     <ul style="font-size:0.7rem">
-      <li><strong>Meteor Lake</strong> — Intel Hot Chips 2023, Foveros 3D packaging</li>
+      <li><strong>Meteor Lake</strong> — Gomes et al., IEEE Hot Chips 34 (2022), Foveros 3D packaging</li>
       <li><strong>GNN Accelerators</strong> — HyGCN (HPCA 2020), EnGN (IEEE TC 2021), GRIP (IEEE TC 2023), TT-GNN (MICRO 2023)</li>
       <li><strong>OpenVINO NPU</strong> — Intel NPU plugin, operator coverage, IR pipeline</li>
       <li><strong>MLPerf Inference</strong> — Standardized benchmark suite</li>

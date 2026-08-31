@@ -264,12 +264,12 @@ Fig.~\ref{fig:fig5b} presents a throughput-intensity roofline. GNNs cluster in t
 \end{figure}
 
 \subsection{Graph Density, Size Scaling, and Static-Shape Compilation}
-Figs.~\ref{fig:fig7} and~\ref{fig:fig6} separate two effects. Across the three OGB datasets (6.9--451.7\,edges/node), NPU latency has no detectable correlation with graph density ($r=-0.00$, $p=0.993$). In the APPNP FP32 size sweep at a fixed density of 7\,edges/node, however, NPU latency increases from 5.92\,ms at 512 nodes to 36.03\,ms at 8192 nodes (6.1$\times$ latency for 16$\times$ as many nodes). Each point is a separately compiled fixed-shape graph, so this experiment characterizes size scaling across compiled shapes rather than dynamic-shape execution within one compiled model.
+Figs.~\ref{fig:fig7} and~\ref{fig:fig6} separate two effects. Across the three OGB datasets (6.9--451.7\,edges/node), NPU latency has no detectable correlation with graph density (Pearson $r=0.006$, $p=0.969$, $n=39$). In the APPNP FP32 size sweep at a fixed density of 7\,edges/node, however, NPU latency increases from 5.92\,ms at 512 nodes to 36.03\,ms at 8192 nodes (6.1$\times$ latency for 16$\times$ as many nodes). Each point is a separately compiled fixed-shape graph, so this experiment characterizes size scaling across compiled shapes rather than dynamic-shape execution within one compiled model.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\columnwidth]{fig7_density_vs_latency.pdf}
-    \caption{NPU latency vs.\ graph density. The flat regression line ($r\approx 0$) shows no detectable relationship in the evaluated sweep and is consistent with static-shape compilation.}
+    \caption{NPU latency vs.\ graph density. The fitted association is negligible (Pearson $r=0.006$, $p=0.969$, $n=39$); this result is consistent with static-shape compilation but does not isolate its cause.}
     \label{fig:fig7}
 \end{figure}
 

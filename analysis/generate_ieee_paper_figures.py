@@ -16,6 +16,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from scipy.stats import pearsonr
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -300,6 +301,7 @@ def figure_6_density() -> None:
 
     x = data["edges_per_node"].to_numpy(dtype=float)
     y = data["mean_ms"].to_numpy(dtype=float)
+    correlation, p_value = pearsonr(x, y)
     slope, intercept = np.polyfit(x, y, 1)
     x_line = np.linspace(x.min(), x.max(), 200)
     y_line = slope * x_line + intercept
@@ -311,7 +313,7 @@ def figure_6_density() -> None:
         mean_error = residual_error * np.sqrt(1 / len(x) + (x_line - x.mean()) ** 2 / spread)
         ax.fill_between(x_line, y_line - 1.96 * mean_error, y_line + 1.96 * mean_error,
                         color="#777777", alpha=0.2, linewidth=0)
-    ax.text(0.30, 0.95, "r≈0", transform=ax.transAxes,
+    ax.text(0.30, 0.95, f"r={correlation:.3f}, p={p_value:.3f}", transform=ax.transAxes,
             ha="center", va="top", fontsize=8)
     ax.set_xlabel("Edges per node (graph density)")
     ax.set_ylabel("NPU latency (ms)")
