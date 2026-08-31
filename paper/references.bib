@@ -70,8 +70,6 @@ year={2019},
   month = 	 {09--15 Jun},
   publisher =    {PMLR},
 }
-
-
 @inproceedings{pmlr-v70-gilmer17a,
   title = 	 {Neural Message Passing for Quantum Chemistry},
   author =       {Justin Gilmer and Samuel S. Schoenholz and Patrick F. Riley and Oriol Vinyals and George E. Dahl},
@@ -247,7 +245,7 @@ series = {NIPS '20}
   number={},
   pages={452-464},
   keywords={Training;Processor scheduling;Computational modeling;Graph neural networks;Scheduling;System-on-chip;Optimization;Graph Neural Networks;Tensor-train Decomporition;Hardware Accelerator},
-  doi={},
+  doi={10.1145/3613424.3614305},
   ISSN={},
   month={Oct},
 }
@@ -274,7 +272,6 @@ series = {NIPS '20}
   volume={72},
   number={4},
   pages={914-925},
-\mathrm{m}$   28  n m    implementation capable of executing inference for several widely-used GNN models (GCN, GraphSAGE, G-GCN, and GIN). Across several benchmark graphs, it reduces 99th percentile latency by a geometric mean of $17\times$   17 ×    and $23\times$   23 ×    compared to a CPU and GPU baseline, respectively, while drawing only $5 \;\mathrm{W}$   5  W   .},
   keywords={Aggregates;Memory management;Bandwidth;Sparse matrices;Programming;Graph neural networks;Computational modeling;Accelerator architectures;neural networks;hardware;system-on-chip;graph neural networks},
   doi={10.1109/TC.2022.3197083},
   ISSN={1557-9956},
@@ -414,7 +411,7 @@ volume = {3},
 pages = {71-92},
 year = {2023},
 issn = {2667-3452},
-doi = {https://doi.org/10.1016/j.iotcps.2023.02.004},
+doi = {10.1016/j.iotcps.2023.02.004},
 author = {Raghubir Singh and Sukhpal Singh Gill},
 keywords = {Edge AI, Edge computing, Artificial intelligence, Fog computing, Machine learning, Cloud computing},
 }
@@ -491,8 +488,7 @@ year = {2021},
 isbn = {9781450383912},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-doi = {10.1145/3453483.3454083},
- higher fusion opportunities, outperforms four state-of-the-art DNN execution frameworks with 9.3\texttimes{} speedup. The memory requirement reduction and speedups can enable the execution of many of the target models on mobile devices and even make them part of a real-time application.},
+ doi = {10.1145/3453483.3454083},
 booktitle = {Proceedings of the 42nd ACM SIGPLAN International Conference on Programming Language Design and Implementation},
 pages = {883–898},
 numpages = {16},
@@ -590,13 +586,12 @@ series = {PLDI 2021}
   year={2020},
 }
 
-@inproceedings{intel_meteorlake_hotchips_2023,
-  author={{Intel Corporation}},
-  title={Meteor Lake: Intel 4 Compute Architecture and 3D Foveros Disaggregated System-on-Chip},
-  booktitle={IEEE Hot Chips 35 Symposium (HCS 2023)},
-  year={2023},
-  pages={1--28},
-  doi={10.1109/HCS59258.2023.10254710}
+@misc{intel_meteorlake_hotchips_2022,
+  author={Gomes, Wilfred},
+  title={Meteor Lake and Arrow Lake: Intel Next Gen 3D Client Architecture Platform with Foveros},
+  howpublished={Hot Chips 34},
+  year={2022},
+  url={https://hc34.hotchips.org/program/conference/}
 }
 
 @techreport{intel_core_ultra_npu,
@@ -619,11 +614,11 @@ series = {PLDI 2021}
 }
 
 @manual{openvino_npu_docs,
-  title={OpenVINO Toolkit 2024.1: NPU Plugin Developer and Quantization Guide},
+  title={OpenVINO Toolkit 2024: NPU Device},
   author={{OpenVINO Toolkit Core Team}},
   organization={Intel Corporation},
   year={2024},
-  url={https://docs.openvino.ai/2024/documentation/legacy-features/npu-plugin.html}
+  url={https://docs.openvino.ai/2024/openvino-workflow/running-inference/inference-devices-and-modes/npu-device.html}
 }
 
 @misc{intel_socwatch_guide,
@@ -675,8 +670,7 @@ year = {2026},
 isbn = {9798400723599},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-doi = {10.1145/3779212.3790164},
- to 8.4\texttimes{} memory reduction and 1.7\texttimes{} to 75.0\texttimes{} speedup compared to existing frameworks, enabling efficient execution of large-scale models and multi-DNN support on resource-constrained mobile GPUs.},
+ doi = {10.1145/3779212.3790164},
 booktitle = {Proceedings of the 31st ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 2},
 pages = {783–797},
 numpages = {15},
@@ -701,8 +695,7 @@ year = {2024},
 isbn = {9798400703867},
 publisher = {Association for Computing Machinery},
 address = {New York, NY, USA},
-doi = {10.1145/3620666.3651324},
- and 3.2\texttimes{}, on average, compared to the NVIDIA A100 GPU and the state-of-the-art accelerator. As a proof-of-concept, we develop a prototype of IANUS with a commercial PIM, NPU, and an FPGA-based PIM controller to demonstrate the feasibility of IANUS.},
+ doi = {10.1145/3620666.3651324},
 booktitle = {Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems, Volume 3},
 pages = {545–560},
 numpages = {16},
@@ -923,19 +916,4 @@ archivePrefix = {arXiv},
   booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
   year      = {2016},
   pages     = {770--778},
-}
-
-@Article{Bayraktar2026,
-author={Bayraktar, Cihan},
-title={Beyond GNNs: a methodological benchmark of feature efficiency for link prediction in sparse developer networks},
-journal={Knowledge and Information Systems},
-year={2026},
-month={Apr},
-day={24},
-volume={68},
-number={1},
-pages={135},
- accuracy and 0.9996 ROC-AUC in the ML community). These results challenge the tendency to automatically favour complex GNNs and provide powerful methodological insight that feature-based learning for sparse networks can deliver both high performance and computational efficiency. The main contribution of this work is to provide a rigorous and data-driven guide for model selection in graph-based learning and to challenge the automatic preference for GNNs in sparse networks. We also implemented a recommendation system prototype that serves as a practical demonstration of the methodological insights obtained.},
-issn={0219-3116},
-doi={10.1007/s10115-026-02765-7},
 }
