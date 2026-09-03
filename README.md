@@ -11,9 +11,9 @@
 
 | Challenge | Approach | Experiment | Main outcome |
 |---|---|---|---|
-| Client NPUs are designed around regular tensor execution, while GNNs combine sparse matrix operations, Gather/Scatter, and indirect memory access. | Export the same workloads to ONNX and measure end-to-end inference across the CPU, Arc iGPU, and AI Boost NPU through OpenVINO. | **14 models** × **3 OGB datasets** × **3 backends**, with FP32/INT8 variants, provider tracing, and selected package-power measurements. | The **NPU leads on supported dense FP32 models**; the **iGPU generally leads the evaluated GNNs**. INT8 must be validated per model. |
+| Client NPUs are designed around regular tensor execution, while GNNs combine sparse matrix operations, Gather/Scatter, and indirect memory access. | Export the same workloads to ONNX and measure end-to-end inference across the CPU, Arc iGPU, and AI Boost NPU through OpenVINO. | **14 models** × fixed-shape inputs derived from **3 OGB datasets** × **3 backends**, with FP32/INT8 variants, runtime traces, and selected package-power measurements. | The **NPU provides its largest CPU-relative gains on selected dense FP32 models**; the **iGPU generally leads the evaluated GNNs**. INT8 must be validated per model. |
 
-> **Takeaway:** accelerator availability is not the same as accelerator execution. A requested NPU configuration may regress, partially execute on the CPU, execute entirely on the CPU, or fail compilation.
+> **Takeaway:** accelerator availability is not the same as verified accelerator execution. A requested NPU configuration may regress, fail to produce an executable artifact, or show an execution anomaly that requires a retained per-operator trace to interpret.
 
 ### Key measurements
 
@@ -94,9 +94,12 @@ The root [`requirements.txt`](requirements.txt) tracks the maintained environmen
 
 - Results characterize one Core Ultra 5 125H system, not every Meteor Lake or later NPU.
 - The suite covers established reference GNNs, not large, temporal, heterogeneous, or recommendation graphs.
+- GNN inference uses fixed 2,708-node, 10,000-edge tensors derived from the OGB source graphs; results are not full-graph OGB measurements.
+- Dense baselines use the same synthetic input under each dataset label; those labels are repetitions, not independent dense-model datasets.
 - NPU power could not be isolated; package telemetry must not be presented as an NPU-only measurement.
+- Latency-derived energy values are heuristic products, not direct active-inference energy measurements.
 - FP32 and INT8 are the evaluated precisions; quantized-model accuracy is outside this study.
-- Compilation failure, partial CPU execution, CPU execution, and native NPU execution are distinct outcomes.
+- Requested-device labels and provider lists do not by themselves prove per-operator assignment.
 
 ## Citation
 

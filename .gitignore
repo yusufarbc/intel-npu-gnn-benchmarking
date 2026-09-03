@@ -46,6 +46,8 @@ scratch/
 models/*.onnx
 models/*.onnx.data
 models/*.onnx.failed
+results/scaling_sweep/models/**/*.onnx
+results/scaling_sweep/models/**/*.onnx.data
 
 # Benchmark runtime artifacts
 *.etl
@@ -53,6 +55,7 @@ results/**/*.log
 results/**/progress.log
 results/scaling_sweep/runs/
 results/density_sweep/runs/
+results/**/run_*/performance_comparison.png
 
 # Reference PDFs (copyright — cite via references.bib)
 paper/references/*.pdf

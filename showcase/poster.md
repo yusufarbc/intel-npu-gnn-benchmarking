@@ -70,7 +70,7 @@ terms: [npu, gnn, spmm, scatter-gather, memory-bound]
     <ul class="text-lg leading-relaxed mt-3">
       <li>Sparse-times-dense multiplication (SpDMM)</li>
       <li>Gather, Scatter, and indirect indexing</li>
-      <li>Low arithmetic intensity</li>
+      <li>Irregular operator structure and data movement</li>
       <li>Operator and device-assignment uncertainty</li>
     </ul>
   </div>
@@ -103,7 +103,7 @@ terms: [igpu, ogb, openvino, warm-up, socwatch]
         <tr><th class="text-left">Platform</th><td>Core Ultra 5 125H, 16 GB LPDDR5x, Windows 11</td></tr>
         <tr><th class="text-left">Backends</th><td>14-core CPU · Arc iGPU · AI Boost NPU 3720</td></tr>
         <tr><th class="text-left">Workloads</th><td>9 GNNs + 5 dense CNN/transformer baselines</td></tr>
-        <tr><th class="text-left">Datasets</th><td>ogbn-arxiv · ogbn-products · ogbn-proteins</td></tr>
+        <tr><th class="text-left">Graph inputs</th><td>Fixed 2,708-node, 10,000-edge tensors derived from three OGB source graphs</td></tr>
         <tr><th class="text-left">Protocol</th><td>Batch 1 · 5 warm-ups · 100 iterations · 3 runs</td></tr>
         <tr><th class="text-left">Paper stack</th><td>OpenVINO 2024.1 · ONNX Runtime 1.18</td></tr>
       </tbody>
@@ -126,7 +126,7 @@ layout: poster
 terms: [npu, igpu, fp32, mobilenet, vit]
 ---
 
-## Dense models benefit; the iGPU leads the evaluated GNNs
+## Selected dense models benefit; the iGPU leads most evaluated GNNs
 
 <div class="grid grid-cols-12 gap-6 mt-3 items-center">
   <div class="col-span-8">
@@ -136,10 +136,11 @@ terms: [npu, igpu, fp32, mobilenet, vit]
     <div><strong class="text-emerald-700">MobileNetV2:</strong><br/>1.90 ms on NPU<br/><strong>4.5x vs. CPU</strong></div>
     <div class="mt-5"><strong class="text-emerald-700">ViT-Tiny:</strong><br/>9.10 ms on NPU<br/><strong>11.4x vs. CPU</strong></div>
     <div class="mt-5"><strong class="text-blue-700">GraphTransformer:</strong><br/>6.03 ms iGPU<br/>10.72 ms NPU</div>
+    <div class="mt-5 text-sm text-slate-600">Backend choice remains model-dependent; iGPU is faster for ViT-Tiny and EfficientNet-B0.</div>
   </div>
 </div>
 
-<div class="text-sm text-slate-500 mt-2 text-center">Mean FP32 latency across the three OGB inputs; lower is better.</div>
+<div class="text-sm text-slate-500 mt-2 text-center">Mean FP32 latency; GNN inputs are OGB-derived fixed tensors, while dense baselines repeat the same synthetic input. Lower is better.</div>
 
 <!--
 [Sources]
@@ -164,17 +165,17 @@ terms: [int8, cpu-fallback, dynamic-quantization, sgc, mpnn]
       <thead><tr><th>Model</th><th>Requested</th><th>Outcome</th></tr></thead>
       <tbody>
         <tr><td>SGC</td><td>NPU INT8</td><td><strong>2.2x slower</strong></td></tr>
-        <tr><td>MPNN</td><td>NPU FP32</td><td>CPU execution</td></tr>
-        <tr><td>BERT-Tiny</td><td>NPU INT8</td><td>Partial CPU execution</td></tr>
-        <tr><td>GAT / GATv2</td><td>NPU INT8</td><td>Compilation failed</td></tr>
-        <tr><td>EfficientNet-B0</td><td>NPU INT8</td><td>Compilation failed</td></tr>
+        <tr><td>MPNN</td><td>NPU FP32</td><td>No retained native-NPU result</td></tr>
+        <tr><td>MobileNetV2</td><td>NPU INT8</td><td>CPU-like timing; placement unverified</td></tr>
+        <tr><td>GAT / GATv2</td><td>NPU INT8</td><td>No executable configuration</td></tr>
+        <tr><td>EfficientNet-B0</td><td>NPU INT8</td><td>No executable configuration</td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
 <div class="mt-2 text-lg font-semibold text-slate-800 text-center">
-  Always inspect the execution trace: a requested NPU configuration does not prove native NPU execution.
+  Retain and inspect per-operator assignment evidence: a requested NPU configuration does not prove native NPU execution.
 </div>
 
 <!--
@@ -194,7 +195,7 @@ terms: [npu, igpu, fp32, int8]
   <div>
     <h3 class="text-xl font-bold text-blue-700">Use the measurements this way</h3>
     <ul class="text-lg leading-relaxed mt-3">
-      <li><strong>Dense FP32 vision:</strong> start with the NPU</li>
+      <li><strong>Dense FP32:</strong> benchmark both NPU and iGPU; the winner is model-dependent</li>
       <li><strong>Evaluated GNNs:</strong> start with the iGPU</li>
       <li><strong>INT8:</strong> benchmark per model and verify assignment</li>
       <li><strong>Energy:</strong> do not infer isolated NPU power from package telemetry</li>
@@ -206,7 +207,9 @@ terms: [npu, igpu, fp32, int8]
       <li>One Core Ultra 5 125H system</li>
       <li>One frozen paper software stack</li>
       <li>Established GNN reference workloads</li>
+      <li>Fixed-shape subgraphs, not full-graph OGB inference</li>
       <li>No post-quantization accuracy study</li>
+      <li>Latency-derived energy is a heuristic estimate</li>
     </ul>
   </div>
 </div>

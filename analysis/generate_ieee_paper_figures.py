@@ -3,7 +3,8 @@
 The paper places these figures at one IEEE column (3.5 in).  Generating a wide
 10 in canvas and scaling it down in LaTeX also scales 8 pt labels to roughly
 3 pt.  This script instead draws at the final physical width and exports PNG,
-SVG, and PDF variants with 8 pt tick and legend text.
+SVG, and PDF variants under results, then copies only the PDF required by
+LaTeX into the paper directory.
 """
 
 from __future__ import annotations
@@ -16,7 +17,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import pearsonr
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -84,7 +84,7 @@ def finish_axis(ax: mpl.axes.Axes) -> None:
 
 
 def export(fig: mpl.figure.Figure, stem: str, *, tight: bool = True) -> None:
-    """Write tightly cropped, final-size artwork to results and paper directories."""
+    """Write all result formats and copy only the LaTeX-ready PDF to paper."""
     RESULTS.mkdir(parents=True, exist_ok=True)
     PAPER.mkdir(parents=True, exist_ok=True)
     creator = "generate_ieee_paper_figures.py"
@@ -107,8 +107,8 @@ def export(fig: mpl.figure.Figure, stem: str, *, tight: bool = True) -> None:
             svg = "\n".join(line.rstrip() for line in output.read_text(encoding="utf-8").splitlines()) + "\n"
             output.write_text(svg, encoding="utf-8", newline="\n")
         outputs.append(output)
-    for output in outputs:
-        shutil.copy2(output, PAPER / output.name)
+    pdf_output = next(output for output in outputs if output.suffix == ".pdf")
+    shutil.copy2(pdf_output, PAPER / pdf_output.name)
     plt.close(fig)
 
 
@@ -195,6 +195,7 @@ def figure_3_operators() -> None:
     models = ordered_models(data["model"])
     data = data.set_index("model").reindex(models)
     categories = ["SpMM/MatMul", "MLP", "Activation", "Attention", "Memory/Shape", "Other"]
+    display_labels = {"SpMM/MatMul": "SpDMM/MatMul"}
     colors = ["#0072B2", "#E69F00", "#009E73", "#CC79A7", "#56B4E9", "#D55E00"]
 
     fig, ax = plt.subplots(figsize=(3.5, 3.05))
@@ -204,7 +205,8 @@ def figure_3_operators() -> None:
     for category, color in zip(categories, colors):
         values = data[category].fillna(0).to_numpy()
         ax.bar(x, values, bottom=bottom, width=0.78, color=color,
-               edgecolor="white", linewidth=0.25, label=category)
+               edgecolor="white", linewidth=0.25,
+               label=display_labels.get(category, category))
         bottom += values
     ax.set_ylabel("Share of ONNX nodes (%)")
     ax.set_ylim(0, 100)
@@ -248,82 +250,7 @@ def figure_4_optimization() -> None:
     export(fig, "fig5a_opt_speedup")
 
 
-def figure_5_roofline() -> None:
-    frames = [pd.read_csv(path) for path in sorted((ROOT / "results").glob("*/scalability_matrix.csv"))]
-    data = pd.concat(frames, ignore_index=True)
-    data["ai"] = pd.to_numeric(data["ai"], errors="coerce")
-    data["throughput_gflops"] = pd.to_numeric(data["throughput_gflops"], errors="coerce")
-
-    fig, ax = plt.subplots(figsize=(3.5, 2.75))
-    fig.subplots_adjust(left=0.19, right=0.98, bottom=0.20, top=0.97)
-    for device in DEVICES:
-        subset = data[
-            (data["device"] == device)
-            & (data["ai"] > 0)
-            & data["throughput_gflops"].notna()
-        ]
-        ax.scatter(subset["ai"], subset["throughput_gflops"], s=18, alpha=0.8,
-                   linewidth=0, color=COLORS[device], label=DEVICE_LABELS[device])
-    ax.set_xscale("log")
-    ax.xaxis.set_major_locator(mpl.ticker.LogLocator(base=10))
-    ax.xaxis.set_major_formatter(mpl.ticker.FuncFormatter(
-        lambda value, _position: f"{value:g}" if value >= 0.1 else ""
-    ))
-    ax.xaxis.set_minor_formatter(mpl.ticker.NullFormatter())
-    ax.set_xlabel("Arithmetic intensity (FLOP/byte)")
-    ax.set_ylabel("Throughput (GFLOP/s)")
-    ax.legend(loc="upper left", ncol=3, frameon=False, handlelength=0.8,
-              handletextpad=0.3, columnspacing=0.7, borderaxespad=0.2)
-    finish_axis(ax)
-    export(fig, "fig5b_roofline")
-
-
-def figure_6_density() -> None:
-    measurements = pd.read_csv(RESULTS / "master_results.csv")
-    datasets = pd.read_csv(RESULTS / "dataset_stats.csv")
-    measurements = measurements[
-        (measurements["device"] == "NPU")
-        & (measurements["precision"].str.lower() == "fp32")
-    ]
-    measurements = measurements.groupby(["model", "dataset"], as_index=False)["mean_ms"].mean()
-    data = measurements.merge(
-        datasets[["dataset", "edges_per_node"]], on="dataset", how="inner"
-    ).dropna(subset=["mean_ms", "edges_per_node"])
-
-    fig, ax = plt.subplots(figsize=(3.5, 2.75))
-    fig.subplots_adjust(left=0.19, right=0.98, bottom=0.20, top=0.97)
-    dataset_order = ["ogbn-arxiv", "ogbn-products", "ogbn-proteins"]
-    dataset_colors = dict(zip(dataset_order, [COLORS["NPU"], COLORS["GPU"], COLORS["CPU"]]))
-    for dataset in dataset_order:
-        subset = data[data["dataset"] == dataset]
-        ax.scatter(subset["edges_per_node"], subset["mean_ms"], s=22, alpha=0.82,
-                   linewidth=0, color=dataset_colors[dataset], label=dataset)
-
-    x = data["edges_per_node"].to_numpy(dtype=float)
-    y = data["mean_ms"].to_numpy(dtype=float)
-    correlation, p_value = pearsonr(x, y)
-    slope, intercept = np.polyfit(x, y, 1)
-    x_line = np.linspace(x.min(), x.max(), 200)
-    y_line = slope * x_line + intercept
-    ax.plot(x_line, y_line, color="#222222", linewidth=1.1)
-    if len(x) > 2:
-        residual = y - (slope * x + intercept)
-        residual_error = np.sqrt(np.sum(residual ** 2) / (len(x) - 2))
-        spread = np.sum((x - x.mean()) ** 2)
-        mean_error = residual_error * np.sqrt(1 / len(x) + (x_line - x.mean()) ** 2 / spread)
-        ax.fill_between(x_line, y_line - 1.96 * mean_error, y_line + 1.96 * mean_error,
-                        color="#777777", alpha=0.2, linewidth=0)
-    ax.text(0.30, 0.95, f"r={correlation:.3f}, p={p_value:.3f}", transform=ax.transAxes,
-            ha="center", va="top", fontsize=8)
-    ax.set_xlabel("Edges per node (graph density)")
-    ax.set_ylabel("NPU latency (ms)")
-    ax.legend(loc="lower center", ncol=3, frameon=False, handlelength=0.8,
-              handletextpad=0.3, columnspacing=0.7, borderaxespad=0.2)
-    finish_axis(ax)
-    export(fig, "fig7_density_vs_latency")
-
-
-def figure_7_scaling() -> None:
+def figure_5_scaling() -> None:
     data = pd.read_csv(ROOT / "results" / "scaling_sweep" / "scaling_sweep.csv")
     data["num_nodes"] = pd.to_numeric(data["num_nodes"], errors="coerce")
     data["num_edges"] = pd.to_numeric(data["num_edges"], errors="coerce")
@@ -376,10 +303,8 @@ def main() -> None:
     figure_2_int8_heatmap()
     figure_3_operators()
     figure_4_optimization()
-    figure_5_roofline()
-    figure_6_density()
-    figure_7_scaling()
-    print("Generated IEEE-size PNG/SVG/PDF versions for paper Figures 1-7.")
+    figure_5_scaling()
+    print("Generated IEEE-size PNG/SVG/PDF versions for the five camera-ready figures.")
 
 
 if __name__ == "__main__":
