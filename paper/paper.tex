@@ -298,6 +298,8 @@ Under OpenVINO 2024.1, the Meteor Lake NPU provides its largest CPU-relative gai
 \subsection{Comparison with Prior Work}
 Custom GNN accelerators like HyGCN \cite{9065592} ($10^{3}\times$ over CPU), EnGN \cite{9161360} ($1.8\times10^{3}\times$ over CPU), and GRIP \cite{9858684} ($17\times$ over CPU) rely on hardware-native sparse engines and dedicated memory hierarchies. By contrast, the Meteor Lake NPU provides 0.9--1.2$\times$ acceleration for the evaluated GNNs over the CPU. These published speedups are not directly comparable because platforms, datasets, and baselines differ; they illustrate the distinct optimization targets of sparse GNN ASICs and commodity client NPUs. This distinction is consistent with observations in the wider edge AI landscape \cite{SINGH202371}.
 
+More broadly, evidence from sparse developer-network link prediction indicates that carefully engineered feature-based models can sometimes provide competitive performance with lower computational complexity than GNN-based alternatives \cite{Bayraktar2026}.
+
 \subsection{Limitations}
 
 \textit{Single-Platform Scope:} All measurements were collected on a single Intel Core Ultra 5 125H processor (4P+8E+2LPE cores, 7 Xe-cores iGPU, one NPU tile). Results may vary across Meteor Lake configurations with different core/memory setups (LPDDR5x vs. DDR5) and subsequent architectures (Lunar Lake, Arrow Lake) due to differences in memory bandwidth.
