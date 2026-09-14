@@ -15,92 +15,83 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
 ---
 
 <div class="flex flex-col h-full justify-between">
-  <!-- Header Row -->
-  <div class="border-b border-slate-200 pb-2">
-    <div class="flex justify-between items-center text-xs">
-      <span class="font-bold text-blue-700 tracking-wide">IEEE HPEC 2026 · RESEARCH OVERVIEW & STANDING POSTER</span>
-      <span class="text-slate-500 font-medium">Intel Core Ultra 5 125H (14-Core CPU · Arc iGPU · AI Boost NPU)</span>
+<div class="border-b border-slate-200 pb-2">
+  <div class="flex justify-between items-center text-xs">
+    <span class="font-bold text-blue-700 tracking-wide">IEEE HPEC 2026 · RESEARCH OVERVIEW & STANDING POSTER</span>
+    <span class="text-slate-500 font-medium">Intel Core Ultra 5 125H (14-Core CPU · Arc iGPU · AI Boost NPU)</span>
+  </div>
+  <h1 class="text-2xl font-extrabold text-slate-900 leading-tight mt-1">
+    Benchmarking GNN Inference on the Intel Core Ultra NPU: Latency, Quantization, and Energy
+  </h1>
+  <div class="text-xs text-slate-600 mt-1">
+    <strong>Yusuf Talha Arabacı · Emrullah Demiral · Ömer Faruk Acar</strong> — Department of Software Engineering, Karabük University
+  </div>
+</div>
+
+<div class="grid grid-cols-12 gap-5 items-center my-auto">
+  <div class="col-span-7 flex flex-col items-center">
+    <div class="w-full text-xs font-semibold text-slate-700 mb-1 flex justify-between">
+      <span>FP32 Latency Across Backends (Lower is Better)</span>
+      <span class="text-slate-400 font-normal">14 Models × 3 Devices</span>
     </div>
-    <h1 class="text-2xl font-extrabold text-slate-900 leading-tight mt-1">
-      Benchmarking GNN Inference on the Intel Core Ultra NPU: Latency, Quantization, and Energy
-    </h1>
-    <div class="text-xs text-slate-600 mt-1">
-      <strong>Yusuf Talha Arabacı · Emrullah Demiral · Ömer Faruk Acar</strong> — Department of Software Engineering, Karabük University
+    <img src="/figures/fig1_latency_comparison.svg" class="w-full max-h-[265px] object-contain rounded border border-slate-100 bg-white p-1" alt="FP32 latency comparison" />
+    <div class="text-[11px] text-slate-500 mt-1 text-center">
+      Batch 1 · OpenVINO 2024.1 · GNNs on fixed 2,708-node subgraphs · Dense models on synthetic baselines
     </div>
   </div>
 
-  <!-- Main Body: 12 Cols -->
-  <div class="grid grid-cols-12 gap-5 items-center my-auto">
-    <!-- Left: Latency Chart (7 cols) -->
-    <div class="col-span-7 flex flex-col items-center">
-      <div class="w-full text-xs font-semibold text-slate-700 mb-1 flex justify-between">
-        <span>FP32 Latency Across Backends (Lower is Better)</span>
-        <span class="text-slate-400 font-normal">14 Models × 3 Devices</span>
+  <div class="col-span-5 flex flex-col gap-2">
+    <div class="glass-panel p-2.5 border-l-4 border-l-emerald-600">
+      <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
+        <span>⚡ Dense FP32 Models</span>
+        <span class="stat-badge badge-npu text-[10px] py-0 px-1">NPU Excels</span>
       </div>
-      <img src="/figures/fig1_latency_comparison.svg" class="w-full max-h-[265px] object-contain rounded border border-slate-100 bg-white p-1" alt="FP32 latency comparison" />
-      <div class="text-[11px] text-slate-500 mt-1 text-center">
-        Batch 1 · OpenVINO 2024.1 · GNNs on fixed 2,708-node subgraphs · Dense models on synthetic baselines
+      <div class="text-[11.5px] text-slate-700 leading-snug mt-1">
+        <strong>MobileNetV2:</strong> 1.90 ms (<strong>4.5x</strong> vs CPU)<br/>
+        <strong>ResNet-50:</strong> 3.94 ms (<strong>8.0x</strong> vs CPU, 2.8x vs iGPU)<br/>
+        <strong>ViT-Tiny:</strong> 9.10 ms (<strong>11.4x</strong> vs CPU)
+      </div>
+    </div>
+
+    <div class="glass-panel p-2.5 border-l-4 border-l-blue-600">
+      <div class="flex items-center gap-1.5 text-xs font-bold text-blue-800">
+        <span>🌐 Evaluated GNN Workloads</span>
+        <span class="stat-badge badge-igpu text-[10px] py-0 px-1">iGPU Leads</span>
+      </div>
+      <div class="text-[11.5px] text-slate-700 leading-snug mt-1">
+        The Arc iGPU consistently achieves the lowest latency across evaluated GNNs.<br/>
+        <strong>GraphTransformer:</strong> 6.03 ms iGPU vs 10.72 ms NPU (<strong>1.8x faster</strong>).
       </div>
     </div>
 
-    <!-- Right: 3 Key Takeaway Panels + QR Box (5 cols) -->
-    <div class="col-span-5 flex flex-col gap-2">
-      <!-- Card 1: Dense Models -->
-      <div class="glass-panel p-2.5 border-l-4 border-l-emerald-600">
-        <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
-          <span>⚡ Dense FP32 Models</span>
-          <span class="stat-badge badge-npu text-[10px] py-0 px-1">NPU Excels</span>
-        </div>
-        <div class="text-[11.5px] text-slate-700 leading-snug mt-1">
-          <strong>MobileNetV2:</strong> 1.90 ms (<strong>4.5x</strong> vs CPU)<br/>
-          <strong>ResNet-50:</strong> 3.94 ms (<strong>8.0x</strong> vs CPU, 2.8x vs iGPU)<br/>
-          <strong>ViT-Tiny:</strong> 9.10 ms (<strong>11.4x</strong> vs CPU)
-        </div>
+    <div class="glass-panel p-2.5 border-l-4 border-l-rose-600">
+      <div class="flex items-center gap-1.5 text-xs font-bold text-rose-800">
+        <span>⚠️ INT8 Quantization</span>
+        <span class="stat-badge badge-cpu text-[10px] py-0 px-1">Not Always Faster</span>
       </div>
-
-      <!-- Card 2: Evaluated GNNs -->
-      <div class="glass-panel p-2.5 border-l-4 border-l-blue-600">
-        <div class="flex items-center gap-1.5 text-xs font-bold text-blue-800">
-          <span>🌐 Evaluated GNN Workloads</span>
-          <span class="stat-badge badge-igpu text-[10px] py-0 px-1">iGPU Leads</span>
-        </div>
-        <div class="text-[11.5px] text-slate-700 leading-snug mt-1">
-          The Arc iGPU consistently achieves the lowest latency across evaluated GNNs.<br/>
-          <strong>GraphTransformer:</strong> 6.03 ms iGPU vs 10.72 ms NPU (<strong>1.8x faster</strong>).
-        </div>
+      <div class="text-[11.5px] text-slate-700 leading-snug mt-1">
+        <strong>SGC regression:</strong> 2.2x slower on NPU (78.6 → 173.9 ms)<br/>
+        <strong>GAT / GATv2:</strong> NPU INT8 compilation failed<br/>
+        <strong>MobileNetV2:</strong> Unverified placement / silent CPU fallback
       </div>
+    </div>
 
-      <!-- Card 3: INT8 Quantization -->
-      <div class="glass-panel p-2.5 border-l-4 border-l-rose-600">
-        <div class="flex items-center gap-1.5 text-xs font-bold text-rose-800">
-          <span>⚠️ INT8 Quantization</span>
-          <span class="stat-badge badge-cpu text-[10px] py-0 px-1">Not Always Faster</span>
-        </div>
-        <div class="text-[11.5px] text-slate-700 leading-snug mt-1">
-          <strong>SGC regression:</strong> 2.2x slower on NPU (78.6 → 173.9 ms)<br/>
-          <strong>GAT / GATv2:</strong> NPU INT8 compilation failed<br/>
-          <strong>MobileNetV2:</strong> Unverified placement / silent CPU fallback
-        </div>
-      </div>
-
-      <!-- Bottom Mini-bar: QR + Link -->
-      <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded p-1.5">
-        <img src="/qrcode.png" class="w-11 h-11 border border-slate-200 rounded" alt="QR code" />
-        <div class="text-[11px] leading-tight text-slate-600">
-          <span class="font-bold text-slate-800">Explore paper, code & data:</span><br/>
-          <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 hover:underline">
-            github.com/yusufarbc/intel-npu-gnn-benchmarking
-          </a>
-        </div>
+    <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded p-1.5">
+      <img src="/qrcode.png" class="w-11 h-11 border border-slate-200 rounded" alt="QR code" />
+      <div class="text-[11px] leading-tight text-slate-600">
+        <span class="font-bold text-slate-800">Explore paper, code & data:</span><br/>
+        <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 hover:underline">
+          github.com/yusufarbc/intel-npu-gnn-benchmarking
+        </a>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Bottom Footer bar -->
-  <div class="flex justify-between items-center text-[10px] text-slate-500 border-t border-slate-100 pt-1">
-    <span>💡 Press <kbd>Right Arrow</kbd> for deep-dive slides (Setup, Attention Mismatch, INT8 Analysis, Decision Guide)</span>
-    <span>IEEE HPEC 2026 Virtual Poster</span>
-  </div>
+<div class="flex justify-between items-center text-[10px] text-slate-500 border-t border-slate-100 pt-1">
+  <span>💡 Press <kbd>Right Arrow</kbd> for deep-dive slides (Setup, Attention Mismatch, INT8 Analysis, Decision Guide)</span>
+  <span>IEEE HPEC 2026 Virtual Poster</span>
+</div>
 </div>
 
 <!--
