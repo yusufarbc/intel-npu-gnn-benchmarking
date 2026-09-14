@@ -67,6 +67,7 @@ paper/references/*.pdf
 !showcase/poster-export.pdf
 !paper/figures/*.pdf
 !results/figures/*.pdf
+!Meteor Lake Architecture Overview.pdf
 
 # Testing
 htmlcov/

@@ -5,6 +5,7 @@
 [![IEEE HPEC 2026](https://img.shields.io/badge/IEEE%20HPEC-2026-00629B.svg)](https://ieee-hpec.org/)
 [![Interactive poster](https://img.shields.io/badge/Interactive%20poster-GitHub%20Pages-7B2CBF.svg)](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/)
 [![Paper](https://img.shields.io/badge/Paper-camera--ready-B31B1B.svg)](paper/paper.pdf)
+[![Meteor Lake Overview](https://img.shields.io/badge/Intel-Meteor%20Lake%20Architecture%20Overview-0071C5.svg)](Meteor%20Lake%20Architecture%20Overview.pdf)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2EA44F.svg)](LICENSE)
 
 ## The study in 30 seconds
@@ -62,6 +63,25 @@
 | [Interactive poster](https://yusufarbc.github.io/intel-npu-gnn-benchmarking/) | Six-slide visual summary for the IEEE HPEC 2026 poster session |
 | [Camera-ready paper](paper/paper.pdf) | Full methodology, analysis, limitations, and references |
 | [Benchmark notebook](npu_gnn_benchmarking.ipynb) | End-to-end experiment and figure pipeline |
+| [Meteor Lake Architecture Overview](Meteor%20Lake%20Architecture%20Overview.pdf) | Official Intel architecture document for the evaluated platform |
+
+## Background: Intel Meteor Lake NPU Architecture
+
+The platform evaluated in this study — the Intel Core Ultra 5 125H — is based on the Meteor Lake architecture, which integrates a CPU tile, a GPU tile, an SoC tile, and an I/O tile in a single package. The AI Boost NPU resides on the SoC tile and is designed for streaming-dataflow workloads. The official architecture document is included in this repository: [`Meteor Lake Architecture Overview.pdf`](Meteor%20Lake%20Architecture%20Overview.pdf).
+
+The following video from Intel Technology explains the Meteor Lake NPU design and its intended use cases (recorded by Intel engineers):
+
+<p align="center">
+  <a href="https://youtu.be/QSzNoX0qplE?si=p_haYFRaty-EmIZD" target="_blank">
+    <img src="https://img.youtube.com/vi/QSzNoX0qplE/maxresdefault.jpg"
+         alt="Meteor Lake: AI Acceleration and NPU Explained | Talking Tech | Intel Technology"
+         width="80%" />
+  </a>
+  <br/>
+  <em>▶ Meteor Lake: AI Acceleration and NPU Explained — Intel Technology (YouTube)</em>
+</p>
+
+Understanding this architecture is essential context for interpreting why the NPU performs differently on sparse GNN workloads compared to the dense vision models it was primarily designed for.
 
 ## Experimental setup
 
