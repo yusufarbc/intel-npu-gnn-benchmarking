@@ -1,29 +1,28 @@
 # Interactive HPEC Poster
 
-This directory contains two Slidev presentations for the paper **“Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis.”**
+This directory contains the Slidev presentation for the paper **“Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis.”**
 
 | Source | Role |
 |---|---|
 | [`poster.md`](poster.md) | Six-slide HPEC virtual poster deployed to GitHub Pages |
 | [`poster-export.pdf`](poster-export.pdf) | Six-slide offline PDF backup for screen sharing |
-| [`slides.md`](slides.md) | Longer technical deck for extended discussion |
 
-The public poster is available at:
+The public interactive poster is available at:
 
 <https://yusufarbc.github.io/intel-npu-gnn-benchmarking/>
 
-## Why the deployed version has six slides
+## Structure of the Six-Slide Poster
 
-HPEC recommends four to six slides for a virtual poster. The short deck is organized around the conversation visitors are most likely to have:
+HPEC recommends four to six slides for a virtual poster. The deck is organized around the conversation visitors are most likely to have during the session:
 
-1. Central result
-2. Challenge and motivation
-3. Experimental setup
-4. FP32 latency result
-5. INT8 and device-assignment exceptions
-6. Deployment guidance and limitations
+1. **Central result:** Main takeaway, authors, and link to code/data
+2. **Challenge and motivation:** Dense streaming NPU vs. irregular sparse GNN mismatch
+3. **Experimental setup:** Meteor Lake SoC platform, backends, workloads, and protocol
+4. **FP32 latency result:** Dense models benefit on NPU; iGPU leads on evaluated GNNs
+5. **INT8 and device-assignment exceptions:** SGC regression, GAT compilation failures, silent CPU fallback
+6. **Deployment guidance and limitations:** Practical backend decision rules and evidence boundaries
 
-The repository and paper provide the deeper material. During the Zoom poster session, screen-share the GitHub Pages tab and open the linked repository only when someone asks for implementation details, raw results, or reproduction instructions.
+The repository and camera-ready paper provide deeper material. During the Zoom poster session, screen-share the GitHub Pages tab or offline PDF and open the linked repository when visitors request raw data, traces, or reproduction scripts.
 
 ## Run locally
 
@@ -37,36 +36,18 @@ npm run dev
 
 The poster will be served at <http://localhost:3030>.
 
-To open the full technical deck instead:
-
-```bash
-npm run dev:full
-```
-
 ## Build or export
 
 ```bash
 # Build the six-slide poster
 npm run build
 
-# Export the poster for offline backup
+# Export the poster as PDF for offline backup
 npm run export
-
-# Build or export the longer technical deck
-npm run build:full
-npm run export:full
 ```
 
-Keep an exported PDF available during the conference in case GitHub Pages or the Zoom connection is unreliable.
+Keep the exported PDF ([`poster-export.pdf`](poster-export.pdf)) open during the conference in case GitHub Pages or the network connection is unreliable.
 
 ## Deployment
 
-The workflow at [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) builds `poster.md` and deploys it to GitHub Pages on every push to `main`.
-
-Before presenting, verify that:
-
-- the GitHub Pages link opens in a private/incognito browser window;
-- the QR code resolves to the repository;
-- all charts remain readable at typical Zoom screen-share resolution;
-- the title, author order, software versions, and headline values match the camera-ready paper;
-- an offline export is available.
+The GitHub Actions workflow at [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml) builds `poster.md` and deploys it to GitHub Pages automatically on every push to `main`.
