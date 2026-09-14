@@ -271,7 +271,7 @@ const activeTerms = computed(() => {
 </script>
 
 <template>
-  <div class="glossary-wrapper">
+  <div v-if="activeTerms && activeTerms.length > 0" class="glossary-wrapper">
     <!-- Trigger Button -->
     <button 
       @click="isOpen = !isOpen"

@@ -1,7 +1,6 @@
 ---
 theme: default
 layout: poster
-terms: [npu, gnn, igpu, fp32, meteor-lake]
 info: |
   ## Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis
   IEEE HPEC 2026 interactive poster.
@@ -28,19 +27,23 @@ Benchmarking GNN Inference on the Intel Core Ultra NPU: Latency, Quantization, a
 </div>
 </div>
 <div class="grid grid-cols-12 gap-5 items-stretch my-auto">
-<div class="col-span-6 flex flex-col justify-between gap-3">
+<div class="col-span-6 flex flex-col justify-between gap-2.5">
 <div class="glass-panel p-3 border-l-4 border-l-blue-600 bg-slate-50/70">
 <div class="text-xs font-bold uppercase tracking-wider text-blue-800 mb-1.5 flex items-center gap-1.5">
 <span>🎯 Research Questions</span>
 </div>
 <div class="text-[13px] font-semibold text-slate-800 leading-snug">
-"When does a client NPU provide real end-to-end acceleration for GNN inference compared with the CPU and integrated GPU?"
+When does a client NPU provide real end-to-end acceleration for GNN inference compared with the CPU and integrated GPU?
 </div>
 <div class="text-xs text-slate-600 leading-snug mt-2 pt-2 border-t border-slate-200/80">
-"Does INT8 quantization consistently improve NPU performance?"
+Does INT8 quantization consistently improve NPU performance?
 </div>
 </div>
-<div class="glass-panel p-3.5 border-2 border-blue-500/80 bg-blue-50/40 rounded-lg flex flex-col justify-between">
+<div class="text-[11px] text-slate-600 font-medium bg-slate-100/90 border border-slate-200/90 rounded px-2.5 py-1 flex items-center justify-between">
+<span>🔬 <strong>Experimental Scope:</strong> 14 models · 3 backends</span>
+<span class="text-slate-500">OpenVINO 2024.1 · Batch 1</span>
+</div>
+<div class="glass-panel p-3 border-2 border-blue-500/80 bg-blue-50/40 rounded-lg flex flex-col justify-between">
 <div>
 <div class="text-xs font-bold uppercase tracking-wider text-blue-900 mb-1 flex items-center gap-1.5">
 <span>💡 Central Finding</span>
@@ -52,7 +55,7 @@ Best accelerator depends on the workload.
 The Intel NPU performs very well on supported dense FP32 models, while the integrated Arc GPU generally provides lower latency for the evaluated sparse GNN workloads.
 </div>
 </div>
-<div class="text-[11.5px] font-semibold text-rose-800 bg-rose-50 border border-rose-200 rounded px-2 py-1 mt-2.5">
+<div class="text-[11.5px] font-semibold text-rose-800 bg-rose-50 border border-rose-200 rounded px-2 py-1 mt-2">
 ⚠️ INT8 is not a guaranteed speedup and must be validated per model.
 </div>
 </div>
@@ -75,7 +78,7 @@ The Intel NPU performs very well on supported dense FP32 models, while the integ
 <span class="stat-badge badge-igpu text-[10px] py-0 px-1">iGPU Leads</span>
 </div>
 <div class="text-xs text-slate-700 leading-snug mt-1">
-The Arc iGPU consistently achieves the lowest latency across evaluated GNNs.<br/>
+The Arc iGPU generally achieves the lowest latency across the evaluated GNN workloads.<br/>
 <strong>GraphTransformer:</strong> 6.03 ms iGPU vs 10.72 ms NPU (<strong>1.8x faster</strong>).
 </div>
 </div>
@@ -87,13 +90,13 @@ The Arc iGPU consistently achieves the lowest latency across evaluated GNNs.<br/
 <div class="text-xs text-slate-700 leading-snug mt-1">
 <strong>SGC regression:</strong> 2.2x slower on NPU (78.6 → 173.9 ms)<br/>
 <strong>GAT / GATv2:</strong> NPU INT8 compilation failed<br/>
-<strong>MobileNetV2:</strong> Unverified placement / silent CPU fallback
+<strong>MobileNetV2:</strong> Unverified placement / possible CPU fallback
 </div>
 </div>
 <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded p-1.5">
-<img src="/qrcode.png" class="w-10 h-10 border border-slate-200 rounded" alt="QR code" />
+<img src="/qrcode.png" class="w-13 h-13 border border-slate-200 rounded bg-white p-0.5" alt="QR code" />
 <div class="text-[11px] leading-tight text-slate-600">
-<span class="font-bold text-slate-800">Explore paper, code & data:</span><br/>
+<span class="font-bold text-slate-800 text-xs">Explore paper, code & data:</span><br/>
 <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 hover:underline">
 github.com/yusufarbc/intel-npu-gnn-benchmarking
 </a>

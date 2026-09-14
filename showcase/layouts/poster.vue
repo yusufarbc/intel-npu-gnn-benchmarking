@@ -10,6 +10,6 @@ defineProps({
 <template>
   <div class="slidev-layout default">
     <slot />
-    <Glossary :terms="terms" />
+    <Glossary v-if="$nav.currentPage > 1 && terms && terms.length > 0" :terms="terms" />
   </div>
 </template>
