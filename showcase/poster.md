@@ -255,45 +255,83 @@ terms: [int8, cpu-fallback, dynamic-quantization, sgc, mpnn]
 ---
 layout: poster
 terms: [npu, igpu, fp32, int8]
+class: compact-slide
 ---
 
 ## Deployment guidance—and the boundary of the evidence
 
-<div class="grid grid-cols-2 gap-10 mt-5">
-  <div>
-    <h3 class="text-xl font-bold text-blue-700">Use the measurements this way</h3>
-    <ul class="text-lg leading-relaxed mt-3">
-      <li><strong>Dense FP32:</strong> benchmark both NPU and iGPU; the winner is model-dependent</li>
-      <li><strong>Evaluated GNNs:</strong> start with the iGPU</li>
-      <li><strong>INT8:</strong> benchmark per model and verify assignment</li>
-      <li><strong>Energy:</strong> do not infer isolated NPU power from package telemetry</li>
-    </ul>
-  </div>
-  <div>
-    <h3 class="text-xl font-bold text-slate-700">Do not overgeneralize</h3>
-    <ul class="text-lg leading-relaxed mt-3">
-      <li>One Core Ultra 5 125H system</li>
-      <li>One frozen paper software stack</li>
-      <li>Established GNN reference workloads</li>
-      <li>Fixed-shape subgraphs, not full-graph OGB inference</li>
-      <li>No post-quantization accuracy study</li>
-      <li>Latency-derived energy is a heuristic estimate</li>
-    </ul>
-  </div>
+<div class="grid grid-cols-2 gap-6 mt-2 items-start">
+<div class="glass-panel !m-0 p-3 border-l-4 border-l-blue-600 bg-slate-50/50">
+<h3 class="text-base font-bold text-blue-700 flex items-center gap-1.5">
+<span>🎯 Use the measurements this way</span>
+</h3>
+<ul class="text-xs leading-relaxed mt-2 space-y-1">
+<li><strong>Dense FP32:</strong> benchmark both NPU and iGPU; winner is model-dependent.</li>
+<li><strong>Evaluated GNNs:</strong> start with the Arc iGPU for lowest latency.</li>
+<li><strong>INT8:</strong> benchmark per model and inspect per-op device assignment.</li>
+<li><strong>Energy:</strong> avoid inferring isolated NPU power from package telemetry.</li>
+</ul>
+</div>
+<div class="glass-panel !m-0 p-3 border-l-4 border-l-slate-400 bg-slate-50/50">
+<h3 class="text-base font-bold text-slate-700 flex items-center gap-1.5">
+<span>⚠️ Do not overgeneralize</span>
+</h3>
+<ul class="text-xs leading-relaxed mt-2 space-y-1">
+<li>Evaluated on a single Intel Core Ultra 5 125H test platform.</li>
+<li>Uses one frozen paper stack: OpenVINO 2024.1 & ONNX Runtime 1.18.</li>
+<li>Fixed-shape subgraphs (2,708 nodes), not dynamic full-graph OGB runs.</li>
+<li>No post-quantization accuracy or task-loss evaluation was conducted.</li>
+</ul>
+</div>
 </div>
 
-<div class="grid grid-cols-12 gap-6 items-center mt-8 border-t border-slate-200 pt-5">
-  <div class="col-span-9 text-xl font-semibold text-slate-800">
-    Explore the paper, code, CSV results, and reproduction workflow in the repository.<br/>
-    <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline font-normal text-base inline-block mt-2">
-      https://github.com/yusufarbc/intel-npu-gnn-benchmarking ↗
-    </a>
-  </div>
-  <div class="col-span-3 text-center">
-    <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" rel="noopener noreferrer">
-      <img src="/qrcode.png" class="w-28 h-28 mx-auto hover:opacity-90 transition-opacity" alt="QR code linking to the GitHub repository" />
-    </a>
-  </div>
+<div class="grid grid-cols-12 gap-5 items-center mt-3 border-t border-slate-200 pt-3">
+<div class="col-span-9 flex flex-col justify-between gap-2">
+<div class="flex items-center justify-between">
+<div class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+<span>🙏 Thank You for Your Interest!</span>
+<span class="text-[11px] font-semibold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-200">🤝 Open to Collaboration</span>
+</div>
+</div>
+<div class="text-xs text-slate-600">
+Interested in joint research, edge AI benchmarking, or GNN accelerator profiling? We'd love to connect!
+</div>
+<div class="grid grid-cols-3 gap-2 mt-0.5">
+<div class="bg-slate-50 border border-slate-200 rounded p-1.5">
+<div class="font-bold text-slate-800 text-xs">Yusuf Talha Arabacı</div>
+<div class="text-[10px] text-slate-500">Lead Author</div>
+<a href="mailto:yusuftalhaarabaci@hotmail.com" class="text-blue-600 hover:underline text-[11px] block truncate mt-0.5">
+yusuftalhaarabaci@hotmail.com
+</a>
+</div>
+<div class="bg-slate-50 border border-slate-200 rounded p-1.5">
+<div class="font-bold text-slate-800 text-xs">Emrullah Demiral</div>
+<div class="text-[10px] text-slate-500">Co-Author</div>
+<a href="mailto:emrullahdemiral@karabuk.edu.tr" class="text-blue-600 hover:underline text-[11px] block truncate mt-0.5">
+emrullahdemiral@karabuk.edu.tr
+</a>
+</div>
+<div class="bg-slate-50 border border-slate-200 rounded p-1.5">
+<div class="font-bold text-slate-800 text-xs">Ömer Faruk Acar</div>
+<div class="text-[10px] text-slate-500">Co-Author</div>
+<a href="mailto:farukacar@karabuk.edu.tr" class="text-blue-600 hover:underline text-[11px] block truncate mt-0.5">
+farukacar@karabuk.edu.tr
+</a>
+</div>
+</div>
+<div class="text-[11px] text-slate-500 mt-0.5">
+Explore paper, code, raw data & reproduction: 
+<a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline font-semibold">
+github.com/yusufarbc/intel-npu-gnn-benchmarking ↗
+</a>
+</div>
+</div>
+<div class="col-span-3 text-center flex flex-col items-center justify-center">
+<a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" rel="noopener noreferrer">
+<img src="/qrcode.png" class="w-24 h-24 mx-auto rounded border border-slate-200 p-1 bg-white hover:opacity-90 transition-opacity shadow-sm" alt="QR code" />
+</a>
+<span class="text-[10px] text-slate-500 mt-1 font-medium">Scan for Repo & Paper</span>
+</div>
 </div>
 
 <!--
