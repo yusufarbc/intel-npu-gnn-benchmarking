@@ -41,6 +41,7 @@ data/ogbn_*/
 docs/
 .committee-conditions
 scratch/
+poster-sunum-ozel/
 
 # ONNX models (large binary files — regenerate with: python analysis/model_prep.py)
 models/*.onnx
