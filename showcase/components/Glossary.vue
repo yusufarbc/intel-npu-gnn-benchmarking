@@ -53,7 +53,7 @@ const glossary = {
   },
   'dense-graph': {
     title: 'Dense Graph',
-    desc: 'A graph with high connectivity where node connections approach the theoretical maximum (e.g., ogbn-proteins, average degree of 451.7).'
+    desc: 'A graph with high connectivity where node connections approach the theoretical maximum (e.g., ogbn-proteins, average degree of 298.5).'
   },
   'adjacency-matrix': {
     title: 'Adjacency Matrix',

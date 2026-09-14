@@ -53,6 +53,9 @@ results/scaling_sweep/models/**/*.onnx.data
 *.etl
 results/**/*.log
 results/**/progress.log
+results/**/baseline_profiling.json
+results/**/optimized_profiling.json
+results/**/baseline_onnxruntime_profile_*.json
 results/scaling_sweep/runs/
 results/density_sweep/runs/
 results/**/run_*/performance_comparison.png

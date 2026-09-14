@@ -49,3 +49,22 @@ keywords:
   - ONNX Runtime
   - INT8 quantization
   - edge AI
+preferred-citation:
+  type: conference-paper
+  authors:
+    - family-names: Arabacı
+      given-names: Yusuf Talha
+      affiliation: Karabük University
+      country: TR
+    - family-names: Demiral
+      given-names: Emrullah
+      affiliation: Karabük University
+      country: TR
+    - family-names: Acar
+      given-names: Ömer Faruk
+      affiliation: Karabük University
+      country: TR
+  title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quantization, and Energy Analysis"
+  collection-title: "2026 IEEE High Performance Extreme Computing Conference (HPEC)"
+  year: 2026
+  url: "https://yusufarbc.github.io/intel-npu-gnn-benchmarking/"

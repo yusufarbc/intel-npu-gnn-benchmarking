@@ -1,6 +1,9 @@
 {
   "name": "npu-gnn-benchmarking-showcase",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "slidev poster.md --port 3030",
     "dev:full": "slidev slides.md --port 3030",
