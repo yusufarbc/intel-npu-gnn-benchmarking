@@ -16,11 +16,11 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
 <div class="flex flex-col h-full justify-between">
 <div class="border-b border-slate-200 pb-1">
 <div class="flex justify-between items-center text-xs">
-<span class="font-bold text-blue-700 tracking-wide">IEEE HPEC 2026 · RESEARCH OVERVIEW & STANDING POSTER</span>
+<span class="font-bold text-blue-700 tracking-wide">IEEE HPEC 2026 · RESEARCH OVERVIEW</span>
 <span class="text-slate-500 font-medium text-xs">Intel Core Ultra 5 125H (14-Core CPU · Arc iGPU · AI Boost NPU)</span>
 </div>
 <h1 class="text-[1.35rem] font-extrabold text-slate-900 leading-tight mt-0.5">
-Benchmarking GNN Inference on the Intel Core Ultra NPU: Latency, Quantization, and Energy
+Benchmarking GNN Inference on the Intel Core Ultra NPU: Latency, Quantization, and Energy Analysis
 </h1>
 <div class="text-[11px] text-slate-600 mt-0.5">
 <strong>Yusuf Talha Arabacı · Emrullah Demiral · Ömer Faruk Acar</strong> — Department of Software Engineering, Karabük University
