@@ -39,6 +39,13 @@
   padding: 1.5rem 2rem !important;
 }
 
+/* Overflow hidden helper */
+.overflow-hidden,
+.overflow-hidden.slidev-layout,
+.overflow-hidden .slidev-layout {
+  overflow-y: hidden !important;
+}
+
 /* Compact slide helper for overflow slides */
 .compact-slide,
 .compact-slide .slidev-layout {
