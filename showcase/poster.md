@@ -299,7 +299,7 @@ Interested in joint research, edge AI benchmarking, or GNN accelerator profiling
 <div class="grid grid-cols-3 gap-2 mt-0.5">
 <div class="bg-slate-50 border border-slate-200 rounded p-1.5">
 <div class="font-bold text-slate-800 text-xs">Yusuf Talha Arabacı</div>
-<div class="text-[10px] text-slate-500">First Author</div>
+<div class="text-[10px] text-slate-500">Author</div>
 <a href="mailto:yusuftalhaarabaci@hotmail.com" class="text-blue-600 hover:underline text-[11px] block truncate mt-0.5">
 yusuftalhaarabaci@hotmail.com
 </a>
