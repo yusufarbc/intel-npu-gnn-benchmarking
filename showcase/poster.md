@@ -14,7 +14,7 @@ title: "Benchmarking GNN Inference on the Intel Core Ultra NPU: A Latency, Quant
 ---
 
 <div class="flex flex-col h-full justify-between">
-<div class="border-b border-slate-200 pb-1">
+<div class="border-b border-slate-200 pb-1 relative">
 <div class="flex justify-between items-center text-xs">
 <span class="font-bold text-blue-700 tracking-wide">IEEE HPEC 2026 · RESEARCH OVERVIEW</span>
 <span class="text-slate-500 font-medium text-xs">Intel Core Ultra 5 125H (14-Core CPU · Arc iGPU · AI Boost NPU)</span>
@@ -25,6 +25,7 @@ Benchmarking GNN Inference on the Intel Core Ultra NPU: Latency, Quantization, a
 <div class="text-[11px] text-slate-600 mt-0.5">
 <strong>Yusuf Talha Arabacı · Emrullah Demiral · Ömer Faruk Acar</strong> — Department of Software Engineering, Karabük University
 </div>
+<img src="/qrcode.png" class="absolute right-1 bottom-1 w-16 h-16 border border-slate-200 rounded-lg bg-white p-0.5 shadow-sm" alt="QR code" />
 </div>
 <div class="grid grid-cols-12 gap-4 items-stretch my-1">
 <div class="col-span-6 flex flex-col justify-between gap-2">
@@ -93,13 +94,11 @@ The Arc iGPU generally achieves the lowest latency across the evaluated GNN work
 <strong>MobileNetV2:</strong> Unverified placement / possible CPU fallback
 </div>
 </div>
-<div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded p-1 px-2">
-<img src="/qrcode.png" class="w-11 h-11 border border-slate-200 rounded bg-white p-0.5" alt="QR code" />
-<div class="text-[10.5px] leading-tight text-slate-600">
-<span class="font-bold text-slate-800 text-[11px]">Explore paper, code & data:</span><br/>
-<a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 hover:underline">
-github.com/yusufarbc/intel-npu-gnn-benchmarking
-</a>
+<div class="bg-slate-50 border border-slate-200 rounded p-1 px-2.5 text-[10px] leading-snug text-slate-600">
+<span class="font-bold text-slate-800 text-[10.5px]">Explore paper, code & data:</span>
+<div class="text-[9.5px] font-mono leading-tight mt-0.5">
+<span class="text-slate-500 font-sans">Poster:</span> <a href="https://yusufarbc.github.io/intel-npu-gnn-benchmarking/" target="_blank" class="text-blue-600 hover:underline">yusufarbc.github.io/intel-npu-gnn-benchmarking/</a><br/>
+<span class="text-slate-500 font-sans">Repo:</span> <a href="https://github.com/yusufarbc/intel-npu-gnn-benchmarking" target="_blank" class="text-blue-600 hover:underline">github.com/yusufarbc/intel-npu-gnn-benchmarking</a>
 </div>
 </div>
 </div>
